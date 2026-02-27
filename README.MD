@@ -162,3 +162,12 @@ vercel --prod
 以本次 `expfood-mvp` 为例：
 - 下载：`/downloads/expfood-mvp.tar.gz`
 - 体验：`/apps/expfood-mvp/`
+
+## 11. 执行纪律（防漏步骤）
+- 当用户要求“按前例推送/打包推送”时，默认执行“完整接入流程”，禁止只上传压缩包。
+- 完整接入最少包含 4 项：
+  1) `source/downloads/<slug>.*`
+  2) `source/_posts/<slug>.md`（`categories` 必须含 `项目`）
+  3) `source/apps/<slug>/index.html`
+  4) `source/projects/index.md` 入口链接
+- 若仅完成第 1 项，视为未完成，不得结束任务。

@@ -7,3 +7,4 @@ title: 项目
 - HealthLog Mobile（下载版）：[下载源码](/downloads/healthlog-mobile.zip)
 - 方针管理 1.6（下载版）：[下载源码](/downloads/policy-management-1-6.zip)
 - expfood-mvp：[在线体验](/apps/expfood-mvp/) | [下载源码](/downloads/expfood-mvp.tar.gz)
+- juben：[在线入口](/apps/juben/) | [下载源码](/downloads/juben.tar.gz)

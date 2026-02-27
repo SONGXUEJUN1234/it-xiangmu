@@ -2,10 +2,8 @@
 title: 项目
 ---
 
-杩欓噷鏄垜鐨勬瘡鍛?AI 灏忓簲鐢ㄥ悎闆嗐€傜偣鍑婚」鐩繘鍏ヨ鎯呴〉涓庝笅杞姐€?
-- 鎶曡祫鏀剁泭鐜囨祴绠楋紙姹囨姤鐗堬級锛歔鍦ㄧ嚎浣撻獙](/apps/investment-roi/)
-- HealthLog Mobile锛堜笅杞界増锛夛細[涓嬭浇婧愮爜](/downloads/healthlog-mobile.zip)
-- 鏂归拡绠＄悊 1.6锛堜笅杞界増锛夛細[涓嬭浇婧愮爜](/downloads/policy-management-1-6.zip)
-
-- expfood-mvp锛歔鍦ㄧ嚎浣撻獙](/apps/expfood-mvp/) | [涓嬭浇婧愮爜](/downloads/expfood-mvp.tar.gz)
-
+这里是我的每周 AI 小应用合集。点击项目进入详情页与下载。
+- 投资收益率（汇报版）：[在线体验](/apps/investment-roi/)
+- HealthLog Mobile（下载版）：[下载源码](/downloads/healthlog-mobile.zip)
+- 方针管理 1.6（下载版）：[下载源码](/downloads/policy-management-1-6.zip)
+- expfood-mvp：[在线体验](/apps/expfood-mvp/) | [下载源码](/downloads/expfood-mvp.tar.gz)

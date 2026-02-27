@@ -6,8 +6,8 @@ author: Your Name
 language: en
 timezone: Asia/Shanghai
 
-url: https://songxuejun1234.github.io
-root: /it-xiangmu/
+url: https://it-xiangmu-e032wckt6-songxuejuns-projects.vercel.app
+root: /
 
 permalink: ':year/:month/:day/:title/'
 permalink_defaults:

@@ -1,0 +1,43 @@
+<%- partial('_partial/header') %>
+
+<div class="container">
+  <h1 style="margin-bottom:30px;"><%= page.category %></h1>
+
+  <div class="project-grid">
+    <% page.posts.each(function(post){ %>
+      <div class="project-card">
+        <h2>
+          <a href="<%= url_for(post.path) %>">
+            <%= post.title %>
+          </a>
+        </h2>
+
+        <p class="project-meta">
+          <%= date(post.date, 'YYYY-MM-DD') %>
+        </p>
+
+        <div class="project-excerpt">
+          <%- post.excerpt || post.content.split('<!-- more -->')[0] %>
+        </div>
+
+        <% if (post.download) { %>
+          <p>
+            <a class="btn-download" href="<%= post.download %>" target="_blank">
+              Download
+            </a>
+          </p>
+        <% } %>
+
+        <% if (post.tags && post.tags.length) { %>
+          <p class="project-tags">
+            <% post.tags.forEach(function(tag){ %>
+              <span>#<%= tag.name %></span>
+            <% }) %>
+          </p>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<%- partial('_partial/footer') %>

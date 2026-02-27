@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>投资回报率测算（汇报版）</title>
+  <style>
+    :root {
+      --bg: #ecf1f7;
+      --ink: #132033;
+      --muted: #5a6b82;
+      --line: #ccd7e6;
+      --panel: #fefefe;
+      --primary: #155eef;
+      --primary-deep: #0a3a9d;
+      --accent: #d97706;
+      --good: #0b7a5c;
+      --bad: #b72a22;
+      --warn: #9a5a00;
+      --shadow: 0 16px 46px rgba(23, 45, 76, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      color: var(--ink);
+      font-family: "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(140deg, rgba(21, 94, 239, 0.14), transparent 45%),
+        radial-gradient(760px 360px at 95% 3%, rgba(217, 119, 6, 0.2), transparent 66%),
+        radial-gradient(900px 500px at -10% 0%, rgba(15, 98, 254, 0.12), transparent 70%),
+        var(--bg);
+    }
+
+    .app {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      border-radius: 18px;
+      background: linear-gradient(160deg, #ffffff 0%, #f9fbfe 100%);
+      border: 1px solid #d9e4f2;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: rise 0.6s ease-out;
+    }
+
+    .head {
+      padding: 22px 24px;
+      border-bottom: 1px solid #dce6f3;
+      background:
+        linear-gradient(108deg, rgba(21, 94, 239, 0.95) 0%, rgba(10, 58, 157, 0.92) 58%, rgba(10, 58, 157, 0.84) 100%),
+        linear-gradient(180deg, #ffffff00, #ffffff00);
+      color: #f8fbff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .head::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(440px 200px at 82% -18%, rgba(255, 255, 255, 0.25), transparent 74%);
+      pointer-events: none;
+    }
+
+    .head-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.28rem, 2.3vw, 1.86rem);
+      letter-spacing: 0.01em;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      font-size: 0.95rem;
+      color: #dbe9ff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      background: rgba(255, 255, 255, 0.15);
+      color: #f8fbff;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .main {
+      padding: 20px 22px 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff, #f9fbff);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: #20314b;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #324968;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #cdd9ea;
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-size: 0.94rem;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    input:focus {
+      border-color: #6f9eff;
+      box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(18, 43, 80, 0.16);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-deep));
+    }
+
+    .btn-secondary {
+      color: #263a58;
+      background: #e8effb;
+    }
+
+    .btn-ghost {
+      color: #724304;
+      background: #fff3de;
+    }
+
+    .error {
+      min-height: 1.2rem;
+      font-size: 0.9rem;
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .result {
+      border: 1px solid #cfdced;
+      border-radius: 14px;
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+    }
+
+    .result-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e9f4;
+    }
+
+    .result h2 {
+      margin: 0;
+      font-size: 1.04rem;
+      color: #1f3350;
+    }
+
+    .result-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid #d6e1ef;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+      min-height: 88px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric.major {
+      grid-column: span 2;
+      min-height: 98px;
+      background: linear-gradient(135deg, #f2f7ff, #ffffff);
+    }
+
+    .name {
+      color: #4f617a;
+      font-size: 0.84rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .tip-target {
+      position: relative;
+      cursor: help;
+      border-bottom: 1px dotted #9aa9c1;
+      outline: none;
+      width: fit-content;
+    }
+
+    .tip-target::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 0;
+      top: calc(100% + 8px);
+      min-width: 220px;
+      max-width: 320px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #1f2a3d;
+      color: #fff;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      box-shadow: 0 6px 18px rgba(16, 26, 44, 0.24);
+      opacity: 0;
+      transform: translateY(2px);
+      pointer-events: none;
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      z-index: 20;
+      white-space: normal;
+    }
+
+    .tip-target:hover::after,
+    .tip-target:focus::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .val {
+      font-weight: 800;
+      font-size: 1.08rem;
+      letter-spacing: 0.01em;
+    }
+
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .footer-note {
+      margin-top: 2px;
+      color: #6c7c91;
+      font-size: 0.8rem;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric.major { grid-column: span 2; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 12px; }
+      .head { padding: 18px 16px; }
+      .main { padding: 14px; }
+      .head-top { flex-direction: column; align-items: flex-start; }
+      .result-head { flex-direction: column; align-items: flex-start; }
+      .result-grid { grid-template-columns: 1fr; }
+      .metric.major { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+  <section class="app" aria-label="投资回报率计算工具">
+    <header class="head">
+      <div class="head-top">
+        <h1>投资回报率测算（汇报版）</h1>
+        <span class="tag">管理决策展示</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="grid">
+        <section class="card">
+          <h2>项目投资</h2>
+          <div class="field">
+            <label for="initial">一次性投资（元）</label>
+            <input id="initial" inputmode="decimal" placeholder="例如 2800000">
+          </div>
+          <div class="field">
+            <label for="life">项目寿命（年）</label>
+            <input id="life" inputmode="decimal" placeholder="例如 8">
+          </div>
+          <div class="field">
+            <label for="salvage">期末残值（元，可选）</label>
+            <input id="salvage" inputmode="decimal" placeholder="例如 120000">
+          </div>
+          <div class="field">
+            <label for="discount">社会平均回报率 / 基准折现率（%）</label>
+            <input id="discount" inputmode="decimal" value="8" placeholder="例如 8">
+          </div>
+          <div class="hint">建议使用公司要求的最低回报率、行业平均 ROI 或 WACC 作为基准。</div>
+        </section>
+
+        <section class="card">
+          <h2>年化成本</h2>
+          <div class="field">
+            <label for="cost_maintain">新增维护成本（元/年）</label>
+            <input id="cost_maintain" inputmode="decimal" placeholder="例如 120000">
+          </div>
+          <div class="field">
+            <label for="cost_consumables">新增备件/耗材（元/年）</label>
+            <input id="cost_consumables" inputmode="decimal" placeholder="例如 70000">
+          </div>
+          <div class="field">
+            <label for="cost_other">其他新增成本（元/年）</label>
+            <input id="cost_other" inputmode="decimal" placeholder="例如 40000">
+          </div>
+          <div class="hint">年净现金流 = 正向收益合计 - 负向成本合计。</div>
+        </section>
+
+        <section class="card">
+          <h2>年化收益</h2>
+          <div class="field">
+            <label for="benefit_efficiency">效率提升增益（元/年）</label>
+            <input id="benefit_efficiency" inputmode="decimal" placeholder="例如 500000">
+          </div>
+          <div class="field">
+            <label for="benefit_energy">能耗/电耗节省（元/年）</label>
+            <input id="benefit_energy" inputmode="decimal" placeholder="例如 360000">
+          </div>
+          <div class="field">
+            <label for="benefit_labor">人工节省（元/年）</label>
+            <input id="benefit_labor" inputmode="decimal" placeholder="例如 240000">
+          </div>
+          <div class="field">
+            <label for="benefit_quality">质量提升收益（元/年）</label>
+            <input id="benefit_quality" inputmode="decimal" placeholder="例如 180000">
+          </div>
+          <div class="field">
+            <label for="benefit_material">包材/辅料节省（元/年）</label>
+            <input id="benefit_material" inputmode="decimal" placeholder="例如 90000">
+          </div>
+          <div class="field">
+            <label for="benefit_other">其他收益（元/年）</label>
+            <input id="benefit_other" inputmode="decimal" placeholder="例如 50000">
+          </div>
+        </section>
+      </div>
+
+      <div class="actions">
+        <button id="calculate" class="btn-primary" type="button">计算结果</button>
+        <button id="demo" class="btn-ghost" type="button">填充示例</button>
+        <button id="clear" class="btn-secondary" type="button">清空</button>
+      </div>
+      <div id="error" class="error" role="status" aria-live="polite"></div>
+
+      <section class="result" aria-live="polite">
+        <div class="result-head">
+          <h2>关键指标看板</h2>
+          <p class="result-note">建议优先查看：投资结论、NPV、IRR 与基准差值。</p>
+        </div>
+        <div class="result-grid">
+          <article class="metric major">
+            <span class="name tip-target" tabindex="0" data-tip="综合 NPV、IRR、回收期给出的管理层判断建议，适用于汇报场景的快速决策。">投资结论</span>
+            <span id="r_decision" class="val">-</span>
+          </article>
+          <article class="metric major">
+            <span class="name tip-target" tabindex="0" data-tip="每年经营性净现金流，不含初始投资。公式：年化收益合计 - 年化成本合计。">年净现金流</span>
+            <span id="r_net_cash" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="静态年回报率。公式：年净现金流 / 初始投资。用于快速比较项目短期效率。">静态 ROI（年）</span>
+            <span id="r_static_roi" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="不折现回收期。公式：初始投资 / 年净现金流。若年净现金流小于等于 0，则无法回收。">静态回收期</span>
+            <span id="r_static_payback" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="项目寿命内总体回报。公式：(年净现金流*寿命 + 残值 - 初始投资) / 初始投资。">寿命期累计回报率</span>
+            <span id="r_life_roi" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="净现值。公式：-初始投资 + 各年净现金流折现值 + 残值折现值。NPV > 0 通常表示高于基准回报率。">净现值 NPV</span>
+            <span id="r_npv" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="内部收益率。即让 NPV = 0 的折现率。IRR 高于基准回报率，通常说明项目可行。">内部收益率 IRR</span>
+            <span id="r_irr" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="按基准折现率计算的回收期。逐年累加折现现金流，首次大于等于 0 的时间点即为动态回收期。">动态回收期</span>
+            <span id="r_dynamic_payback" class="val">-</span>
+          </article>
+          <article class="metric">
+            <span class="name tip-target" tabindex="0" data-tip="比较 IRR 与社会平均回报率（基准折现率）的差值。高于基准表示有超额回报空间。">与社会平均回报率比较</span>
+            <span id="r_compare" class="val">-</span>
+          </article>
+        </div>
+        <div class="footer-note">注：本工具用于投资测算与管理汇报辅助，最终立项请结合风险、产能与战略因素综合决策。</div>
+      </section>
+    </main>
+  </section>
+
+  <script>
+    const ids = [
+      "initial", "life", "salvage", "discount",
+      "benefit_efficiency", "benefit_energy", "benefit_labor", "benefit_quality", "benefit_material", "benefit_other",
+      "cost_maintain", "cost_consumables", "cost_other"
+    ];
+
+    const outputIds = [
+      "r_decision", "r_net_cash", "r_static_roi", "r_static_payback", "r_life_roi",
+      "r_npv", "r_irr", "r_dynamic_payback", "r_compare"
+    ];
+
+    const el = {};
+    ids.concat(outputIds).concat(["calculate", "demo", "clear", "error"]).forEach((id) => {
+      el[id] = document.getElementById(id);
+    });
+
+    function num(id, allowBlank) {
+      const text = el[id].value.trim();
+      if (allowBlank && text === "") return 0;
+      const v = Number(text);
+      return Number.isFinite(v) ? v : NaN;
+    }
+
+    function setError(msg) {
+      el.error.textContent = msg;
+    }
+
+    function clearError() {
+      setError("");
+    }
+
+    function money(v) {
+      return new Intl.NumberFormat("zh-CN", {
+        style: "currency",
+        currency: "CNY",
+        maximumFractionDigits: 2
+      }).format(v);
+    }
+
+    function pct(v) {
+      return (v * 100).toFixed(2) + "%";
+    }
+
+    function paint(id, text, kind) {
+      const node = el[id];
+      node.className = "val";
+      if (kind === "good") node.classList.add("good");
+      if (kind === "bad") node.classList.add("bad");
+      if (kind === "warn") node.classList.add("warn");
+      node.textContent = text;
+    }
+
+    function npv(rate, initial, annualNet, life, salvage) {
+      let v = -initial;
+      for (let t = 1; t <= life; t += 1) {
+        v += annualNet / Math.pow(1 + rate, t);
+      }
+      v += salvage / Math.pow(1 + rate, life);
+      return v;
+    }
+
+    function irr(initial, annualNet, life, salvage) {
+      const f = (r) => npv(r, initial, annualNet, life, salvage);
+      if (f(-0.99) * f(5) > 0) return null;
+
+      let low = -0.99;
+      let high = 5;
+      for (let i = 0; i < 120; i += 1) {
+        const mid = (low + high) / 2;
+        const val = f(mid);
+        if (Math.abs(val) < 1e-7) return mid;
+        if (f(low) * val <= 0) high = mid;
+        else low = mid;
+      }
+      return (low + high) / 2;
+    }
+
+    function dynamicPayback(discountRate, initial, annualNet, life, salvage) {
+      let cum = -initial;
+      for (let t = 1; t <= life; t += 1) {
+        const annualPv = annualNet / Math.pow(1 + discountRate, t);
+        if (cum + annualPv >= 0) {
+          const need = -cum;
+          const ratio = annualPv === 0 ? 0 : need / annualPv;
+          return (t - 1) + ratio;
+        }
+        cum += annualPv;
+      }
+      const salvagePv = salvage / Math.pow(1 + discountRate, life);
+      if (cum + salvagePv >= 0) {
+        const need = -cum;
+        const ratio = salvagePv === 0 ? 0 : need / salvagePv;
+        return life + ratio;
+      }
+      return null;
+    }
+
+    function validate(inputs) {
+      if (!Number.isFinite(inputs.initial) || inputs.initial <= 0) {
+        return "一次性投资必须是大于 0 的数字。";
+      }
+      if (!Number.isFinite(inputs.life) || inputs.life <= 0 || !Number.isInteger(inputs.life)) {
+        return "项目寿命必须是大于 0 的整数（按年）。";
+      }
+      if (!Number.isFinite(inputs.discountPct) || inputs.discountPct < 0) {
+        return "社会平均回报率（折现率）必须是大于等于 0 的数字。";
+      }
+      if (!Number.isFinite(inputs.salvage) || inputs.salvage < 0) {
+        return "期末残值不能小于 0。";
+      }
+      if (!Number.isFinite(inputs.annualBenefit) || !Number.isFinite(inputs.annualCost)) {
+        return "请检查年化收益和成本输入，确保是有效数字。";
+      }
+      return "";
+    }
+
+    function compute() {
+      clearError();
+
+      const inputs = {
+        initial: num("initial", false),
+        life: num("life", false),
+        salvage: num("salvage", true),
+        discountPct: num("discount", false),
+        annualBenefit:
+          num("benefit_efficiency", true) +
+          num("benefit_energy", true) +
+          num("benefit_labor", true) +
+          num("benefit_quality", true) +
+          num("benefit_material", true) +
+          num("benefit_other", true),
+        annualCost:
+          num("cost_maintain", true) +
+          num("cost_consumables", true) +
+          num("cost_other", true)
+      };
+
+      const msg = validate(inputs);
+      if (msg) {
+        setError(msg);
+        return;
+      }
+
+      const life = inputs.life;
+      const discountRate = inputs.discountPct / 100;
+      const annualNet = inputs.annualBenefit - inputs.annualCost;
+
+      const staticRoi = annualNet / inputs.initial;
+      const staticPayback = annualNet > 0 ? inputs.initial / annualNet : null;
+      const lifeRoi = (annualNet * life + inputs.salvage - inputs.initial) / inputs.initial;
+      const projectNpv = npv(discountRate, inputs.initial, annualNet, life, inputs.salvage);
+      const projectIrr = irr(inputs.initial, annualNet, life, inputs.salvage);
+      const dp = dynamicPayback(discountRate, inputs.initial, annualNet, life, inputs.salvage);
+
+      let decisionText = "建议进一步评审";
+      let decisionKind = "warn";
+      if (projectNpv > 0 && projectIrr !== null && projectIrr >= discountRate && dp !== null && dp <= life) {
+        decisionText = "建议推进";
+        decisionKind = "good";
+      } else if (projectNpv < 0 || (projectIrr !== null && projectIrr < discountRate)) {
+        decisionText = "建议暂缓";
+        decisionKind = "bad";
+      }
+
+      paint("r_decision", decisionText, decisionKind);
+
+      paint("r_net_cash", money(annualNet), annualNet > 0 ? "good" : annualNet < 0 ? "bad" : "warn");
+      paint("r_static_roi", pct(staticRoi), staticRoi > 0 ? "good" : staticRoi < 0 ? "bad" : "warn");
+
+      if (staticPayback === null) paint("r_static_payback", "无法回收", "bad");
+      else paint("r_static_payback", staticPayback.toFixed(2) + " 年", staticPayback <= life ? "good" : "warn");
+
+      paint("r_life_roi", pct(lifeRoi), lifeRoi > 0 ? "good" : lifeRoi < 0 ? "bad" : "warn");
+      paint("r_npv", money(projectNpv), projectNpv >= 0 ? "good" : "bad");
+
+      if (projectIrr === null) {
+        paint("r_irr", "无法求解", "warn");
+        paint("r_compare", "IRR 不可用，请看 NPV", "warn");
+      } else {
+        const spread = projectIrr - discountRate;
+        paint("r_irr", pct(projectIrr), projectIrr >= discountRate ? "good" : "bad");
+        if (spread >= 0) paint("r_compare", "高于基准 " + pct(spread), "good");
+        else paint("r_compare", "低于基准 " + pct(Math.abs(spread)), "bad");
+      }
+
+      if (dp === null) paint("r_dynamic_payback", "寿命期内未回收", "bad");
+      else paint("r_dynamic_payback", dp.toFixed(2) + " 年", dp <= life ? "good" : "warn");
+    }
+
+    function clearAll() {
+      ids.forEach((id) => {
+        if (id === "discount") el[id].value = "8";
+        else el[id].value = "";
+      });
+      outputIds.forEach((id) => paint(id, "-", ""));
+      clearError();
+      el.initial.focus();
+    }
+
+    function fillDemo() {
+      const demo = {
+        initial: "2800000",
+        life: "8",
+        salvage: "120000",
+        discount: "8",
+        benefit_efficiency: "500000",
+        benefit_energy: "360000",
+        benefit_labor: "240000",
+        benefit_quality: "180000",
+        benefit_material: "90000",
+        benefit_other: "50000",
+        cost_maintain: "120000",
+        cost_consumables: "70000",
+        cost_other: "40000"
+      };
+      Object.keys(demo).forEach((id) => {
+        el[id].value = demo[id];
+      });
+      compute();
+    }
+
+    el.calculate.addEventListener("click", compute);
+    el.demo.addEventListener("click", fillDemo);
+    el.clear.addEventListener("click", clearAll);
+    ids.forEach((id) => {
+      el[id].addEventListener("keydown", (event) => {
+        if (event.key === "Enter") compute();
+      });
+    });
+  </script>
+</body>
+</html>

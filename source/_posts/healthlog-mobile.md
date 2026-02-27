@@ -16,9 +16,10 @@ version: 0.1.0
 ---
 
 ## 项目简介
-HealthLog Mobile 鏄竴涓熀浜?Expo + TypeScript 鐨勫仴搴疯褰曞簲鐢ㄦ簮鐮佸寘銆?
+HealthLog Mobile 是一个基于 Expo + TypeScript 的健康记录应用源码包。
+
 ## 下载
-[涓嬭浇婧愮爜鍖匽(/downloads/healthlog-mobile.zip)
+[下载源码](/downloads/healthlog-mobile.zip)
 
 ## 说明
-璇ラ」鐩负绉诲姩绔伐绋嬶紝涓嶆彁渚涚綉椤靛湪绾挎紨绀恒€?
+该项目为移动端工程，不提供网页在线演示。

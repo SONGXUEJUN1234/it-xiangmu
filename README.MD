@@ -151,3 +151,14 @@ vercel --prod
 - 复制到 `D:` 权限失败：先复制到 `C:\Users\<Windows用户名>\Downloads` 再移动。
 - 大文件拷贝中断：优先 `zip` 后单文件拷贝，避免散文件 99% 失败。
 - 页面中文乱码：确保文件保存为 UTF-8。
+
+## 10. 最易遗漏（必须同时完成）
+只把压缩包上传到 `source/downloads/` 不算接入完成。必须同时满足：
+- `source/downloads/<slug>.zip` 或 `source/downloads/<slug>.tar.gz` 已存在。
+- `source/_posts/<slug>.md` 已创建，且 `categories` 包含 `Projects`。
+- `source/apps/<slug>/index.html` 已创建且可访问。
+- `source/projects/index.md` 已新增该项目入口。
+
+以本次 `expfood-mvp` 为例：
+- 下载：`/downloads/expfood-mvp.tar.gz`
+- 体验：`/apps/expfood-mvp/`

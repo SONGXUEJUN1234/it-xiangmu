@@ -6,8 +6,8 @@ author: Your Name
 language: en
 timezone: Asia/Shanghai
 
-url: http://localhost:4001
-root: /
+url: https://songxuejun1234.github.io
+root: /it-xiangmu/
 
 permalink: ':year/:month/:day/:title/'
 permalink_defaults:

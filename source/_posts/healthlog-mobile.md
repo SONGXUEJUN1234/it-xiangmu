@@ -1,4 +1,4 @@
----
+﻿---
 title: HealthLog Mobile
 date: 2026-02-27
 updated: 2026-02-27
@@ -7,7 +7,7 @@ tags:
   - Expo
   - Tool
 categories:
-  - Projects
+  - 项目
 repo: ""
 download: /downloads/healthlog-mobile.zip
 demo: /apps/healthlog-mobile/
@@ -16,10 +16,9 @@ version: 0.1.0
 ---
 
 ## Overview
-HealthLog Mobile 是一个基于 Expo + TypeScript 的健康记录应用源码包。
-
+HealthLog Mobile 鏄竴涓熀浜?Expo + TypeScript 鐨勫仴搴疯褰曞簲鐢ㄦ簮鐮佸寘銆?
 ## Download
-[下载源码包](/downloads/healthlog-mobile.zip)
+[涓嬭浇婧愮爜鍖匽(/downloads/healthlog-mobile.zip)
 
 ## Notes
-该项目为移动端工程，不提供网页在线演示。
+璇ラ」鐩负绉诲姩绔伐绋嬶紝涓嶆彁渚涚綉椤靛湪绾挎紨绀恒€?

@@ -1,12 +1,12 @@
----
-title: 方针管理 1.6
+﻿---
+title: 鏂归拡绠＄悊 1.6
 date: 2026-02-27
 updated: 2026-02-27
 tags:
   - Management
   - Tool
 categories:
-  - Projects
+  - 项目
 repo: ""
 download: /downloads/policy-management-1-6.zip
 demo: /apps/policy-management-1-6/
@@ -15,10 +15,9 @@ version: 1.6
 ---
 
 ## Overview
-方针管理 1.6 项目源码下载。
-
+鏂归拡绠＄悊 1.6 椤圭洰婧愮爜涓嬭浇銆?
 ## Download
-[下载源码包](/downloads/policy-management-1-6.zip)
+[涓嬭浇婧愮爜鍖匽(/downloads/policy-management-1-6.zip)
 
 ## Notes
-本页面仅提供下载，不提供在线演示。
+鏈〉闈粎鎻愪緵涓嬭浇锛屼笉鎻愪緵鍦ㄧ嚎婕旂ず銆?

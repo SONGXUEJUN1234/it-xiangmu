@@ -5,7 +5,7 @@ updated: 2026-02-27
 tags:
   - Tool
 categories:
-  - Projects
+  - 项目
 repo: ""
 download: "/downloads/expfood-mvp.tar.gz"
 demo: "/apps/expfood-mvp/"
@@ -21,3 +21,4 @@ expfood-mvp 项目接入页，提供在线入口与源码下载。
 
 ## Download
 [下载源码](/downloads/expfood-mvp.tar.gz)
+

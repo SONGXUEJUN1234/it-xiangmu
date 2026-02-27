@@ -6,7 +6,7 @@ tags:
   - Finance
   - Tool
 categories:
-  - Projects
+  - 项目
 repo: ""
 download: ""
 demo: /apps/investment-roi/
@@ -19,3 +19,4 @@ version: 1.0.0
 
 ## Demo
 [在线体验](/apps/investment-roi/)
+

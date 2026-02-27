@@ -1,8 +1,8 @@
-title: AI Weekly Projects
-subtitle: One AI App Every Week
-description: My AI Project Collection
-keywords: AI, Projects
-author: Your Name
+title: AI 每周项目集
+subtitle: 每周一个 AI 小应用
+description: 我的 AI 项目集合
+keywords: AI, 项目, 工具
+author: 宋
 language: zh-CN
 timezone: Asia/Shanghai
 
@@ -58,7 +58,7 @@ index_generator:
   per_page: 10
   order_by: -date
 
-default_category: uncategorized
+default_category: 未分类
 category_map: {}
 tag_map: {}
 

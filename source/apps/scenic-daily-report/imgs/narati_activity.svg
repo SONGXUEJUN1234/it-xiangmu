@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#E6E6FA"/>
+  <circle cx="200" cy="300" r="100" fill="#FF6347"/>
+  <circle cx="600" cy="300" r="100" fill="#4682B4"/>
+  <rect x="300" y="200" width="200" height="200" fill="#32CD32"/>
+  <polygon points="400,150 450,250 350,250" fill="#FFD700"/>
+  <polygon points="400,450 450,350 350,350" fill="#FFD700"/>
+  <text x="400" y="50" font-family="Arial" font-size="36" text-anchor="middle" fill="#4B0082">那拉提特色活动</text>
+  <text x="200" cy="300" font-family="Arial" font-size="24" text-anchor="middle" fill="white">骑马</text>
+  <text x="600" cy="300" font-family="Arial" font-size="24" text-anchor="middle" fill="white">露营</text>
+  <text x="400" cy="300" font-family="Arial" font-size="24" text-anchor="middle" fill="white">草原音乐节</text>
+</svg>

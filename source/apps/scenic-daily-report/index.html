@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【景点】日报 - 伊犁那拉提</title>
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Framer Motion -->
+  <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+    
+    :root {
+      --primary-color: #c00000; /* 报纸红色 */
+      --secondary-color: #333333;
+      --text-color: #1f2937;
+      --bg-color: #f8f8f8;
+      --border-color: #e5e5e5;
+    }
+    
+    body {
+      font-family: 'Noto Serif SC', serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .newspaper-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .newspaper-masthead {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 900;
+      color: var(--primary-color);
+      letter-spacing: -0.05em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .newspaper-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      border-top: 2px solid var(--secondary-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .news-item {
+      padding: 0.5rem;
+      border-right: 1px solid var(--border-color);
+    }
+    
+    .news-item:last-child {
+      border-right: none;
+    }
+    
+    .headline {
+      grid-column: span 6;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .subheadline {
+      grid-column: span 3;
+    }
+    
+    .news-image-container {
+      grid-column: span 3;
+      grid-row: span 2;
+    }
+    
+    .news-column {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    
+    .sidebar {
+      grid-column: span 1;
+      grid-row: span 3;
+      background-color: #f9f9f9;
+    }
+    
+    .news-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .news-content {
+      font-size: 0.95rem;
+      text-align: justify;
+      column-count: 1;
+    }
+    
+    .news-content-multi {
+      column-count: 2;
+      column-gap: 1rem;
+      text-align: justify;
+    }
+    
+    .news-meta {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    @media (max-width: 768px) {
+      .newspaper-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .headline, .subheadline, .news-image-container, .news-column, .sidebar {
+        grid-column: span 2;
+      }
+      
+      .news-content-multi {
+        column-count: 1;
+      }
+    }
+    
+    /* 打印样式 */
+    @media print {
+      body {
+        background-color: white;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 9pt; /* 全局减小字体 */
+      }
+      
+      .newspaper-container {
+        box-shadow: none;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* 隐藏不需要打印的元素 */
+      #cameraBtn, #printBtn, .no-print {
+        display: none !important;
+      }
+      
+      /* 极度紧凑的打印布局 */
+      .newspaper-grid {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* 极小化页眉 */
+      header {
+        margin-bottom: 0.1cm;
+        padding: 0.1cm;
+        transform: scale(0.9);
+        transform-origin: top center;
+      }
+      
+      header h1 {
+        font-size: 20pt;
+      }
+      
+      /* 压缩头条区域 */
+      .headline {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0.1cm 0;
+        page-break-inside: avoid;
+      }
+      
+      /* 减小主标题 */
+      .headline h2 {
+        margin: 0.1cm 0;
+        font-size: 16pt;
+        line-height: 1.1;
+      }
+      
+      /* 调整主要内容布局为两列 */
+      .news-image-container, .news-column {
+        display: inline-block;
+        vertical-align: top;
+        page-break-inside: avoid;
+        margin: 0;
+        padding: 0.1cm;
+      }
+      
+      /* 减小图片容器宽度 */
+      .news-image-container {
+        width: 45%;
+      }
+      
+      /* 调整新闻列宽度 */
+      .news-column {
+        width: 25%;
+      }
+      
+      /* 调整侧边栏为内联显示 */
+      .sidebar {
+        display: inline-block;
+        vertical-align: top;
+        width: 25%;
+        margin: 0;
+        padding: 0.1cm;
+        page-break-inside: avoid;
+      }
+      
+      /* 调整子标题区域 */
+      .subheadline {
+        display: none; /* 隐藏子标题区域，优先显示主要内容 */
+      }
+      
+      /* 极度压缩文本 */
+      .news-content, .news-content-multi {
+        font-size: 8pt;
+        line-height: 1.1;
+        column-count: 1;
+        margin: 0;
+      }
+      
+      /* 最小化段落间距 */
+      p {
+        margin: 0.05cm 0;
+      }
+      
+      /* 极度压缩图片 */
+      img {
+        max-width: 100%;
+        max-height: 5cm; /* 大幅减小图片高度 */
+        page-break-inside: avoid;
+      }
+      
+      /* 最小化页面边距 */
+      @page {
+        size: A4;
+        margin: 0.3cm;
+      }
+      
+      /* 强制分页点 */
+      .page-break-after {
+        page-break-after: always;
+      }
+      
+      /* 防止分页点 */
+      .no-page-break {
+        page-break-inside: avoid;
+      }
+      
+      /* 优化表格和列表 */
+      table, ul, ol {
+        page-break-inside: avoid;
+        margin: 0.05cm 0;
+        font-size: 8pt;
+      }
+      
+      /* 确保所有文本都可见 */
+      * {
+        overflow: visible !important;
+      }
+      
+      /* 最小化标题 */
+      h3 {
+        margin: 0.05cm 0;
+        font-size: 10pt;
+        line-height: 1.1;
+      }
+      
+      h4 {
+        margin: 0.05cm 0;
+        font-size: 9pt;
+        line-height: 1.1;
+      }
+      
+      /* 压缩页脚 */
+      footer {
+        margin-top: 0.1cm;
+        padding: 0.1cm;
+        font-size: 7pt;
+      }
+      
+      /* 调整图片下方的说明文字 */
+      .news-image-container p.text-sm {
+        font-size: 7pt;
+        margin: 0.05cm 0;
+      }
+      
+      /* 压缩数据显示 */
+      .sidebar .text-2xl {
+        font-size: 12pt;
+      }
+      
+      /* 确保所有内容在第一页 */
+      .newspaper-grid > div:nth-child(n+8) {
+        display: none; /* 隐藏第8个及之后的元素，确保关键内容在第一页 */
+      }
+    }
+  </style>
+</head>
+<body class="p-2 md:p-4">
+  <div class="newspaper-container">
+    <!-- 报头 -->
+    <header class="p-4 border-b border-gray-300">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center">
+          <h1 class="newspaper-masthead text-5xl md:text-6xl">【景点】日报</h1>
+          <div class="hidden md:block ml-4 text-sm border-l border-gray-300 pl-4">
+            <p>SCENIC SPOT DAILY</p>
+          </div>
+        </div>
+        <div class="text-sm text-right mt-2 md:mt-0">
+          <p id="current-date"></p>
+          <p>第01版：要闻</p>
+          <p>总第1234期</p>
+          <button id="printBtn" class="mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-3 rounded-full text-sm flex items-center no-print">
+            <i class="fas fa-print mr-1"></i>打印报纸
+          </button>
+        </div>
+      </div>
+      <div class="mt-2 text-sm flex justify-between border-t border-b py-1 border-gray-300">
+        <div>国内统一刊号: CN11-0001</div>
+        <div>邮发代号: 1-1</div>
+        <div>零售价: ¥1.00</div>
+        <div>景点日报社出版</div>
+      </div>
+    </header>
+
+    <!-- 头条新闻 -->
+    <div class="newspaper-grid p-2">
+      <div class="headline p-2 animate-on-scroll">
+        <h2 id="mainTitle" class="text-4xl md:text-5xl font-bold text-center my-2">宋学军大明星莅临那拉提，我为那拉提代言</h2>
+        <p class="text-center text-sm text-gray-600">本报记者 李明 发自新疆伊犁</p>
+      </div>
+
+      <!-- 主要新闻内容 -->
+      <div class="news-image-container p-1 animate-on-scroll">
+        <div class="relative">
+          <img id="yiliImage" src="./imgs/yili_1.svg" alt="伊犁风景" class="w-full h-auto">
+          <button id="cameraBtn" class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full shadow-lg flex items-center">
+            <i class="fas fa-camera mr-2"></i>拍照替换
+          </button>
+        </div>
+        <p class="text-sm mt-1">伊犁河谷风光，被誉为"塞外江南"，拥有壮丽的自然风光和丰富的文化底蕴。（记者 王刚 摄）</p>
+        
+        <div class="mt-3">
+          <h3 class="text-2xl font-bold">那拉提草原：亚洲最美的高山草甸</h3>
+          <p class="mt-2 text-justify">那拉提草原位于伊犁河谷，海拔1800米，是亚洲最美的高山草甸之一。夏季繁花似锦，是摄影和观光的绝佳胜地。据统计，每年有超过100万游客前来观光。</p>
+          <p class="mt-2 text-justify">当地旅游局负责人介绍，近年来，那拉提景区不断完善基础设施，提升服务质量，游客满意度持续提高。</p>
+        </div>
+      </div>
+
+      <!-- 新闻专栏1 -->
+      <div class="news-column p-2 animate-on-scroll">
+        <h3 class="text-xl font-bold border-b border-gray-300 pb-1">伊犁旅游业蓬勃发展</h3>
+        <div class="news-content-multi mt-2">
+          <p>记者从伊犁哈萨克自治州旅游局获悉，2023年伊犁地区接待游客总量突破300万人次，同比增长15.7%，旅游总收入达到42.3亿元。</p>
+          <p>伊犁地区凭借其独特的自然风光和丰富的民族文化资源，成为新疆最受欢迎的旅游目的地之一。特别是那拉提草原、喀拉峻草原等景点，吸引了大量国内外游客。</p>
+          <p>伊犁州旅游局局长马力克表示，未来将继续推进全域旅游发展战略，打造"一带一路"旅游重要节点，促进旅游业与文化、农业、体育等产业深度融合。</p>
+          <p>据了解，伊犁州已启动"智慧旅游"建设项目，通过数字化手段提升游客体验和管理效率。同时，积极培育乡村旅游、生态旅游、文化体验等新业态，丰富旅游产品供给。</p>
+        </div>
+      </div>
+
+      <!-- 新闻专栏2 -->
+      <div class="news-column p-2 animate-on-scroll">
+        <h3 class="text-xl font-bold border-b border-gray-300 pb-1">哈萨克族文化成旅游新亮点</h3>
+        <div class="mt-2 flex items-start mb-3">
+          <img src="./imgs/yili_culture.svg" alt="伊犁文化" class="w-1/3 mr-2">
+          <p class="text-sm">哈萨克族传统文化展示（资料图）</p>
+        </div>
+        <div class="news-content">
+          <p>伊犁地区是哈萨克族聚居地，保留了丰富的民族文化遗产。近年来，当地积极推动民族文化与旅游融合发展，哈萨克族的传统音乐、舞蹈、手工艺等成为吸引游客的重要元素。</p>
+          <p>在那拉提景区，游客可以参观哈萨克族传统毡房，体验传统的哈萨克族歌舞、品尝特色美食，了解游牧民族的生活方式。</p>
+          <p>伊犁州文化馆馆长阿依古丽介绍，为保护和传承哈萨克族非物质文化遗产，当地已建立多个传习基地，并定期举办民族文化展演活动。</p>
+          <p>"我们希望通过旅游这个窗口，让更多人了解哈萨克族文化的魅力，同时也为当地居民创造更多就业和创业机会。"阿依古丽说。</p>
+        </div>
+      </div>
+
+      <!-- 侧边栏 -->
+      <div class="sidebar p-2 animate-on-scroll">
+        <h3 class="text-lg font-bold border-b border-gray-300 pb-1">景区数据</h3>
+        <div class="mt-2 space-y-3">
+          <div>
+            <p class="text-sm font-bold">年游客量</p>
+            <p class="text-2xl font-bold text-red-700">300万+</p>
+          </div>
+          <div>
+            <p class="text-sm font-bold">景区面积</p>
+            <p class="text-2xl font-bold text-red-700">1.7万</p>
+            <p class="text-xs">平方公里</p>
+          </div>
+          <div>
+            <p class="text-sm font-bold">最佳旅游季节</p>
+            <p class="text-lg font-bold">6月-9月</p>
+          </div>
+        </div>
+        
+        <h3 class="text-lg font-bold border-b border-gray-300 pb-1 mt-4">交通指南</h3>
+        <div class="mt-2 space-y-2 text-sm">
+          <div>
+            <p class="font-bold">航空</p>
+            <p>伊宁机场有北京、上海、广州等城市的直飞航班</p>
+          </div>
+          <div>
+            <p class="font-bold">铁路</p>
+            <p>可乘坐火车到达伊宁站，再转乘大巴前往那拉提</p>
+          </div>
+          <div>
+            <p class="font-bold">自驾</p>
+            <p>从伊宁市区出发，沿G218国道行驶约170公里可到达那拉提景区</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 下半部分新闻 -->
+      <div class="subheadline p-2 animate-on-scroll">
+        <h3 class="text-xl font-bold border-b border-gray-300 pb-1">草原音乐节成为文旅融合典范</h3>
+        <div class="mt-2 flex items-start mb-3">
+          <img src="./imgs/narati_activity.svg" alt="那拉提特色活动" class="w-1/3 mr-2">
+          <p class="text-sm">那拉提草原音乐节现场盛况（记者 张华 摄）</p>
+        </div>
+        <div class="news-content">
+          <p>每年7月举办的那拉提草原音乐节，已成为伊犁地区文化旅游融合发展的典范。音乐节汇集国内外知名音乐人，在壮美草原上尽情狂欢，吸引了大量年轻游客。</p>
+          <p>据组委会介绍，2023年草原音乐节期间，那拉提景区日均接待游客超过2万人次，带动当地住宿、餐饮、交通等相关产业收入增长30%以上。</p>
+        </div>
+      </div>
+
+      <div class="subheadline p-2 animate-on-scroll">
+        <h3 class="text-xl font-bold border-b border-gray-300 pb-1">特色民宿成为旅游新宠</h3>
+        <div class="news-content mt-2">
+          <p>随着乡村旅游的兴起，伊犁地区的特色民宿逐渐成为游客的新选择。在那拉提景区周边，已有超过100家各具特色的民宿，其中不少是由当地哈萨克族牧民经营的传统毡房改造而成。</p>
+          <p>在距离那拉提景区5公里的牧民村，哈萨克族牧民阿里汗将自家的毡房改造成了接待游客的特色民宿。"以前我们只靠放牧为生，现在通过经营民宿，一年能增加5万多元收入。"阿里汗说。</p>
+          <p>伊犁州旅游局相关负责人表示，将继续支持当地居民发展特色民宿，提升服务质量和管理水平，让更多牧民通过旅游实现增收致富。</p>
+        </div>
+      </div>
+
+      <div class="subheadline p-2 animate-on-scroll">
+        <h3 class="text-xl font-bold border-b border-gray-300 pb-1">那拉提四季旅游攻略</h3>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <div>
+            <h4 class="font-bold text-blue-600">春季 (4-5月)</h4>
+            <p class="text-sm">气温回暖，草原初绿，野花开始绽放，是摄影爱好者的天堂。</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-green-600">夏季 (6-8月)</h4>
+            <p class="text-sm">气候宜人，草原最美时节，繁花盛开，是观光旅游的黄金季节。</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-yellow-600">秋季 (9-10月)</h4>
+            <p class="text-sm">天高气爽，草原金黄，层林尽染，是体验哈萨克族传统节日的好时机。</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-blue-300">冬季 (11-3月)</h4>
+            <p class="text-sm">寒冷多雪，可体验冰雪风光和冬季民俗，参与冰雪运动。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="p-4 text-sm text-center border-t border-gray-300">
+      <p>© 2023 景点日报 版权所有 | 创作者：@秋芝2046</p>
+      <p class="mt-1">数据来源：<a href="https://www.mct.gov.cn/" class="text-blue-600 hover:underline" target="_blank">中华人民共和国文化和旅游部</a> | <a href="https://www.xinjiang.gov.cn/" class="text-blue-600 hover:underline" target="_blank">新疆维吾尔自治区人民政府</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 设置当前日期
+    const dateElement = document.getElementById('current-date');
+    const now = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    dateElement.textContent = now.toLocaleDateString('zh-CN', options);
+    
+    // 打印功能
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+      printBtn.addEventListener('click', function() {
+        window.print();
+      });
+    }
+
+    // 滚动动画
+    document.addEventListener('DOMContentLoaded', function() {
+      const animatedElements = document.querySelectorAll('.animate-on-scroll');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      animatedElements.forEach(element => {
+        observer.observe(element);
+      });
+      
+      // 摄像头拍照功能
+       const cameraBtn = document.getElementById('cameraBtn');
+       const yiliImage = document.getElementById('yiliImage');
+       const mainTitle = document.getElementById('mainTitle');
+       
+       if (cameraBtn) {
+         cameraBtn.addEventListener('click', async function() {
+           try {
+             // 创建视频和画布元素
+             const videoModal = document.createElement('div');
+             videoModal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+             
+             const modalContent = document.createElement('div');
+             modalContent.className = 'bg-white p-4 rounded-lg max-w-lg w-full relative';
+             
+             const closeBtn = document.createElement('button');
+             closeBtn.className = 'absolute top-2 right-2 text-gray-700 hover:text-gray-900';
+             closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+             
+             const title = document.createElement('h3');
+             title.className = 'text-xl font-bold mb-4 text-center';
+             title.textContent = '拍摄照片';
+             
+             // 添加名字输入框
+             const nameInputContainer = document.createElement('div');
+             nameInputContainer.className = 'mb-4';
+             
+             const nameLabel = document.createElement('label');
+             nameLabel.className = 'block text-gray-700 text-sm font-bold mb-2';
+             nameLabel.textContent = '请输入您的名字：';
+             
+             const nameInput = document.createElement('input');
+             nameInput.className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+             nameInput.type = 'text';
+             nameInput.placeholder = '例如：张三';
+             nameInput.id = 'starName';
+             
+             nameInputContainer.appendChild(nameLabel);
+             nameInputContainer.appendChild(nameInput);
+             
+             const video = document.createElement('video');
+             video.className = 'w-full h-64 bg-gray-200 object-cover mb-4';
+             video.autoplay = true;
+             
+             const buttonContainer = document.createElement('div');
+             buttonContainer.className = 'flex justify-center';
+             
+             const captureBtn = document.createElement('button');
+             captureBtn.className = 'bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full';
+             captureBtn.textContent = '拍照';
+             
+             const canvas = document.createElement('canvas');
+             canvas.style.display = 'none';
+             
+             // 组装模态框
+             buttonContainer.appendChild(captureBtn);
+             modalContent.appendChild(closeBtn);
+             modalContent.appendChild(title);
+             modalContent.appendChild(nameInputContainer);
+             modalContent.appendChild(video);
+             modalContent.appendChild(buttonContainer);
+             modalContent.appendChild(canvas);
+             videoModal.appendChild(modalContent);
+             document.body.appendChild(videoModal);
+             
+             // 获取摄像头流
+             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+             video.srcObject = stream;
+             
+             // 关闭按钮事件
+             closeBtn.addEventListener('click', function() {
+               stream.getTracks().forEach(track => track.stop());
+               document.body.removeChild(videoModal);
+             });
+             
+             // 拍照按钮事件
+             captureBtn.addEventListener('click', function() {
+               // 获取输入的名字
+               const starName = document.getElementById('starName').value || '神秘';
+               
+               // 设置画布尺寸与视频相同
+               canvas.width = video.videoWidth;
+               canvas.height = video.videoHeight;
+               
+               // 在画布上绘制视频当前帧
+               const ctx = canvas.getContext('2d');
+               ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+               
+               // 将画布内容转换为图片URL
+               const imageDataURL = canvas.toDataURL('image/png');
+               
+               // 替换原图片
+               yiliImage.src = imageDataURL;
+               
+               // 更新标题
+               mainTitle.textContent = `${starName}大明星莅临那拉提，我为那拉提代言`;
+               
+               // 关闭摄像头和模态框
+               stream.getTracks().forEach(track => track.stop());
+               document.body.removeChild(videoModal);
+             });
+          } catch (error) {
+            console.error('访问摄像头失败:', error);
+            alert('无法访问摄像头，请确保您的设备有摄像头并已授予权限。');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#87CEEB"/>
+  <rect y="300" width="800" height="300" fill="#7CFC00"/>
+  <polygon points="0,300 200,200 400,250 600,180 800,300" fill="#7CFC00"/>
+  <circle cx="700" cy="100" r="50" fill="#FFD700"/>
+  <ellipse cx="300" cy="400" rx="30" ry="10" fill="#8B4513"/>
+  <ellipse cx="500" cy="450" rx="30" ry="10" fill="#8B4513"/>
+  <ellipse cx="650" cy="420" rx="30" ry="10" fill="#8B4513"/>
+  <text x="400" y="150" font-family="Arial" font-size="48" text-anchor="middle" fill="white">那拉提草原</text>
+</svg>

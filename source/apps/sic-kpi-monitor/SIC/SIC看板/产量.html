@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>SIC产量周度指标跟进</title>
+    <!-- 引入xlsx.js和Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: '微软雅黑', Arial, sans-serif; margin: 30px; background: #f7f7f7; }
+        h2 { color: #2c3e50; text-align: center; }
+        .container { background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px #0001; max-width: 1200px; margin: auto; }
+        #chart-container { width: 100%; max-width: 900px; margin: 30px auto; }
+        table { border-collapse: collapse; width: 100%; margin-top: 30px; }
+        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: center; }
+        th { background: #eaeaea; }
+        #exceptionTable td { font-size: 10px; }
+        tr.red td { background: #ffdddd; }
+        tr.yellow td { background: #fff7cc; }
+        tr.green td { background: #eaffea; }
+        /* 异常原因和纠偏措施列样式 */
+        #exceptionTable td:nth-child(8),
+        #exceptionTable td:nth-child(9) {
+            white-space: normal;
+            word-wrap: break-word;
+            word-break: break-all;
+            max-width: 200px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .file-input { margin-bottom: 20px; }
+        .filter { margin-bottom: 20px; }
+        .filter label { margin-right: 8px; }
+        .filter select { margin-right: 20px; }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>SIC产量周度指标跟进表</h2>
+    <div class="file-input">
+        <label>请选择Excel文件：</label>
+        <input type="file" id="excelFile" accept=".xlsx,.xls" />
+        <button id="saveButton" style="margin-left: 15px; padding: 5px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">保存HTML</button>
+    </div>
+    <div class="filter">
+        <label>选择区域：</label>
+        <select id="areaSelect"></select>
+        <label>选择公司：</label>
+        <select id="companySelect"></select>
+        <label>选择窑炉：</label>
+        <select id="kilnSelect">
+            <option value="">请选择窑炉（可选）</option>
+        </select>
+    </div>
+    <div id="chart-container">
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div id="exception-table-container">
+        <h3>SIC产量周度指标跟进表</h3>
+        <table id="exceptionTable">
+            <thead>
+                <tr>
+                    <th>区域</th>
+                    <th>公司</th>
+                    <th>窑炉</th>
+                    <th>周</th>
+                    <th>实际</th>
+                    <th>目标</th>
+                    <th>区域色</th>
+                    <th>异常原因</th>
+                    <th>纠偏措施</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<script>
+// 全局变量
+let group = {};
+let weekList = [];
+let chartInstance = null;
+let chartDataGlobal = [];
+
+// 文件上传监听
+const excelInput = document.getElementById('excelFile');
+excelInput.addEventListener('change', handleFile, false);
+
+function handleFile(e) {
+    const file = e.target.files[0];
+    if (!file) {
+        alert('请选择一个Excel文件！');
+        return;
+    }
+    
+    // 检查文件类型
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+        alert('请选择正确的Excel文件格式（.xlsx 或 .xls）！');
+        return;
+    }
+    
+    console.log('开始读取文件:', file.name);
+    const reader = new FileReader();
+    
+    reader.onload = function(evt) {
+        try {
+            console.log('文件读取成功，开始解析...');
+            const arrayBuffer = evt.target.result;
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            
+            console.log('工作簿解析成功，工作表数量:', workbook.SheetNames.length);
+            console.log('工作表名称:', workbook.SheetNames);
+            
+            // 检查是否有足够的工作表
+            if (workbook.SheetNames.length < 2) {
+                alert('Excel文件至少需要包含2个工作表！当前只有' + workbook.SheetNames.length + '个工作表。');
+                return;
+            }
+            
+            // 解析Sheet1
+            const sheet1 = workbook.Sheets[workbook.SheetNames[0]];
+            if (!sheet1) {
+                alert('无法读取第一个工作表！');
+                return;
+            }
+            
+            const data1 = XLSX.utils.sheet_to_json(sheet1);
+            console.log('第一个工作表数据行数:', data1.length);
+            
+            // 保存原始数据供异常信息显示使用
+            window.originalData = data1;
+            
+            if (data1.length === 0) {
+                alert('第一个工作表没有数据！');
+                return;
+            }
+            
+            // 检查必要的列
+            const requiredColumns = ['区域', '公司', '窑炉', '周', '实际', '目标'];
+            const firstRow = data1[0];
+            const missingColumns = requiredColumns.filter(col => !(col in firstRow));
+            
+            if (missingColumns.length > 0) {
+                alert('第一个工作表缺少必要的列: ' + missingColumns.join(', ') + '\n\n当前列名: ' + Object.keys(firstRow).join(', '));
+                return;
+            }
+            
+            // 解析Sheet2
+            const sheet2 = workbook.Sheets[workbook.SheetNames[1]];
+            if (!sheet2) {
+                alert('无法读取第二个工作表！');
+                return;
+            }
+            
+            const data2 = XLSX.utils.sheet_to_json(sheet2);
+            console.log('第二个工作表数据行数:', data2.length);
+            // 分组
+            group = {};
+            const weeks = new Set();
+            
+            console.log('开始处理数据分组...');
+            data1.forEach((row, index) => {
+                try {
+                    const area = row['区域'];
+                    const company = row['公司'];
+                    const kiln = row['窑炉'] || '';
+                    const week = row['周'];
+                    const value = Number(row['实际']);
+                    const target = Number(row['目标']);
+                    
+                    if (!area || !company || !week) {
+                        console.warn('第' + (index + 1) + '行数据不完整:', row);
+                        return;
+                    }
+                    
+                    if (isNaN(value) || isNaN(target)) {
+                        console.warn('第' + (index + 1) + '行数值数据无效:', row);
+                        return;
+                    }
+                    
+                    weeks.add(week);
+                    if (!group[area]) group[area] = {};
+                    if (!group[area][company]) group[area][company] = {};
+                    if (!group[area][company][kiln]) group[area][company][kiln] = {};
+                    if (!group[area][company][kiln][week]) group[area][company][kiln][week] = {实际: 0, 目标: 0, 数: 0};
+                    group[area][company][kiln][week].实际 += value;
+                    group[area][company][kiln][week].目标 += target;
+                    group[area][company][kiln][week].数 += 1;
+                } catch (error) {
+                    console.error('处理第' + (index + 1) + '行数据时出错:', error, row);
+                }
+            });
+            
+            weekList = Array.from(weeks).sort((a, b) => Number(a) - Number(b));
+            console.log('数据处理完成，周数:', weekList.length, '区域数:', Object.keys(group).length);
+            
+            if (weekList.length === 0) {
+                alert('没有找到有效的周数据！');
+                return;
+            }
+            
+            if (Object.keys(group).length === 0) {
+                alert('没有找到有效的区域数据！');
+                return;
+            }
+            
+            // 保存原始数据供筛选使用
+            window.originalData = data2;
+            
+            // 渲染下拉菜单
+            renderAreaCompanySelect();
+            // 渲染异常表
+            renderExceptionTable(data2);
+            // 默认渲染一次
+            renderChartBySelection();
+            
+            // 显示保存按钮
+            document.getElementById('saveButton').style.display = 'inline-block';
+            alert('Excel文件加载成功！');
+            
+        } catch (error) {
+            console.error('处理Excel文件时出错:', error);
+            alert('处理Excel文件时出错: ' + error.message + '\n\n请检查文件格式是否正确，或打开浏览器控制台查看详细错误信息。');
+        }
+    };
+    
+    reader.onerror = function(error) {
+        console.error('文件读取失败:', error);
+        alert('文件读取失败，请检查文件是否损坏或格式是否正确！');
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function renderAreaCompanySelect() {
+    console.log('开始渲染下拉菜单，group对象:', group);
+    const areaSelect = document.getElementById('areaSelect');
+    const companySelect = document.getElementById('companySelect');
+    const kilnSelect = document.getElementById('kilnSelect');
+    
+    if (!areaSelect || !companySelect || !kilnSelect) {
+        console.error('找不到下拉框元素');
+        return;
+    }
+    
+    areaSelect.innerHTML = '';
+    companySelect.innerHTML = '';
+    kilnSelect.innerHTML = '<option value="">请选择窑炉（可选）</option>';
+    
+    const areas = Object.keys(group);
+    console.log('可用区域:', areas);
+    
+    if (areas.length === 0) {
+        console.warn('没有区域数据，下拉框将保持空白');
+        return;
+    }
+    
+    // 添加默认选项
+    const defaultAreaOption = document.createElement('option');
+    defaultAreaOption.value = '';
+    defaultAreaOption.textContent = '请选择区域';
+    areaSelect.appendChild(defaultAreaOption);
+    
+    areas.forEach(area => {
+        const option = document.createElement('option');
+        option.value = area;
+        option.textContent = area;
+        areaSelect.appendChild(option);
+    });
+    
+    // 设置第一个实际区域为默认选中
+    if (areas.length > 0) {
+        areaSelect.value = areas[0];
+    }
+    
+    const firstArea = areaSelect.value;
+    console.log('选中的区域:', firstArea);
+    
+    if (!firstArea) return;
+    
+    const companies = Object.keys(group[firstArea] || {});
+    console.log('该区域的公司:', companies);
+    
+    // 添加默认选项
+    const defaultCompanyOption = document.createElement('option');
+    defaultCompanyOption.value = '';
+    defaultCompanyOption.textContent = '请选择公司';
+    companySelect.appendChild(defaultCompanyOption);
+    
+    companies.forEach(company => {
+        const option = document.createElement('option');
+        option.value = company;
+        option.textContent = company;
+        companySelect.appendChild(option);
+    });
+    
+    // 设置第一个公司为默认选中
+    if (companies.length > 0) {
+        companySelect.value = companies[0];
+        updateKilnSelect(); // 更新窑炉选项
+    }
+    areaSelect.onchange = function() {
+        companySelect.innerHTML = '';
+        kilnSelect.innerHTML = '<option value="">请选择窑炉（可选）</option>';
+        
+        const selectedArea = areaSelect.value;
+        if (!selectedArea) {
+            return;
+        }
+        
+        const companies = Object.keys(group[selectedArea] || {});
+        
+        // 添加默认选项
+        const defaultCompanyOption = document.createElement('option');
+        defaultCompanyOption.value = '';
+        defaultCompanyOption.textContent = '请选择公司';
+        companySelect.appendChild(defaultCompanyOption);
+        
+        companies.forEach(company => {
+            const option = document.createElement('option');
+            option.value = company;
+            option.textContent = company;
+            companySelect.appendChild(option);
+        });
+        
+        // 设置第一个公司为默认选中
+         if (companies.length > 0) {
+             companySelect.value = companies[0];
+             updateKilnSelect();
+         }
+        renderChartBySelection();
+    };
+    companySelect.onchange = function() {
+        updateKilnSelect();
+        renderChartBySelection();
+    };
+    kilnSelect.onchange = renderChartBySelection;
+}
+
+function updateKilnSelect() {
+    const area = document.getElementById('areaSelect').value;
+    const company = document.getElementById('companySelect').value;
+    const kilnSelect = document.getElementById('kilnSelect');
+    
+    kilnSelect.innerHTML = '<option value="">请选择窑炉（可选）</option>';
+    
+    if (!area || !company) return;
+    
+    const kilns = Object.keys(group[area][company] || {});
+    console.log('该公司的窑炉:', kilns);
+    
+    kilns.forEach(kiln => {
+        if (kiln !== '') { // 排除空字符串窑炉
+            const option = document.createElement('option');
+            option.value = kiln;
+            option.textContent = kiln;
+            kilnSelect.appendChild(option);
+        }
+    });
+}
+
+function renderChartBySelection() {
+    const area = document.getElementById('areaSelect').value;
+    const company = document.getElementById('companySelect').value;
+    const kiln = document.getElementById('kilnSelect').value;
+    
+    if (!area || !company) return;
+    
+    let chartData;
+    let title;
+    
+    if (kiln) {
+        // 显示特定窑炉的数据
+        chartData = weekList.map(week => {
+            const d = group[area][company][kiln][week] || {实际: 0, 目标: 0, 数: 1};
+            return {
+                week: week,
+                value: d.实际 / d.数,
+                target: d.目标 / d.数
+            };
+        });
+        title = `${area} - ${company} - ${kiln}`;
+    } else {
+        // 显示公司所有窑炉的聚合数据
+        chartData = weekList.map(week => {
+            let totalActual = 0;
+            let totalTarget = 0;
+            let totalCount = 0;
+            
+            // 遍历该公司所有窑炉
+            Object.keys(group[area][company] || {}).forEach(kilnKey => {
+                const d = group[area][company][kilnKey][week];
+                if (d) {
+                    totalActual += d.实际;
+                    totalTarget += d.目标;
+                    totalCount += d.数;
+                }
+            });
+            
+            return {
+                week: week,
+                value: totalCount > 0 ? totalActual / totalCount : 0,
+                target: totalCount > 0 ? totalTarget / totalCount : 0
+            };
+        });
+        title = `${area} - ${company}`;
+    }
+    
+    chartDataGlobal = chartData; // 供插件使用
+    renderChart(chartData, title);
+    
+    // 根据筛选条件更新表格显示
+    updateExceptionTable(area, company, kiln);
+}
+
+// 分区色带插件
+const zoneBgPlugin = {
+    id: 'zoneBgPlugin',
+    beforeDraw(chart) {
+        const { ctx, chartArea, scales } = chart;
+        if (!chartArea || chartDataGlobal.length === 0) return;
+        const yAxis = scales.y;
+        
+        // 保存当前绘图状态
+        ctx.save();
+        
+        // 计算平均目标值用于绘制分区
+        const avgTarget = chartDataGlobal.reduce((sum, d) => sum + d.target, 0) / chartDataGlobal.length;
+        
+        // 计算分区线对应的 Y 轴像素值（注意Canvas坐标系Y轴向下）
+        const yBottom = chartArea.bottom; // 图表底部
+        const yTop = chartArea.top; // 图表顶部
+        const y0 = yAxis.getPixelForValue(0); // 0值对应的Y坐标
+        const y90 = yAxis.getPixelForValue(avgTarget * 0.9); // 90%目标值
+        const y100 = yAxis.getPixelForValue(avgTarget); // 100%目标值
+        
+        // 红区 (0 到 90%目标值)
+        ctx.fillStyle = 'rgba(244,67,54,0.8)';
+        const redHeight = Math.abs(y0 - y90);
+        const redY = Math.min(y0, y90);
+        if (redHeight > 0) {
+            ctx.fillRect(chartArea.left, redY, chartArea.right - chartArea.left, redHeight);
+        }
+        
+        // 黄区 (90%目标值 到 100%目标值)
+        ctx.fillStyle = 'rgba(255,193,7,0.8)';
+        const yellowHeight = Math.abs(y90 - y100);
+        const yellowY = Math.min(y90, y100);
+        if (yellowHeight > 0) {
+            ctx.fillRect(chartArea.left, yellowY, chartArea.right - chartArea.left, yellowHeight);
+        }
+        
+        // 绿区 (100%目标值以上)
+        ctx.fillStyle = 'rgba(76,175,80,0.5)';
+        const greenY = Math.min(y100, yTop);
+        const greenHeight = Math.abs(y100 - yTop);
+        if (greenHeight > 0) {
+            ctx.fillRect(chartArea.left, greenY, chartArea.right - chartArea.left, greenHeight);
+        }
+        
+        // 绘制分界线
+        ctx.strokeStyle = 'rgba(244,67,54,0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(chartArea.left, y90);
+        ctx.lineTo(chartArea.right, y90);
+        ctx.stroke();
+        
+        ctx.strokeStyle = 'rgba(76,175,80,0.5)';
+        ctx.beginPath();
+        ctx.moveTo(chartArea.left, y100);
+        ctx.lineTo(chartArea.right, y100);
+        ctx.stroke();
+        
+        // 恢复绘图状态
+        ctx.restore();
+    }
+};
+
+function renderChart(chartData, title) {
+    // 计算所有目标产量的最大值
+    const maxTarget = Math.max(...chartData.map(d => d.target));
+    // 销毁旧图表
+    if (chartInstance) chartInstance.destroy();
+    const ctx = document.getElementById('barChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.map(d => d.week),
+                datasets: [
+                    // 实际产量线 (最前面)
+                    {
+                        label: `${title} 周度`,
+                        data: chartData.map(d => d.value),
+                        borderColor: '#2196F3',
+                        backgroundColor: 'transparent',
+                        borderWidth: 4,
+                        fill: false,
+                        pointRadius: 8,
+                        pointBackgroundColor: '#2196F3',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 3,
+                        tension: 0.3,
+                        order: 0
+                    }
+                ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: `${title} 周度指标达标情况` }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: '实际' },
+                    suggestedMax: maxTarget * 1.2
+                },
+                x: {
+                    title: { display: true, text: '周次' }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        },
+        plugins: [zoneBgPlugin]
+    });
+}
+
+// 根据筛选条件更新异常跟进表
+function updateExceptionTable(area, company, kiln) {
+    if (!window.originalData) return;
+    
+    // 根据筛选条件过滤数据
+    let filteredData = window.originalData.filter(row => {
+        const matchArea = row['区域'] === area;
+        const matchCompany = row['公司'] === company;
+        const matchKiln = kiln ? row['窑炉'] === kiln : true;
+        return matchArea && matchCompany && matchKiln;
+    });
+    
+    // 渲染过滤后的数据
+    renderExceptionTable(filteredData);
+}
+
+// 渲染异常跟进表
+function renderExceptionTable(data) {
+    const tbody = document.querySelector('#exceptionTable tbody');
+    tbody.innerHTML = '';
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        // 统一转换为小写或去除空格后匹配
+        const zoneColor = (row['区域色'] || '').trim().toLowerCase();
+        if (zoneColor.includes('红')) tr.className = 'red';
+        else if (zoneColor.includes('黄')) tr.className = 'yellow';
+        else if (zoneColor.includes('绿')) tr.className = 'green';
+        tr.innerHTML = `
+            <td>${row['区域'] || ''}</td>
+            <td>${row['公司'] || ''}</td>
+            <td>${row['窑炉'] || ''}</td>
+            <td>${row['周'] || ''}</td>
+            <td>${row['实际'] || ''}</td>
+            <td>${row['目标'] || ''}</td>
+            <td>${row['区域色'] || ''}</td>
+            <td>${row['异常原因'] || ''}</td>
+            <td>${row['纠偏措施'] || ''}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// 保存HTML功能
+document.getElementById('saveButton').addEventListener('click', function() {
+    try {
+        // 将Canvas转换为图片
+        const canvas = document.getElementById('barChart');
+        const chartImage = canvas.toDataURL('image/png');
+        
+        // 创建一个临时的图片元素来替换Canvas
+        const tempImg = document.createElement('img');
+        tempImg.src = chartImage;
+        tempImg.id = 'chart-image';
+        tempImg.style.width = '100%';
+        tempImg.style.maxWidth = '900px';
+        
+        // 临时替换Canvas为图片
+        const chartContainer = document.getElementById('chart-container');
+        const originalCanvas = document.getElementById('barChart');
+        chartContainer.replaceChild(tempImg, originalCanvas);
+        
+        // 获取当前HTML内容
+        const htmlContent = document.documentElement.outerHTML;
+        
+        // 恢复Canvas
+        chartContainer.replaceChild(originalCanvas, tempImg);
+        
+        // 创建Blob对象
+        const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
+        
+        // 创建下载链接
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        
+        // 设置文件名（使用固定名称）
+        downloadLink.download = '产量.html';
+        
+        // 触发下载
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        alert('HTML文件保存成功！');
+    } catch (error) {
+        console.error('保存HTML文件时出错:', error);
+        alert('保存HTML文件时出错: ' + error.message);
+    }
+});
+</script>
+</body>
+</html>

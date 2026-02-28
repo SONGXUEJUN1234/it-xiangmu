@@ -1,0 +1,1020 @@
+<html lang="zh-CN" class="fontawesome-i2svg-active fontawesome-i2svg-complete"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利润因素分析系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@11.0.0/dist/framer-motion.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style type="text/css">:host,:root{--fa-font-solid:normal 900 1em/1 "Font Awesome 6 Solid";--fa-font-regular:normal 400 1em/1 "Font Awesome 6 Regular";--fa-font-light:normal 300 1em/1 "Font Awesome 6 Light";--fa-font-thin:normal 100 1em/1 "Font Awesome 6 Thin";--fa-font-duotone:normal 900 1em/1 "Font Awesome 6 Duotone";--fa-font-sharp-solid:normal 900 1em/1 "Font Awesome 6 Sharp";--fa-font-sharp-regular:normal 400 1em/1 "Font Awesome 6 Sharp";--fa-font-sharp-light:normal 300 1em/1 "Font Awesome 6 Sharp";--fa-font-brands:normal 400 1em/1 "Font Awesome 6 Brands"}svg:not(:host).svg-inline--fa,svg:not(:root).svg-inline--fa{overflow:visible;box-sizing:content-box}.svg-inline--fa{display:var(--fa-display,inline-block);height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-2xs{vertical-align:.1em}.svg-inline--fa.fa-xs{vertical-align:0}.svg-inline--fa.fa-sm{vertical-align:-.0714285705em}.svg-inline--fa.fa-lg{vertical-align:-.2em}.svg-inline--fa.fa-xl{vertical-align:-.25em}.svg-inline--fa.fa-2xl{vertical-align:-.3125em}.svg-inline--fa.fa-pull-left{margin-right:var(--fa-pull-margin,.3em);width:auto}.svg-inline--fa.fa-pull-right{margin-left:var(--fa-pull-margin,.3em);width:auto}.svg-inline--fa.fa-li{width:var(--fa-li-width,2em);top:.25em}.svg-inline--fa.fa-fw{width:var(--fa-fw-width,1.25em)}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:var(--fa-counter-background-color,#ff253a);border-radius:var(--fa-counter-border-radius,1em);box-sizing:border-box;color:var(--fa-inverse,#fff);line-height:var(--fa-counter-line-height,1);max-width:var(--fa-counter-max-width,5em);min-width:var(--fa-counter-min-width,1.5em);overflow:hidden;padding:var(--fa-counter-padding,.25em .5em);right:var(--fa-right,0);text-overflow:ellipsis;top:var(--fa-top,0);-webkit-transform:scale(var(--fa-counter-scale,.25));transform:scale(var(--fa-counter-scale,.25));-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:var(--fa-bottom,0);right:var(--fa-right,0);top:auto;-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:var(--fa-bottom,0);left:var(--fa-left,0);right:auto;top:auto;-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{top:var(--fa-top,0);right:var(--fa-right,0);-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:var(--fa-left,0);right:auto;top:var(--fa-top,0);-webkit-transform:scale(var(--fa-layers-scale,.25));transform:scale(var(--fa-layers-scale,.25));-webkit-transform-origin:top left;transform-origin:top left}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-2xs{font-size:.625em;line-height:.1em;vertical-align:.225em}.fa-xs{font-size:.75em;line-height:.0833333337em;vertical-align:.125em}.fa-sm{font-size:.875em;line-height:.0714285718em;vertical-align:.0535714295em}.fa-lg{font-size:1.25em;line-height:.05em;vertical-align:-.075em}.fa-xl{font-size:1.5em;line-height:.0416666682em;vertical-align:-.125em}.fa-2xl{font-size:2em;line-height:.03125em;vertical-align:-.1875em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:var(--fa-li-margin,2.5em);padding-left:0}.fa-ul>li{position:relative}.fa-li{left:calc(var(--fa-li-width,2em) * -1);position:absolute;text-align:center;width:var(--fa-li-width,2em);line-height:inherit}.fa-border{border-color:var(--fa-border-color,#eee);border-radius:var(--fa-border-radius,.1em);border-style:var(--fa-border-style,solid);border-width:var(--fa-border-width,.08em);padding:var(--fa-border-padding,.2em .25em .15em)}.fa-pull-left{float:left;margin-right:var(--fa-pull-margin,.3em)}.fa-pull-right{float:right;margin-left:var(--fa-pull-margin,.3em)}.fa-beat{-webkit-animation-name:fa-beat;animation-name:fa-beat;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,ease-in-out);animation-timing-function:var(--fa-animation-timing,ease-in-out)}.fa-bounce{-webkit-animation-name:fa-bounce;animation-name:fa-bounce;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,cubic-bezier(.28,.84,.42,1));animation-timing-function:var(--fa-animation-timing,cubic-bezier(.28,.84,.42,1))}.fa-fade{-webkit-animation-name:fa-fade;animation-name:fa-fade;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1));animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1))}.fa-beat-fade{-webkit-animation-name:fa-beat-fade;animation-name:fa-beat-fade;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1));animation-timing-function:var(--fa-animation-timing,cubic-bezier(.4,0,.6,1))}.fa-flip{-webkit-animation-name:fa-flip;animation-name:fa-flip;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,ease-in-out);animation-timing-function:var(--fa-animation-timing,ease-in-out)}.fa-shake{-webkit-animation-name:fa-shake;animation-name:fa-shake;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,linear);animation-timing-function:var(--fa-animation-timing,linear)}.fa-spin{-webkit-animation-name:fa-spin;animation-name:fa-spin;-webkit-animation-delay:var(--fa-animation-delay,0s);animation-delay:var(--fa-animation-delay,0s);-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,2s);animation-duration:var(--fa-animation-duration,2s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,linear);animation-timing-function:var(--fa-animation-timing,linear)}.fa-spin-reverse{--fa-animation-direction:reverse}.fa-pulse,.fa-spin-pulse{-webkit-animation-name:fa-spin;animation-name:fa-spin;-webkit-animation-direction:var(--fa-animation-direction,normal);animation-direction:var(--fa-animation-direction,normal);-webkit-animation-duration:var(--fa-animation-duration,1s);animation-duration:var(--fa-animation-duration,1s);-webkit-animation-iteration-count:var(--fa-animation-iteration-count,infinite);animation-iteration-count:var(--fa-animation-iteration-count,infinite);-webkit-animation-timing-function:var(--fa-animation-timing,steps(8));animation-timing-function:var(--fa-animation-timing,steps(8))}@media (prefers-reduced-motion:reduce){.fa-beat,.fa-beat-fade,.fa-bounce,.fa-fade,.fa-flip,.fa-pulse,.fa-shake,.fa-spin,.fa-spin-pulse{-webkit-animation-delay:-1ms;animation-delay:-1ms;-webkit-animation-duration:1ms;animation-duration:1ms;-webkit-animation-iteration-count:1;animation-iteration-count:1;-webkit-transition-delay:0s;transition-delay:0s;-webkit-transition-duration:0s;transition-duration:0s}}@-webkit-keyframes fa-beat{0%,90%{-webkit-transform:scale(1);transform:scale(1)}45%{-webkit-transform:scale(var(--fa-beat-scale,1.25));transform:scale(var(--fa-beat-scale,1.25))}}@keyframes fa-beat{0%,90%{-webkit-transform:scale(1);transform:scale(1)}45%{-webkit-transform:scale(var(--fa-beat-scale,1.25));transform:scale(var(--fa-beat-scale,1.25))}}@-webkit-keyframes fa-bounce{0%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}10%{-webkit-transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0);transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0)}30%{-webkit-transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em));transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em))}50%{-webkit-transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0);transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0)}57%{-webkit-transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em));transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em))}64%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}100%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}}@keyframes fa-bounce{0%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}10%{-webkit-transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0);transform:scale(var(--fa-bounce-start-scale-x,1.1),var(--fa-bounce-start-scale-y,.9)) translateY(0)}30%{-webkit-transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em));transform:scale(var(--fa-bounce-jump-scale-x,.9),var(--fa-bounce-jump-scale-y,1.1)) translateY(var(--fa-bounce-height,-.5em))}50%{-webkit-transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0);transform:scale(var(--fa-bounce-land-scale-x,1.05),var(--fa-bounce-land-scale-y,.95)) translateY(0)}57%{-webkit-transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em));transform:scale(1,1) translateY(var(--fa-bounce-rebound,-.125em))}64%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}100%{-webkit-transform:scale(1,1) translateY(0);transform:scale(1,1) translateY(0)}}@-webkit-keyframes fa-fade{50%{opacity:var(--fa-fade-opacity,.4)}}@keyframes fa-fade{50%{opacity:var(--fa-fade-opacity,.4)}}@-webkit-keyframes fa-beat-fade{0%,100%{opacity:var(--fa-beat-fade-opacity,.4);-webkit-transform:scale(1);transform:scale(1)}50%{opacity:1;-webkit-transform:scale(var(--fa-beat-fade-scale,1.125));transform:scale(var(--fa-beat-fade-scale,1.125))}}@keyframes fa-beat-fade{0%,100%{opacity:var(--fa-beat-fade-opacity,.4);-webkit-transform:scale(1);transform:scale(1)}50%{opacity:1;-webkit-transform:scale(var(--fa-beat-fade-scale,1.125));transform:scale(var(--fa-beat-fade-scale,1.125))}}@-webkit-keyframes fa-flip{50%{-webkit-transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg));transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg))}}@keyframes fa-flip{50%{-webkit-transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg));transform:rotate3d(var(--fa-flip-x,0),var(--fa-flip-y,1),var(--fa-flip-z,0),var(--fa-flip-angle,-180deg))}}@-webkit-keyframes fa-shake{0%{-webkit-transform:rotate(-15deg);transform:rotate(-15deg)}4%{-webkit-transform:rotate(15deg);transform:rotate(15deg)}24%,8%{-webkit-transform:rotate(-18deg);transform:rotate(-18deg)}12%,28%{-webkit-transform:rotate(18deg);transform:rotate(18deg)}16%{-webkit-transform:rotate(-22deg);transform:rotate(-22deg)}20%{-webkit-transform:rotate(22deg);transform:rotate(22deg)}32%{-webkit-transform:rotate(-12deg);transform:rotate(-12deg)}36%{-webkit-transform:rotate(12deg);transform:rotate(12deg)}100%,40%{-webkit-transform:rotate(0);transform:rotate(0)}}@keyframes fa-shake{0%{-webkit-transform:rotate(-15deg);transform:rotate(-15deg)}4%{-webkit-transform:rotate(15deg);transform:rotate(15deg)}24%,8%{-webkit-transform:rotate(-18deg);transform:rotate(-18deg)}12%,28%{-webkit-transform:rotate(18deg);transform:rotate(18deg)}16%{-webkit-transform:rotate(-22deg);transform:rotate(-22deg)}20%{-webkit-transform:rotate(22deg);transform:rotate(22deg)}32%{-webkit-transform:rotate(-12deg);transform:rotate(-12deg)}36%{-webkit-transform:rotate(12deg);transform:rotate(12deg)}100%,40%{-webkit-transform:rotate(0);transform:rotate(0)}}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-both,.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}.fa-rotate-by{-webkit-transform:rotate(var(--fa-rotate-angle,none));transform:rotate(var(--fa-rotate-angle,none))}.fa-stack{display:inline-block;vertical-align:middle;height:2em;position:relative;width:2.5em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0;z-index:var(--fa-stack-z-index,auto)}.svg-inline--fa.fa-stack-1x{height:1em;width:1.25em}.svg-inline--fa.fa-stack-2x{height:2em;width:2.5em}.fa-inverse{color:var(--fa-inverse,#fff)}.fa-sr-only,.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.fa-sr-only-focusable:not(:focus),.sr-only-focusable:not(:focus){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.svg-inline--fa .fa-primary{fill:var(--fa-primary-color,currentColor);opacity:var(--fa-primary-opacity,1)}.svg-inline--fa .fa-secondary{fill:var(--fa-secondary-color,currentColor);opacity:var(--fa-secondary-opacity,.4)}.svg-inline--fa.fa-swap-opacity .fa-primary{opacity:var(--fa-secondary-opacity,.4)}.svg-inline--fa.fa-swap-opacity .fa-secondary{opacity:var(--fa-primary-opacity,1)}.svg-inline--fa mask .fa-primary,.svg-inline--fa mask .fa-secondary{fill:#000}.fa-duotone.fa-inverse,.fad.fa-inverse{color:var(--fa-inverse,#fff)}</style><style>
+        .bento-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .bento-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 移动端响应式设计 */
+        @media (max-width: 768px) {
+            .bento-item {
+                padding: 1rem;
+                border-radius: 12px;
+                min-height: auto !important;
+            }
+            
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* 移动端标题调整 */
+            .mobile-title-lg {
+                font-size: 1.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .mobile-title-md {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            /* 移动端按钮调整 */
+            .mobile-btn,
+            .chart-type-btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.875rem !important;
+                min-height: 44px;
+                touch-action: manipulation;
+            }
+            
+            /* 移动端图表容器 */
+            .mobile-chart,
+            .chart-container {
+                height: 250px !important;
+            }
+            
+            /* 移动端树形结构 */
+            .mobile-tree,
+            #treeStructure {
+                max-height: 320px !important;
+                min-height: 280px !important;
+            }
+            
+            /* 移动端详情区域 */
+            .mobile-details,
+            #factorDetails {
+                min-height: 240px !important;
+            }
+            
+            /* 移动端布局调整 - 交换因素分析树和详情分析的位置 */
+            @media (max-width: 768px) {
+                .mobile-layout-swap {
+                    display: flex;
+                    flex-direction: column;
+                }
+                
+                .mobile-tree-container {
+                    order: 2;
+                }
+                
+                .mobile-details-container {
+                    order: 1;
+                }
+            }
+            
+            .grid {
+                gap: 1rem !important;
+            }
+            
+            /* 上传区域在移动端优化 */
+            .upload-section {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                width: auto;
+                z-index: 1000;
+            }
+            
+            .upload-section .bento-item {
+                padding: 0.5rem;
+                min-width: 120px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .bento-item {
+                padding: 0.75rem;
+                min-height: auto !important;
+            }
+            
+            .mobile-title-lg {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .mobile-title-md {
+                font-size: 1.125rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .mobile-btn {
+                padding: 0.375rem 0.75rem !important;
+                font-size: 0.75rem !important;
+                min-height: 44px;
+            }
+            
+            .mobile-chart {
+                height: 250px !important;
+            }
+            
+            .mobile-tree,
+            #treeStructure {
+                max-height: 250px !important;
+            }
+            
+            .mobile-details,
+            #factorDetails {
+                min-height: 150px !important;
+            }
+            
+            .grid {
+                gap: 0.75rem !important;
+            }
+            
+            /* 超小屏幕上传区域进一步简化 */
+            .upload-section {
+                top: 5px;
+                right: 5px;
+                width: auto;
+            }
+            
+            .upload-section .bento-item {
+                padding: 0.25rem;
+                min-width: 100px;
+            }
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .chart-type-btn:hover {
+                transform: none;
+            }
+            
+            .chart-type-btn:active {
+                transform: scale(0.95);
+            }
+            
+            .bento-item:hover {
+                transform: none;
+            }
+        }
+        .tree-node {
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background: #2a2a2a;
+            border: 2px solid #444444;
+            border-left: 6px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+        .tree-node:hover {
+            background: #333333;
+            transform: translateX(5px);
+            border-color: #666666;
+        }
+        .tree-node.positive {
+            border-left-color: #00aaff;
+            color: #00aaff;
+            background: #001122;
+        }
+        .tree-node.negative {
+            border-left-color: #ff3333;
+            color: #ff3333;
+            background: #220011;
+        }
+        .tree-children {
+            margin-left: 2rem;
+            border-left: 3px dashed #666666;
+            padding-left: 1rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .gradient-bg {
+            background: #000000;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            background: #1a1a1a;
+            border-radius: 0.5rem;
+            border: 2px solid #333333;
+        }
+        .upload-area {
+            border: 2px dashed #00aaff;
+            border-radius: 0.5rem;
+            padding: 0.25rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px;
+            min-height: unset;
+            margin-top: 0.5rem;
+        }
+        .upload-area i {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        .upload-area span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .upload-area:hover {
+            border-color: #0088cc;
+            background: #222222;
+        }
+        .upload-area.dragover {
+            border-color: #00ff88;
+            background: #002211;
+        }
+        /* 高对比度按钮样式 */
+        .btn-primary {
+            background: #0066cc;
+            color: #ffffff;
+            border: 2px solid #0088ff;
+        }
+        .btn-primary:hover {
+            background: #0088ff;
+            border-color: #00aaff;
+        }
+        /* 高对比度文字 */
+        .text-high-contrast {
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        /* 统计数字高对比度 */
+        .stat-positive {
+            color: #00ddff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        .stat-negative {
+            color: #ff4444;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.inset-0{inset:0px}.z-50{z-index:50}.float-right{float:right}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-8{margin-bottom:2rem}.mr-1{margin-right:0.25rem}.mr-2{margin-right:0.5rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-full{height:100%}.min-h-screen{min-height:100vh}.w-full{width:100%}.flex-1{flex:1 1 0%}.rotate-90{--tw-rotate:90deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-lg{border-radius:0.5rem}.border{border-width:1px}.border-t{border-top-width:1px}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-400{--tw-bg-opacity:1;background-color:rgb(156 163 175 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-blue-900{--tw-bg-opacity:1;background-color:rgb(30 58 138 / var(--tw-bg-opacity, 1))}.bg-white\/5{background-color:rgb(255 255 255 / 0.05)}.bg-opacity-40{--tw-bg-opacity:0.4}.bg-opacity-60{--tw-bg-opacity:0.6}.p-3{padding:0.75rem}.p-6{padding:1.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-12{padding-bottom:3rem}.text-left{text-align:left}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-6xl{font-size:3.75rem;line-height:1}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.leading-relaxed{line-height:1.625}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.opacity-50{opacity:0.5}.opacity-70{opacity:0.7}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-white{--tw-ring-opacity:1;--tw-ring-color:rgb(255 255 255 / var(--tw-ring-opacity, 1))}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:text-blue-400:hover{--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:hidden{display:none}}@media (min-width: 1024px){.lg\:col-span-2{grid-column:span 2 / span 2}.lg\:row-span-2{grid-row:span 2 / span 2}.lg\:mb-4{margin-bottom:1rem}.lg\:mb-6{margin-bottom:1.5rem}.lg\:mr-4{margin-right:1rem}.lg\:mt-6{margin-top:1.5rem}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:gap-4{gap:1rem}.lg\:gap-6{gap:1.5rem}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:py-12{padding-top:3rem;padding-bottom:3rem}.lg\:py-3{padding-top:0.75rem;padding-bottom:0.75rem}.lg\:text-3xl{font-size:1.875rem;line-height:2.25rem}.lg\:text-4xl{font-size:2.25rem;line-height:2.5rem}.lg\:text-base{font-size:1rem;line-height:1.5rem}.lg\:text-lg{font-size:1.125rem;line-height:1.75rem}}</style><script>
+window.preloadedData = [{"因素名称":"销量","影响值":89,"分类":"营销","备注":"内销销量减少830吨,增加毛利89万元；因为新疆和河北绿料的毛利一为正，一为负影响。其中主要是河北绿料减少1623吨，增加毛利47.8万元。"},{"因素名称":"售价","影响值":205,"分类":"营销","备注":"售价增加52元/吨,增加毛利205万元，其中："},{"因素名称":"运费","影响值":-14,"分类":"营销","备注":"  1.5.1吨运输成本增加4元/吨,减少毛利14万元；哈尔滨发河北百威，导致运费高10元/吨，影响利润减少13万元。"},{"因素名称":"包材","影响值":-38,"分类":"营销","备注":"  1.4.1包材成本影响减少毛利38万元；新疆-8万元（墨绿料包材称成本高），哈尔滨-33万元（木类不回收）"},{"因素名称":"研发费用","影响值":17,"分类":"营销","备注":"  1.6模具6个月不生产摊销影响增加毛利10万元；\r\n  1.7新产品研发（首发模具摊销+试版费）影响增加毛利7万元；"},{"因素名称":"销售费用","影响值":14,"分类":"营销","备注":"河北业务费未报增加利润10万元。"},{"因素名称":"仓租","影响值":-25,"分类":"营销","备注":"河北业务费未报增加利润10万元。"},{"因素名称":"欠产","影响值":-4,"分类":"生产","备注":"    2.2.1.1生产因素欠产影响减少毛利5万元；欠产244吨。新疆和河南。\r\n    2.2.1.2排产因素超产影响增加毛利1万元；"},{"因素名称":"燃料成本","影响值":-31,"分类":"生产","备注":"  2.2.5燃料成本总额增加，减少毛利31万元；"},{"因素名称":"电力成本","影响值":1,"分类":"生产","备注":"  2.2.6电力成本总额减少，增加毛利1万元；"},{"因素名称":"折旧成本","影响值":3,"分类":"生产","备注":"  2.2.7折旧成本总额减少，增加毛利3万元；"},{"因素名称":"人力成本","影响值":14,"分类":"生产","备注":"  2.2.8人力成本总额减少，增加毛利14万元；主要哈尔滨缺编13人。"},{"因素名称":"制造费用","影响值":22,"分类":"生产","备注":"  2.2.9制造费用总额减少，增加毛利22万元；"},{"因素名称":"变动成本","影响值":25,"分类":"生产","备注":"  2.2.2单位配方成本下降，增加毛利12万元；\r\n  2.2.3返工包材浪费损失上升，减少毛利1万元；\r\n  2.2.4工单耗用和模具备件耗用下降，增加毛利14万元；"},{"因素名称":"成本滚动","影响值":-76,"分类":"生产","备注":"2.4.1本月产销增加，增加毛利39万元\r\n2.4.2以前月份滚动减少毛利127万元\r\n2.4.3年初库存滚动增加毛利12万元"},{"因素名称":"管理费用","影响值":30,"分类":"生产","备注":"2.5 生产公司管理费用减少，增加毛利38万元；\r\n2.6 生产公司研发费用增加，减少毛利8万元；"},{"因素名称":"原燃料","影响值":249,"分类":"供应","备注":"3.1原料价格减少，增加毛利174万元；主要是碎玻璃价格下降,成本下降257万。纯碱价格下降62万元。\r\n3.2燃料价格减少，增加毛利49万元，河南燃气价格比预算低0.55元/方，减少成本50万。\r\n3.4产销影响增加，增加毛利26万元"},{"因素名称":"资金成本","影响值":30,"分类":"资金","备注":"1.1财务费用减少，增加税前利润35万元；\r\n1.2集团利息分摊增加，减少税前利润5万元；"},{"因素名称":"税务成本","影响值":-123,"分类":"税务","备注":"2.1增值税加计增加，增加税前利润2万元；\r\n2.2所得税费用增加，减少税前利润73万元；北部利润增加\r\n2.2.1其中研发费加计扣除增加，增加税前利润14万元；\r\n2.2.2递延所得税增加，减少税前利润25万元；\r\n2.3税金及附加增加，减少税前利润18万元；\r\n2.4废旧公司利润减少，减少税前利润34万元；河北废旧未退税，亏损30万元。"},{"因素名称":"非经营收益","影响值":24,"分类":"其他"},{"因素名称":"其他影响","影响值":23,"分类":"其他","备注":"\r\n\r\n4.6营业外收入增加，增加税前利润0万元；\r\n4.7营业外支出增加，减少税前利润4万元；"}];
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.preloadedData && window.preloadedData.length > 0) {
+        currentData = window.preloadedData;
+        const uploadSection = document.querySelector('.upload-section');
+        if (uploadSection) {
+            uploadSection.style.display = 'none';
+        }
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            const dataInfo = document.createElement('div');
+            dataInfo.className = 'fixed top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-lg text-sm z-50';
+            dataInfo.innerHTML = '<i class="fas fa-check mr-2"></i>数据已预加载 (' + window.preloadedData.length + ' 条记录)';
+            document.body.appendChild(dataInfo);
+            setTimeout(() => {
+                dataInfo.style.opacity = '0';
+                setTimeout(() => dataInfo.remove(), 300);
+            }, 3000);
+        }
+        setTimeout(() => {
+            createChart();
+            createTreeStructure();
+        }, 100);
+    }
+});
+</script>
+    </head>
+<body class="min-h-screen gradient-bg text-white">
+    <!-- Header -->
+    <header class="p-3 text-center">
+        <h1 class="text-4xl font-bold mb-2 text-high-contrast" style="color: #ffffff; text-shadow: 2px 2px 4px #000000;">
+            利润差分析
+        </h1>
+        <p class="text-lg text-high-contrast" style="color: #cccccc; text-shadow: 1px 1px 2px #000000;">分析</p>
+        <!-- 页面说明容器，宽度与交互式报表一致 -->
+        <div class="mt-2 flex justify-center">
+            <div class="w-full" style="max-width: 66.666667%;">
+                <div id="pageNoteContainer"><div class="bg-blue-900 bg-opacity-60 text-white rounded p-2 mb-1 text-left text-base font-bold">5月营业收入9816万元，实际产量38846吨，对比年度预算产量39339吨，欠产492吨，产量达成率99%；对比运行预算产量39090.88吨，欠产244吨，产量达成率99%；实际销量39714吨，对比预算销量40544吨，减少830吨，销量达成率98%；实际产销率102%，比预算产销率103%下降1%；本月预算净利润7万元，本月实际净利润437万元，比预算增加444万元。</div></div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pb-4">
+        <!-- Minimal File Upload -->
+        <div class="mb-2">
+            <div class="flex justify-end">
+                <div class="bento-item" style="max-width: 280px; padding: 0.75rem; opacity: 1; transform: translateY(0px); transition: all 0.6s ease 0s;">
+                    <div class="flex items-center gap-3">
+                        <svg class="svg-inline--fa fa-upload text-sm" style="color: #00aaff;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="upload" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64zM432 456a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"></path></svg><!-- <i class="fas fa-upload text-sm" style="color: #00aaff;"></i> Font Awesome fontawesome.com -->
+                        <input type="file" id="fileInput" accept=".xlsx,.xls" class="hidden">
+                        <button id="selectFileBtn" class="px-3 py-1 btn-primary rounded text-xs transition-colors">
+                            选择Excel文件
+                        </button>
+                        <div id="fileInfo" class="flex items-center gap-2">
+                            <span id="fileName" class="text-xs text-high-contrast">示例数据模板.xlsx</span>
+                            <button id="saveDataBtn" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded-lg transition-colors" onclick="saveDataToHTML()">
+                                <svg class="svg-inline--fa fa-floppy-disk mr-1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="floppy-disk" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"></path></svg><!-- <i class="fas fa-save mr-1"></i> Font Awesome fontawesome.com -->保存数据
+                            </button>
+                        </div>
+                    </div>
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="svg-inline--fa fa-file-excel" style="color: #44ff88;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-excel" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM155.7 250.2L192 302.1l36.3-51.9c7.6-10.9 22.6-13.5 33.4-5.9s13.5 22.6 5.9 33.4L221.3 344l46.4 66.2c7.6 10.9 5 25.8-5.9 33.4s-25.8 5-33.4-5.9L192 385.8l-36.3 51.9c-7.6 10.9-22.6 13.5-33.4 5.9s-13.5-22.6-5.9-33.4L162.7 344l-46.4-66.2c-7.6-10.9-5-25.8 5.9-33.4s25.8-5 33.4 5.9z"></path></svg><!-- <i class="fas fa-file-excel" style="color: #44ff88;"></i> Font Awesome fontawesome.com -->
+                        <span>拖拽或点击上传Excel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4 mobile-layout-swap" style="height: calc(100vh - 160px);">
+            <!-- Interactive Chart - Large -->
+            <div class="lg:col-span-2">
+                <div class="bento-item" style="min-height: 450px; opacity: 1; transform: translateY(0px); transition: all 0.6s ease 0s;">
+                    <h2 class="text-2xl lg:text-3xl mobile-title-lg font-bold mb-3 flex items-center text-high-contrast">
+                        <svg class="svg-inline--fa fa-chart-line mr-2 lg:mr-3" style="color: #44ff88;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"></path></svg><!-- <i class="fas fa-chart-line mr-2 lg:mr-4" style="color: #44ff88;"></i> Font Awesome fontawesome.com -->
+                        <span class="hidden sm:inline">图表</span>
+                        <span class="sm:hidden">数据图表</span>
+                    </h2>
+                    <div class="chart-container mobile-chart" style="height: 380px;">
+                        <canvas id="mainChart" style="box-sizing: border-box; display: block; height: 516px; width: 930px;" width="1047" height="580"></canvas>
+                    </div>
+                    <div id="chartControls" class="mt-2 lg:mt-3 flex gap-2 lg:gap-3 justify-center flex-wrap">
+                        <button class="chart-type-btn mobile-btn px-4 lg:px-8 py-2 lg:py-3 btn-primary rounded-lg transition-colors text-sm lg:text-base ring-2 ring-white" data-type="bar">
+                            柱状图
+                        </button>
+                        <button class="chart-type-btn mobile-btn px-4 lg:px-8 py-2 lg:py-3 btn-primary rounded-lg transition-colors text-sm lg:text-base" data-type="line">
+                            折线图
+                        </button>
+                        <button class="chart-type-btn mobile-btn px-4 lg:px-8 py-2 lg:py-3 btn-primary rounded-lg transition-colors text-sm lg:text-base" data-type="pie">
+                            饼图
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tree Structure - Tall -->
+            <div class="lg:row-span-2 h-full mobile-tree-container">
+                <div class="bento-item h-full flex flex-col" style="height: 100%; opacity: 1; transform: translateY(0px); transition: all 0.6s ease 0s;">
+                    <h2 class="text-xl lg:text-2xl mobile-title-md font-bold mb-2 lg:mb-3 flex items-center text-high-contrast">
+                        <svg class="svg-inline--fa fa-sitemap mr-2 lg:mr-4" style="color: #ffdd44;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sitemap" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M208 80c0-26.5 21.5-48 48-48h64c26.5 0 48 21.5 48 48v64c0 26.5-21.5 48-48 48h-8v40H464c30.9 0 56 25.1 56 56v32h8c26.5 0 48 21.5 48 48v64c0 26.5-21.5 48-48 48H464c-26.5 0-48-21.5-48-48V368c0-26.5 21.5-48 48-48h8V288c0-4.4-3.6-8-8-8H312v40h8c26.5 0 48 21.5 48 48v64c0 26.5-21.5 48-48 48H256c-26.5 0-48-21.5-48-48V368c0-26.5 21.5-48 48-48h8V280H112c-4.4 0-8 3.6-8 8v32h8c26.5 0 48 21.5 48 48v64c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V368c0-26.5 21.5-48 48-48h8V288c0-30.9 25.1-56 56-56H264V192h-8c-26.5 0-48-21.5-48-48V80z"></path></svg><!-- <i class="fas fa-sitemap mr-2 lg:mr-4" style="color: #ffdd44;"></i> Font Awesome fontawesome.com -->
+                        因素分析树
+                    </h2>
+                    <div id="treeStructure" class="mobile-tree flex-1" style="overflow-y: auto;"></div>
+                </div>
+            </div>
+
+            <!-- Factor Details - Wide -->
+            <div class="lg:col-span-2 mobile-details-container">
+                <div class="bento-item" style="min-height: 300px; opacity: 1; transform: translateY(0px); transition: all 0.6s ease 0s;">
+                    <h2 class="text-xl lg:text-2xl mobile-title-md font-bold mb-2 lg:mb-3 flex items-center text-high-contrast">
+                        <svg class="svg-inline--fa fa-circle-info mr-2 lg:mr-4" style="color: #44ddff;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-info" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"></path></svg><!-- <i class="fas fa-info-circle mr-2 lg:mr-4" style="color: #44ddff;"></i> Font Awesome fontawesome.com -->
+                        <span class="hidden sm:inline">因素详情分析</span>
+                        <span class="sm:hidden">详情分析</span>
+                    </h2>
+                    <div id="factorDetails" class="mobile-details" style="min-height: 240px;">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold">税务成本</h3>
+                        <span class="text-red-400 flex items-center">
+                            <svg class="svg-inline--fa fa-arrow-down mr-2" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path></svg><!-- <i class="fas fa-arrow-down mr-2"></i> Font Awesome fontawesome.com -->
+                            负面影响
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm opacity-70">影响值</p>
+                            <p class="text-2xl font-bold text-red-400">-123.00</p>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-70">分类</p>
+                            <p class="text-lg">税务</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm opacity-70 mb-2">详细说明</p>
+                        <textarea class="bg-white/5 p-3 rounded-lg w-full text-white" style="min-height:180px;resize:vertical;" onchange="updateFactorDescription(this, '税务成本')">2.1增值税加计增加，增加税前利润2万元；
+2.2所得税费用增加，减少税前利润73万元；北部利润增加
+2.2.1其中研发费加计扣除增加，增加税前利润14万元；
+2.2.2递延所得税增加，减少税前利润25万元；
+2.3税金及附加增加，减少税前利润18万元；
+2.4废旧公司利润减少，减少税前利润34万元；河北废旧未退税，亏损30万元。</textarea>
+                    </div>
+                    
+                    <div class="text-xs opacity-50">
+                        <!-- 数据来源信息已移至footer -->
+                    </div>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-2 border-t" style="border-color: #666666;">
+        <p class="text-high-contrast">@宋学军 </p>
+        <div class="mt-1 text-sm text-high-contrast">
+            <a href="https://github.com/SheetJS/sheetjs" target="_blank" class="hover:text-blue-400 transition-colors" style="color: #00aaff;">SheetJS</a> |
+            <a href="https://www.chartjs.org/" target="_blank" class="hover:text-blue-400 transition-colors" style="color: #00aaff;">Chart.js</a> |
+            <a href="https://tailwindcss.com/" target="_blank" class="hover:text-blue-400 transition-colors" style="color: #00aaff;">TailwindCSS</a>
+        </div>
+        <div id="dataSourceInfo" class="mt-1 text-xs text-high-contrast opacity-70"> 最后更新: 2025/6/5 23:21:50</div>
+    </footer>
+
+    <script>
+        // Global variables
+        let workbook = null;
+        let currentData = null;
+        let chart = null;
+        let treeData = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFileUpload();
+            initializeChartControls();
+        });
+
+        // File upload functionality
+        function initializeFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+
+            // 兼容性增强：确保元素都存在
+            if (!uploadArea || !fileInput || !selectFileBtn) {
+                console.error('上传相关元素未找到');
+                return;
+            }
+
+            // 点击按钮选择文件
+            selectFileBtn.addEventListener('click', () => fileInput.click());
+            // 点击上传区域也可选择文件
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            // 拖拽文件到上传区域
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            // 文件选择后处理
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+        }
+
+        // Handle file upload
+        function handleFile(file) {
+            if (!file.name.match(/\.(xlsx|xls)$/)) {
+                alert('请选择Excel文件 (.xlsx 或 .xls)');
+                return;
+            }
+
+            const fileName = document.getElementById('fileName');
+            const fileInfo = document.getElementById('fileInfo');
+            
+            fileName.textContent = file.name;
+            fileInfo.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    workbook = XLSX.read(e.target.result, { type: 'binary' });
+                    processExcelData();
+                } catch (error) {
+                    console.error('Error reading Excel file:', error);
+                    alert('读取Excel文件时出错，请检查文件格式');
+                }
+            };
+            reader.readAsBinaryString(file);
+        }
+
+        // Process Excel data
+        function processExcelData() {
+            if (!workbook) return;
+
+            // Process Sheet1 for factors data
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            // Assume first row is headers
+            const headers = jsonData[0];
+            const rows = jsonData.slice(1);
+
+            // Convert to structured data
+            currentData = rows.map(row => {
+                const obj = {};
+                headers.forEach((header, index) => {
+                    obj[header] = row[index];
+                });
+                return obj;
+            }).filter(row => Object.values(row).some(val => val !== undefined && val !== ''));
+
+            // Process Sheet2 for page description if exists
+            if (workbook.SheetNames.length > 1) {
+                const sheet2Name = workbook.SheetNames[1];
+                const sheet2 = workbook.Sheets[sheet2Name];
+                const sheet2Data = XLSX.utils.sheet_to_json(sheet2, { header: 1 });
+                
+                // Extract text content from Sheet2
+                let pageDescription = '';
+                sheet2Data.forEach(row => {
+                    if (row && row.length > 0) {
+                        const text = row.join(' ').trim();
+                        if (text) {
+                            pageDescription += text + ' ';
+                        }
+                    }
+                });
+                
+                // Update page description container
+                if (pageDescription.trim()) {
+                    const pageNoteContainer = document.getElementById('pageNoteContainer');
+                    pageNoteContainer.innerHTML = `<div class='bg-blue-900 bg-opacity-60 text-white rounded p-3 mb-2 text-left text-xl font-bold'>${pageDescription.trim()}</div>`;
+                }
+            }
+
+            createChart();
+            createTreeStructure();
+        }
+
+        // 移除了数据概览函数，因为该模块已被删除
+
+        // Create chart
+        function createChart(type = 'bar') {
+            if (!currentData || currentData.length === 0) return;
+
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Prepare chart data
+            const labels = currentData.map((item, index) => item['因素名称'] || item['名称'] || `项目${index + 1}`);
+            const values = currentData.map(item => {
+                const valueKey = Object.keys(item).find(key => 
+                    key.includes('影响') || key.includes('值') || key.includes('数值') || 
+                    typeof item[key] === 'number'
+                );
+                return parseFloat(item[valueKey]) || 0;
+            });
+            // 记录每个点的分类
+            const categories = currentData.map(item => item['分类'] || item['类别'] || '默认分类');
+
+            // Color coding: blue for positive, red for negative
+            let colors = values.map(value => value >= 0 ? '#3b82f6' : '#ef4444');
+            let borderColors = values.map(value => value >= 0 ? '#1d4ed8' : '#dc2626');
+            // 如果有高亮分类，调整颜色
+            if (currentHighlightedCategory) {
+                colors = categories.map(cat => cat === currentHighlightedCategory ? '#facc15' : 'rgba(100,100,100,0.3)');
+                borderColors = colors;
+            }
+
+            const chartConfig = {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '影响值',
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: borderColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    },
+                    scales: type !== 'pie' ? {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    } : {},
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const name = labels[index];
+                            const category = categories[index];
+                            const id = nodeIds[index];
+                            window.highlightTreeByName(id, category);
+                            window.highlightChartByName(name);
+                            showFactorDetails(currentData[index]);
+                        }
+                    }
+                }
+            };
+
+            chart = new Chart(ctx, chartConfig);
+        }
+
+        // Initialize chart controls
+        function initializeChartControls() {
+            const buttons = document.querySelectorAll('.chart-type-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const type = button.dataset.type;
+                    createChart(type);
+                    // 保持高亮
+                    if (currentHighlightedCategory) {
+                        highlightChartByCategory(currentHighlightedCategory);
+                        highlightTreeByCategory(currentHighlightedCategory);
+                    }
+                    // Update button states
+                    buttons.forEach(btn => btn.classList.remove('ring-2', 'ring-white'));
+                    button.classList.add('ring-2', 'ring-white');
+                });
+            });
+        }
+
+        // Create tree structure
+        function createTreeStructure() {
+            if (!currentData || currentData.length === 0) return;
+            const treeContainer = document.getElementById('treeStructure');
+            // 分组
+            const categories = {};
+            currentData.forEach(item => {
+                const category = item['分类'] || item['类别'] || '默认分类';
+                if (!categories[category]) categories[category] = [];
+                categories[category].push(item);
+            });
+            let treeHTML = '';
+            Object.keys(categories).forEach(category => {
+                const categoryItems = categories[category];
+                const categoryValue = categoryItems.reduce((sum, item) => {
+                    const valueKey = Object.keys(item).find(key => key.includes('影响') || key.includes('值') || key.includes('数值') || typeof item[key] === 'number');
+                    return sum + (parseFloat(item[valueKey]) || 0);
+                }, 0);
+                const categoryClass = categoryValue >= 0 ? 'positive' : 'negative';
+                const expandIcon = categoryItems.length > 0 ? '<i class="fas fa-chevron-right mr-2 transition-transform"></i>' : '';
+                // 一级节点
+                treeHTML += `
+                    <div class="tree-node ${categoryClass}" data-category="${category}" onclick="onTreeCategoryClick('${category}', this);toggleTreeNode(this)">
+                        ${expandIcon}
+                        <strong>${category}</strong>
+                        <span class="float-right font-bold">${categoryValue.toFixed(2)}</span>
+                    </div>
+                `;
+                // 二级节点
+                if (categoryItems.length > 0) {
+                    treeHTML += '<div class="tree-children hidden">';
+                    categoryItems.forEach((item, idx) => {
+                        const valueKey = Object.keys(item).find(key => key.includes('影响') || key.includes('值') || key.includes('数值') || typeof item[key] === 'number');
+                        const value = parseFloat(item[valueKey]) || 0;
+                        const itemClass = value >= 0 ? 'positive' : 'negative';
+                        const itemName = item['因素名称'] || item['名称'] || '未命名';
+                        const nodeId = category + '___' + idx;
+                        treeHTML += `
+                            <div class="tree-node ${itemClass}" data-category="${category}" data-name="${itemName}" data-id="${nodeId}" onclick="onTreeItemClick('${category}', '${itemName}', '${nodeId}', this);event.stopPropagation();">
+                                <i class="fas fa-leaf mr-2"></i>
+                                ${itemName}
+                                <span class="float-right font-bold">${value.toFixed(2)}</span>
+                            </div>
+                        `;
+                    });
+                    treeHTML += '</div>';
+                }
+            });
+            treeContainer.innerHTML = treeHTML;
+        }
+
+        // 新增：高亮图表中某分类
+        let currentHighlightedCategory = null;
+        function highlightChartByCategory(category) {
+            currentHighlightedCategory = category;
+            currentHighlightedName = null;
+            chart.data.datasets[0].backgroundColor = currentData.map(item => {
+                const value = parseFloat(item['影响值'] || item['值'] || item['数值'] || 0);
+                if (item['分类'] === category) {
+                    return value >= 0 ? '#2563eb' : '#dc2626'; // 深蓝/深红
+                } else {
+                    return value >= 0 ? 'rgba(59,130,246,0.2)' : 'rgba(239,68,68,0.2)';
+                }
+            });
+            chart.data.datasets[0].borderColor = currentData.map(item => (item['分类'] === category) ? '#facc15' : 'rgba(100,100,100,0.1)');
+            chart.data.datasets[0].borderWidth = currentData.map(item => (item['分类'] === category) ? 4 : 2);
+            chart.update();
+        }
+        // 新增：高亮树中某分类
+        function highlightTreeByCategory(category) {
+            // 只高亮一级节点
+            document.querySelectorAll('.tree-node[data-category]').forEach(node => {
+                if (node.getAttribute('data-category') === category) {
+                    node.style.boxShadow = '0 0 0 3px #facc15';
+                } else {
+                    node.style.boxShadow = '';
+                }
+            });
+            // 清除所有二级节点高亮
+            document.querySelectorAll('.tree-node[data-id]').forEach(node => {
+                node.style.boxShadow = '';
+            });
+        }
+        function highlightTreeByName(id, category) {
+            // 只高亮当前唯一id的二级节点
+            document.querySelectorAll('.tree-node[data-id]').forEach(node => {
+                if (node.getAttribute('data-id') === id) {
+                    node.style.boxShadow = '0 0 0 3px #facc15';
+                } else {
+                    node.style.boxShadow = '';
+                }
+            });
+            // 只高亮所属一级分类
+            document.querySelectorAll('.tree-node[data-category]').forEach(node => {
+                if (node.getAttribute('data-category') === category) {
+                    node.style.boxShadow = '0 0 0 3px #facc15';
+                } else {
+                    node.style.boxShadow = '';
+                }
+            });
+        }
+        // 新增：树节点点击事件
+        function onTreeCategoryClick(category, element) {
+            highlightChartByCategory(category);
+            highlightTreeByCategory(category);
+        }
+
+        // Toggle tree node
+        function toggleTreeNode(element) {
+            const children = element.nextElementSibling;
+            if (children && children.classList.contains('tree-children')) {
+                children.classList.toggle('hidden');
+                const icon = element.querySelector('.fa-chevron-right');
+                if (icon) {
+                    icon.classList.toggle('rotate-90');
+                }
+            }
+        }
+
+        // Show factor details
+        function showFactorDetails(item) {
+            const detailsContainer = document.getElementById('factorDetails');
+            
+            const valueKey = Object.keys(item).find(key => 
+                key.includes('影响') || key.includes('值') || key.includes('数值') || 
+                typeof item[key] === 'number'
+            );
+            const value = parseFloat(item[valueKey]) || 0;
+            const itemName = item['因素名称'] || item['名称'] || '未命名';
+            const description = item['备注'] || item['描述'] || item['说明'] || '无详细说明';
+            const category = item['分类'] || item['类别'] || '默认分类';
+            
+            const colorClass = value >= 0 ? 'text-blue-400' : 'text-red-400';
+            const impactType = value >= 0 ? '正面影响' : '负面影响';
+            const icon = value >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+            
+            detailsContainer.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold">${itemName}</h3>
+                        <span class="${colorClass} flex items-center">
+                            <i class="fas ${icon} mr-2"></i>
+                            ${impactType}
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm opacity-70">影响值</p>
+                            <p class="text-2xl font-bold ${colorClass}">${value.toFixed(2)}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-70">分类</p>
+                            <p class="text-lg">${category}</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <p class="text-sm opacity-70 mb-2">详细说明</p>
+                        <textarea class="bg-white/5 p-3 rounded-lg w-full text-white" style="min-height:180px;resize:vertical;" onchange="updateFactorDescription(this, '${itemName}')">${description}</textarea>
+                    </div>
+                    
+                    <div class="text-xs opacity-50">
+                        <!-- 数据来源信息已移至footer -->
+                    </div>
+                </div>
+            `;
+        }
+
+        // 移除了统计信息函数，因为该模块已被删除
+
+        // Save data to HTML function
+        function saveDataToHTML() {
+            if (!currentData || currentData.length === 0) {
+                alert('请先上传Excel文件并确保数据已加载');
+                return;
+            }
+
+            // 获取当前HTML内容
+            const htmlContent = document.documentElement.outerHTML;
+            
+            // 获取页面描述内容
+            const pageNoteContainer = document.getElementById('pageNoteContainer');
+            const pageDescription = pageNoteContainer ? pageNoteContainer.innerHTML : '';
+            
+            // 创建包含数据的新HTML
+            const dataScript = `<script>
+window.preloadedData = ${JSON.stringify(currentData)};
+window.preloadedPageDescription = ${JSON.stringify(pageDescription)};
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.preloadedData && window.preloadedData.length > 0) {
+        currentData = window.preloadedData;
+        const uploadSection = document.querySelector('.upload-section');
+        if (uploadSection) {
+            uploadSection.style.display = 'none';
+        }
+        // 恢复页面描述
+        if (window.preloadedPageDescription) {
+            const pageNoteContainer = document.getElementById('pageNoteContainer');
+            if (pageNoteContainer) {
+                pageNoteContainer.innerHTML = window.preloadedPageDescription;
+            }
+        }
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            const dataInfo = document.createElement('div');
+            dataInfo.className = 'fixed top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-lg text-sm z-50';
+            dataInfo.innerHTML = '<i class="fas fa-check mr-2"></i>数据已预加载 (' + window.preloadedData.length + ' 条记录)';
+            document.body.appendChild(dataInfo);
+            setTimeout(() => {
+                dataInfo.style.opacity = '0';
+                setTimeout(() => dataInfo.remove(), 300);
+            }, 3000);
+        }
+        setTimeout(() => {
+            createChart();
+            createTreeStructure();
+        }, 100);
+    }
+});
+</scr` + `ipt>`;
+            // 在</head>标签前插入数据脚本
+            const newHtmlContent = htmlContent.replace('</head>', dataScript + '\n    </head>');
+            // 创建下载链接
+            const blob = new Blob([newHtmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '利润差因素分析.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            // 清理URL对象
+            URL.revokeObjectURL(url);
+            // 显示成功提示
+            alert('数据已保存到HTML文件！\n\n现在您可以直接发送这个HTML文件给其他用户，\n他们打开文件就能看到完整的数据分析报表，\n无需再上传Excel文件。');
+        }
+
+        // Add some animation effects
+        function animateElements() {
+            const elements = document.querySelectorAll('.bento-item');
+            elements.forEach((element, index) => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    element.style.transition = 'all 0.6s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        }
+
+        // Initialize animations when page loads
+        window.addEventListener('load', animateElements);
+
+        // 页面说明容器引用
+        const pageNoteContainer = document.getElementById('pageNoteContainer');
+
+        // 详细说明编辑同步到currentData
+        function updateFactorDescription(textarea, itemName) {
+            if (!currentData) return;
+            for (let i = 0; i < currentData.length; i++) {
+                const name = currentData[i]['因素名称'] || currentData[i]['名称'] || '';
+                if (name === itemName) {
+                    currentData[i]['备注'] = textarea.value;
+                    break;
+                }
+            }
+        }
+
+        // 页面底部显示数据来源和更新时间
+        function renderDataSourceInfo() {
+            const info = document.getElementById('dataSourceInfo');
+            const now = new Date().toLocaleString();
+            info.innerHTML = ` 最后更新: ${now}`;
+        }
+        renderDataSourceInfo();
+
+        // 注册全局函数，确保唯一
+        window.onTreeCategoryClick = onTreeCategoryClick;
+        window.onTreeItemClick = onTreeItemClick;
+        window.highlightChartByCategory = highlightChartByCategory;
+        window.highlightTreeByCategory = highlightTreeByCategory;
+        window.highlightTreeByName = highlightTreeByName;
+        window.highlightChartByName = highlightChartByName;
+
+       ;
+        
+        function highlightChartByName(name) {
+            currentHighlightedCategory = null;
+            currentHighlightedName = name;
+            chart.data.datasets[0].backgroundColor = currentData.map(item => {
+                const value = parseFloat(item['影响值'] || item['值'] || item['数值'] || 0);
+                if ((item['因素名称'] || item['名称']) === name) {
+                    return value >= 0 ? '#2563eb' : '#dc2626';
+                } else {
+                    return value >= 0 ? 'rgba(59,130,246,0.2)' : 'rgba(239,68,68,0.2)';
+                }
+            });
+            chart.data.datasets[0].borderColor = currentData.map(item => ((item['因素名称'] || item['名称']) === name) ? '#facc15' : 'rgba(100,100,100,0.1)');
+            chart.data.datasets[0].borderWidth = currentData.map(item => ((item['因素名称'] || item['名称']) === name) ? 4 : 2);
+            chart.update();
+        }
+
+        function onTreeItemClick(category, name, id, element) {
+            highlightChartByName(name);
+            highlightTreeByName(id, category);
+            // 用id查找唯一数据
+            const categoryItems = currentData.filter(d => (d['分类'] || d['类别'] || '默认分类') === category);
+            const idx = id.split('___')[1];
+            const item = categoryItems[parseInt(idx)];
+            if (item) showFactorDetails(item);
+        }
+    </script>
+
+</body></html>

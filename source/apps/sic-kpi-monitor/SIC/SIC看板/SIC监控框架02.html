@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华兴财务管理系统 - VPO工作站SIC监控</title>
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .tab-container {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .tab-nav {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+        }
+        
+        .tab-nav li {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .tab-button {
+            width: 100%;
+            padding: 15px 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .tab-button:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+            box-shadow: inset 0 -3px 0 #0056b3;
+        }
+        
+        .tab-content {
+            position: relative;
+            height: calc(100vh - 140px);
+        }
+        
+        .tab-pane {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-pane.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tab-pane iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 18px;
+            color: #6c757d;
+        }
+        
+        .loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #dee2e6;
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header {
+                margin-bottom: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+                margin-bottom: 3px;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .tab-nav button {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+            
+            .tab-content {
+                height: calc(100vh - 110px);
+            }
+        }
+        
+        /* 图标样式 */
+        .tab-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        /* 总览网格样式 */
+        .overview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-content: flex-start;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #f0f2f5;
+        }
+
+        .chart-container {
+            flex-grow: 1;
+            flex-basis: calc(50% - 10px);
+            min-width: 400px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 50vh;
+        }
+        
+        .chart-container h3 {
+            text-align: center;
+            padding: 10px;
+            margin: 0;
+            background-color: #007bff;
+            color: white;
+            font-size: 1.1em;
+            border-bottom: 1px solid #0056b3;
+        }
+        
+        .chart-container iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            max-height: 800px;
+            overflow-y: auto;
+            border: none;
+        }
+        
+        /* 日报表样式 */
+        .daily-report-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .report-header h2 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .report-date {
+            font-size: 16px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9, #1f5f8b);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #229954, #1e8449);
+            transform: translateY(-2px);
+        }
+        
+        .report-summary {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card, .ai-summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e8e8e8;
+        }
+        
+        .summary-card h3, .ai-summary-card h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .stat-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .stat-value.red {
+            color: #e74c3c;
+        }
+        
+        .stat-value.yellow {
+            color: #f39c12;
+        }
+        
+        .stat-value.green {
+            color: #27ae60;
+        }
+        
+        .ai-analysis {
+            min-height: 120px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .loading-ai {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .exception-details {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e8e8e8;
+        }
+        
+        .exception-details h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .filter-controls select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .exception-table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        #dailyExceptionTable {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        #dailyExceptionTable th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 2px solid #2c3e50;
+        }
+        
+        #dailyExceptionTable td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+            vertical-align: top;
+        }
+        
+        #dailyExceptionTable tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .severity-red {
+            background-color: #ffebee !important;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .severity-yellow {
+            background-color: #fff8e1 !important;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .achievement-rate {
+            font-weight: 600;
+        }
+        
+        .achievement-rate.low {
+            color: #e74c3c;
+        }
+        
+        .achievement-rate.medium {
+            color: #f39c12;
+        }
+        
+        .achievement-rate.high {
+                color: #27ae60;
+            }
+            
+            .severity-badge {
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                text-align: center;
+                display: inline-block;
+                min-width: 60px;
+            }
+            
+            .severity-badge.red {
+                background-color: #e74c3c;
+                color: white;
+            }
+            
+            .severity-badge.yellow {
+                background-color: #f39c12;
+                color: white;
+            }
+            
+            /* 响应式设计 */
+            @media (max-width: 1200px) {
+                .report-summary {
+                    grid-template-columns: 1fr;
+                }
+                
+                .daily-report-container {
+                    padding: 15px;
+                }
+                
+                .report-header {
+                    flex-direction: column;
+                    gap: 15px;
+                    text-align: center;
+                }
+                
+                .report-actions {
+                    justify-content: center;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .filter-controls {
+                    flex-direction: column;
+                }
+                
+                .filter-controls select {
+                    width: 100%;
+                }
+                
+                #dailyExceptionTable {
+                    font-size: 12px;
+                }
+                
+                #dailyExceptionTable th,
+                #dailyExceptionTable td {
+                    padding: 8px 6px;
+                }
+                
+                .btn {
+                    padding: 8px 16px;
+                    font-size: 13px;
+                }
+            }
+        
+        @media (max-width: 850px) {
+            .chart-container {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>华兴财务管理系统</h1>
+        <p>VPO工作站SIC监控平台</p>
+    </div>
+    
+    <div class="container">
+        <div class="tab-container">
+            <ul class="tab-nav">
+                <li>
+                    <button class="tab-button active" data-tab="production">
+                        <span class="tab-icon"><i class="fas fa-chart-bar"></i></span>
+                        产量监控
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="sales">
+                        <span class="tab-icon"><i class="fas fa-dollar-sign"></i></span>
+                        销量监控
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="utilization">
+                        <span class="tab-icon"><i class="fas fa-tachometer-alt"></i></span>
+                        利用率监控
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="cost">
+                        <span class="tab-icon"><i class="fas fa-calculator"></i></span>
+                        成本监控
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="fund">
+                        <span class="tab-icon"><i class="fas fa-university"></i></span>
+                        资金监控
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="inventory">
+                        <span class="tab-icon"><i class="fas fa-boxes"></i></span>
+                        库存监控
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="overview">
+                        <span class="tab-icon"><i class="fas fa-chart-line"></i></span>
+                        总览
+                    </button>
+                </li>
+                <li>
+                    <button class="tab-button" data-tab="statistics">
+                        <span class="tab-icon"><i class="fas fa-table"></i></span>
+                        数据统计
+                    </button>
+                </li>
+
+            </ul>
+        </div>
+        
+        <div class="tab-content">
+            <div class="tab-pane active" id="production">
+                <div class="loading">正在加载产量监控...</div>
+                <iframe src="./SIC/产量.html" onload="hideLoading(this)"></iframe>
+            </div>
+            
+            <div class="tab-pane" id="sales">
+                <div class="loading">正在加载销量监控...</div>
+                <iframe src="./SIC/销量.html" onload="hideLoading(this)" style="display: none;"></iframe>
+            </div>
+            
+            <div class="tab-pane" id="utilization">
+                <div class="loading">正在加载利用率监控...</div>
+                <iframe src="./SIC/利用率.html" onload="hideLoading(this)" style="display: none;"></iframe>
+            </div>
+            
+            <div class="tab-pane" id="cost">
+                <div class="loading">正在加载成本监控...</div>
+                <iframe src="./SIC/成本.html" onload="hideLoading(this)" style="display: none;"></iframe>
+            </div>
+            
+            <div class="tab-pane" id="fund">
+                <div class="loading">正在加载资金监控...</div>
+                <iframe src="./SIC/资金.html" onload="hideLoading(this)" style="display: none;"></iframe>
+            </div>
+            
+            <div class="tab-pane" id="inventory">
+                <div class="loading">正在加载库存监控...</div>
+                <iframe src="./SIC/库存.html" onload="hideLoading(this)" style="display: none;"></iframe>
+            </div>
+            
+            <div class="tab-pane overview-grid" id="overview">
+                <div class="chart-container">
+                    <h3>产量监控</h3>
+                    <div class="loading">正在加载产量监控...</div>
+                    <iframe src="./SIC/产量.html" onload="hideLoading(this)"></iframe>
+                </div>
+                <div class="chart-container">
+                    <h3>销量监控</h3>
+                    <div class="loading">正在加载销量监控...</div>
+                    <iframe src="./SIC/销量.html" onload="hideLoading(this)"></iframe>
+                </div>
+                <div class="chart-container">
+                    <h3>利用率监控</h3>
+                    <div class="loading">正在加载利用率监控...</div>
+                    <iframe src="./SIC/利用率.html" onload="hideLoading(this)"></iframe>
+                </div>
+                <div class="chart-container">
+                    <h3>成本监控</h3>
+                    <div class="loading">正在加载成本监控...</div>
+                    <iframe src="./SIC/成本.html" onload="hideLoading(this)"></iframe>
+                </div>
+                <div class="chart-container">
+                    <h3>资金监控</h3>
+                    <div class="loading">正在加载资金监控...</div>
+                    <iframe src="./SIC/资金.html" onload="hideLoading(this)"></iframe>
+                </div>
+                <div class="chart-container">
+                    <h3>库存监控</h3>
+                    <div class="loading">正在加载库存监控...</div>
+                    <iframe src="./SIC/库存.html" onload="hideLoading(this)"></iframe>
+                </div>
+            </div>
+            
+            <div class="tab-pane" id="statistics">
+                <div style="padding: 20px; background: #f8f9fa; height: 100%; overflow-y: auto;">
+                    <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                        <h3 style="margin: 0 0 20px 0; color: #2c3e50; font-size: 20px; font-weight: 600; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                            <i class="fas fa-table" style="margin-right: 10px;"></i>产量数据统计
+                        </h3>
+                        
+                        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                            <button id="refreshDataBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                <i class="fas fa-sync-alt" style="margin-right: 8px;"></i>刷新数据
+                            </button>
+                            <button id="exportDataBtn" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                <i class="fas fa-download" style="margin-right: 8px;"></i>导出数据
+                            </button>
+                    </div>
+                    
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                            <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border-left: 4px solid #e74c3c;">
+                                <div style="font-weight: 500; color: #2c3e50; margin-bottom: 10px;">红色预警</div>
+                                <div id="redCount" style="font-weight: 700; font-size: 24px; color: #e74c3c;">0</div>
+                                </div>
+                            <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border-left: 4px solid #f39c12;">
+                                <div style="font-weight: 500; color: #2c3e50; margin-bottom: 10px;">黄色预警</div>
+                                <div id="yellowCount" style="font-weight: 700; font-size: 24px; color: #f39c12;">0</div>
+                                </div>
+                            <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border-left: 4px solid #27ae60;">
+                                <div style="font-weight: 500; color: #2c3e50; margin-bottom: 10px;">正常状态</div>
+                                <div id="greenCount" style="font-weight: 700; font-size: 24px; color: #27ae60;">0</div>
+                                </div>
+                            <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border-left: 4px solid #6c757d;">
+                                <div style="font-weight: 500; color: #2c3e50; margin-bottom: 10px;">总计</div>
+                                <div id="totalCount" style="font-weight: 700; font-size: 24px; color: #2c3e50;">0</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                            <h4 style="margin: 0 0 15px 0; color: #2c3e50;">原始数据预览</h4>
+                            <textarea id="rawDataPreview" readonly style="width: 100%; height: 200px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-family: monospace; font-size: 12px; background: white; resize: vertical;"></textarea>
+                    </div>
+                    
+                        <div style="background: #f8f9fa; border-radius: 8px; padding: 20px;">
+                            <h4 style="margin: 0 0 15px 0; color: #2c3e50;">统计详情</h4>
+                            <div id="statisticsDetails" style="color: #6c757d; font-size: 14px; line-height: 1.6;">
+                                点击"刷新数据"按钮获取最新统计信息
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+    
+    <script>
+        // 标签页切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // 移除所有活动状态
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    
+                    // 添加活动状态
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                    
+                    // 延迟加载iframe
+                    const targetPane = document.getElementById(targetTab);
+                    const iframe = targetPane.querySelector('iframe');
+                    if (iframe && iframe.style.display === 'none') {
+                        iframe.style.display = 'block';
+                    }
+                });
+            });
+        });
+        
+        // 隐藏加载动画
+        function hideLoading(iframe) {
+            const loadingDiv = iframe.parentNode.querySelector('.loading');
+            if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+            }
+            iframe.style.display = 'block';
+        }
+        
+        // 键盘快捷键支持
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="production"]').click();
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="sales"]').click();
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="utilization"]').click();
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="cost"]').click();
+                        break;
+                    case '5':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="fund"]').click();
+                        break;
+                    case '6':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="inventory"]').click();
+                        break;
+                    case '7':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="overview"]').click();
+                        break;
+                    case '8':
+                        e.preventDefault();
+                        document.querySelector('[data-tab="statistics"]').click();
+                        break;
+                }
+            }
+        });
+        
+        // 数据统计功能
+        async function refreshStatisticsData() {
+            try {
+                // 获取产量页面数据
+                const response = await fetch('SIC/产量.html');
+                if (!response.ok) {
+                    throw new Error('无法获取产量页面数据');
+                }
+                
+                const htmlContent = await response.text();
+                
+                // 创建一个临时的DOM来解析HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+                
+                // 查找表格并提取数据
+                const table = doc.getElementById('exceptionTable');
+                if (!table) {
+                    throw new Error('未找到产量数据表格');
+                }
+                
+                const rows = table.querySelectorAll('tr');
+                let tableText = '';
+                
+                // 遍历所有行提取数据
+                            rows.forEach((row, index) => {
+                    const cells = row.querySelectorAll('th, td');
+                    const rowData = [];
+                    
+                    cells.forEach(cell => {
+                        rowData.push(cell.textContent.trim());
+                    });
+                    
+                    tableText += rowData.join('\t');
+                    if (index < rows.length - 1) {
+                        tableText += '\n';
+                    }
+                });
+                
+                if (!tableText) {
+                    throw new Error('未获取到表格数据');
+                }
+                
+                // 显示原始数据
+                document.getElementById('rawDataPreview').value = tableText;
+                
+                // 统计红黄绿条数
+                const lines = tableText.split('\n');
+                let redCount = 0;
+                let yellowCount = 0;
+                let greenCount = 0;
+                let totalCount = 0;
+                
+                // 跳过表头，从第二行开始统计
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line) {
+                        totalCount++;
+                        // 根据区域色列判断颜色（区域色在第7列，索引为6）
+                        const columns = line.split('\t');
+                        if (columns.length >= 7) {
+                            const zoneColor = (columns[6] || '').trim().toLowerCase();
+                            if (zoneColor.includes('红')) {
+                                redCount++;
+                            } else if (zoneColor.includes('黄')) {
+                                yellowCount++;
+                            } else if (zoneColor.includes('绿')) {
+                                greenCount++;
+                            }
+                        }
+                    }
+                }
+                
+                // 更新统计显示
+                document.getElementById('redCount').textContent = redCount;
+                document.getElementById('yellowCount').textContent = yellowCount;
+                document.getElementById('greenCount').textContent = greenCount;
+                document.getElementById('totalCount').textContent = totalCount;
+                
+                // 更新统计详情
+                const details = `
+                    <strong>数据更新时间：</strong>${new Date().toLocaleString()}<br>
+                    <strong>数据行数：</strong>${totalCount} 行<br>
+                    <strong>红色区域占比：</strong>${totalCount > 0 ? (redCount / totalCount * 100).toFixed(1) : 0}%<br>
+                    <strong>黄色区域占比：</strong>${totalCount > 0 ? (yellowCount / totalCount * 100).toFixed(1) : 0}%<br>
+                    <strong>绿色区域占比：</strong>${totalCount > 0 ? (greenCount / totalCount * 100).toFixed(1) : 0}%<br>
+                    <strong>数据来源：</strong>产量监控页面表格数据（基于区域色统计）
+                `;
+                document.getElementById('statisticsDetails').innerHTML = details;
+                
+            } catch (error) {
+                console.error('刷新统计数据失败:', error);
+                document.getElementById('statisticsDetails').innerHTML = `
+                    <span style="color: #e74c3c;"><strong>错误：</strong>${error.message}</span><br>
+                    <span style="color: #6c757d;">请确保产量监控页面已加载完成</span>
+                `;
+            }
+        }
+        
+        // 导出统计数据
+        function exportStatisticsData() {
+            try {
+                const rawData = document.getElementById('rawDataPreview').value;
+                if (!rawData) {
+                    alert('没有可导出的数据，请先刷新数据');
+                    return;
+                }
+                
+                // 创建导出内容
+                const exportContent = `产量数据统计报告\n` +
+                    `生成时间：${new Date().toLocaleString()}\n` +
+                    `红色预警：${document.getElementById('redCount').textContent} 条\n` +
+                    `黄色预警：${document.getElementById('yellowCount').textContent} 条\n` +
+                    `正常状态：${document.getElementById('greenCount').textContent} 条\n` +
+                    `总计：${document.getElementById('totalCount').textContent} 条\n\n` +
+                    `原始数据：\n${rawData}`;
+                
+                // 创建下载链接
+                const blob = new Blob([exportContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+                a.download = `产量数据统计_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+                
+            } catch (error) {
+                console.error('导出数据失败:', error);
+                alert('导出失败：' + error.message);
+            }
+        }
+
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 页面初始化完成
+            
+            // 绑定数据统计功能的事件监听器
+            const refreshBtn = document.getElementById('refreshDataBtn');
+            const exportBtn = document.getElementById('exportDataBtn');
+            
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', refreshStatisticsData);
+            }
+            
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportStatisticsData);
+            }
+        });
+        
+        // 自动刷新功能（可选）
+        function autoRefresh() {
+            const activePane = document.querySelector('.tab-pane.active');
+            const iframe = activePane.querySelector('iframe');
+            if (iframe && iframe.src) {
+                iframe.src = iframe.src;
+            }
+        }
+        
+        // 每5分钟自动刷新一次（可根据需要调整）
+        // setInterval(autoRefresh, 300000);
+        
+        // 页面可见性API - 当页面重新获得焦点时刷新
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // 页面变为可见时，可以选择刷新当前活动的iframe
+                // autoRefresh();
+            }
+        });
+    </script>
+</body>
+</html>

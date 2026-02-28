@@ -15,24 +15,6 @@
     </div>
     <%- partial('_partial/mobile-nav', null, {cache: !config.relative_link}) %>
     <%- partial('_partial/after-footer') %>
-
-    <!-- 项目模态框样式 -->
-    <link rel="stylesheet" href="/css/projects-modal.css">
-
-    <!-- 项目模态框 -->
-    <div id="projects-modal" style="display: none;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>项目合集</h2>
-          <button class="modal-close" onclick="closeProjectsModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div id="projects-grid" class="projects-grid-modal"></div>
-        </div>
-      </div>
-    </div>
-
-    <script src="/js/projects-modal.js"></script>
   </div>
 </body>
 </html>

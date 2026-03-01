@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>矩阵接入终端</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand">
+        <span class="brand-mark">01</span>
+        <span class="brand-text">矩阵接入终端</span>
+      </div>
+      <div class="topbar-links">
+        <a href="#system">系统概览</a>
+        <a href="#modules">能力模块</a>
+        <a href="#console">演示台</a>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <section class="hero-copy">
+        <p class="eyebrow">全中文极暗终端演示</p>
+        <h1>你看到的不是页面<br>而是一块接入中的终端</h1>
+        <p class="lead">
+          整个单页改成更强的黑绿终端视觉。信息不再像官网陈列，
+          而像正在被系统逐条吐出，带警告、扫描、追踪和接入状态。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#console">进入演示台</a>
+          <a class="btn btn-secondary" href="#modules">查看模块</a>
+        </div>
+        <ul class="hero-stats">
+          <li>
+            <strong>09</strong>
+            <span>并行代理</span>
+          </li>
+          <li>
+            <strong>126</strong>
+            <span>任务链路</span>
+          </li>
+          <li>
+            <strong>24ms</strong>
+            <span>状态同步</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="hero-panel">
+        <div class="panel-frame">
+          <div class="panel-head">
+            <span>核心状态</span>
+            <span class="status-live">在线</span>
+          </div>
+          <div class="panel-body">
+            <div class="signal-ring">
+              <div class="ring ring-a"></div>
+              <div class="ring ring-b"></div>
+              <div class="ring-center">接入</div>
+            </div>
+            <div class="signal-list">
+              <div class="signal-item">
+                <span>信道握手</span>
+                <b>完成</b>
+              </div>
+              <div class="signal-item">
+                <span>目标锁定</span>
+                <b>进行中</b>
+              </div>
+              <div class="signal-item">
+                <span>权限校验</span>
+                <b>已放行</b>
+              </div>
+              <div class="signal-item">
+                <span>链路噪声</span>
+                <b>低</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </header>
+
+  <main>
+    <section class="section system" id="system">
+      <div class="section-title">
+        <span>系统概览</span>
+        <h2>不是网页，更像一块被黑进来的监控终端</h2>
+      </div>
+      <div class="system-grid">
+        <article class="info-card">
+          <p class="card-code">节点 01</p>
+          <h3>纯中文指令界面</h3>
+          <p>把系统提示、状态代码、操作提示全部换成中文，让页面更像本地化终端而不是套壳模板。</p>
+        </article>
+        <article class="info-card">
+          <p class="card-code">节点 02</p>
+          <h3>持续扫描感</h3>
+          <p>背景字符流、暗网格、信号环和日志闪烁会持续运行，让页面始终处在“接入中”的状态。</p>
+        </article>
+        <article class="info-card">
+          <p class="card-code">节点 03</p>
+          <h3>高压黑绿对比</h3>
+          <p>压暗背景、提高绿光边缘和发光字权重，让视觉更接近黑客帝国式控制台，而不是普通科技页。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section modules" id="modules">
+      <div class="section-title">
+        <span>能力模块</span>
+        <h2>四块接入面板，负责追踪、拆解、渗透和回传</h2>
+      </div>
+      <div class="module-grid">
+        <article class="module-card">
+          <div class="module-icon">采</div>
+          <h3>入口捕获层</h3>
+          <p>监听目标输入，把片段文本、参数和上下文压成一条可追踪的指令。</p>
+        </article>
+        <article class="module-card">
+          <div class="module-icon">析</div>
+          <h3>拆解分析核</h3>
+          <p>把任务切成多段推理链，同时给出原因、权重和中间状态，避免黑箱输出。</p>
+        </article>
+        <article class="module-card">
+          <div class="module-icon">控</div>
+          <h3>调度控制台</h3>
+          <p>分配代理、控制超时、切换优先级，把执行过程维持在可控范围内。</p>
+        </article>
+        <article class="module-card">
+          <div class="module-icon">报</div>
+          <h3>回传输出屏</h3>
+          <p>把日志、告警、摘要和结果对象并排显示，强调“系统正在回吐结论”的感觉。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section timeline">
+      <div class="section-title">
+        <span>执行路径</span>
+        <h2>一条指令在终端里如何被截获、拆解并回吐结果</h2>
+      </div>
+      <div class="timeline-track">
+        <article class="timeline-step">
+          <strong>01</strong>
+          <h3>截获命令</h3>
+          <p>终端捕捉输入，生成上下文签名和初始追踪编号。</p>
+        </article>
+        <article class="timeline-step">
+          <strong>02</strong>
+          <h3>拆分路径</h3>
+          <p>按照目标、风险和输出要求切成多段执行链。</p>
+        </article>
+        <article class="timeline-step">
+          <strong>03</strong>
+          <h3>并行渗透</h3>
+          <p>多个代理同步检索、判断、校验，把中间结果持续写回终端。</p>
+        </article>
+        <article class="timeline-step">
+          <strong>04</strong>
+          <h3>吐回结果</h3>
+          <p>用摘要、警告和行动建议完成收束，像终端完成一次会话。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section console" id="console">
+      <div class="section-title">
+        <span>演示台</span>
+        <h2>把“酷炫”压到真正可见的指令流和回显过程上</h2>
+      </div>
+      <div class="console-shell">
+        <div class="console-main">
+          <div class="console-head">
+            <span>实时接入日志</span>
+            <span class="status-dot"></span>
+          </div>
+          <div class="console-screen" id="type-screen">
+            <p>系统唤醒中...</p>
+          </div>
+        </div>
+        <aside class="console-side">
+          <div class="mini-card">
+            <span>当前目标</span>
+            <strong>异常链路定位</strong>
+          </div>
+          <div class="mini-card">
+            <span>告警级别</span>
+            <strong>黄色</strong>
+          </div>
+          <div class="mini-card">
+            <span>输出模式</span>
+            <strong>终端回显</strong>
+          </div>
+          <div class="mini-card">
+            <span>代理占用</span>
+            <strong>4 / 9</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>项目代号：矩阵接入终端</p>
+    <a class="btn btn-primary" href="#top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); return false;">返回顶部</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

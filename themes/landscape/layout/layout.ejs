@@ -3,6 +3,10 @@
 <%- partial('_partial/head') %>
 <body>
   <div id="container">
+    <div id="matrix-shell" aria-hidden="true">
+      <canvas id="matrix-rain"></canvas>
+      <div class="matrix-glow"></div>
+    </div>
     <div id="wrap">
       <%- partial('_partial/header', null, {cache: !config.relative_link}) %>
       <div class="outer">

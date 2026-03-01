@@ -61,3 +61,61 @@ $base-style
     list-style: decimal
   dt
     font-weight: bold
+
+::selection
+  background: rgba(64, 255, 140, 0.35)
+  color: #f5fff8
+
+a
+  color: #78ffad
+  transition: color 0.2s ease, text-shadow 0.2s ease
+
+a:hover
+  color: #c8ffdd
+  text-shadow: 0 0 12px rgba(120, 255, 173, 0.55)
+
+#header
+  background: linear-gradient(180deg, rgba(3, 14, 8, 0.9), rgba(3, 14, 8, 0.45))
+  border-bottom: 1px solid rgba(120, 255, 173, 0.14)
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35)
+
+#header-outer, #footer
+  position: relative
+  backdrop-filter: blur(6px)
+
+#logo, #subtitle, .main-nav-link, #main, #sidebar, .article-title a
+  color: #e5ffee
+
+.main-nav-link
+  letter-spacing: 0.08em
+  text-transform: uppercase
+
+.main-nav-link:hover, .article-title a:hover
+  color: #78ffad
+
+#search-form-wrap
+  background: rgba(2, 18, 8, 0.92)
+  border: 1px solid rgba(120, 255, 173, 0.18)
+
+.article, .archive-article
+  background: linear-gradient(180deg, rgba(4, 18, 10, 0.9), rgba(3, 10, 6, 0.94))
+  border: 1px solid rgba(120, 255, 173, 0.14)
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28)
+
+.article-entry, .archive-article-excerpt, .article-meta, .archive-article-date, .article-footer
+  color: #bcecca
+
+.article-more-link a, .btn-download
+  background: linear-gradient(135deg, rgba(8, 55, 24, 0.98), rgba(18, 112, 46, 0.98))
+  border: 1px solid rgba(120, 255, 173, 0.2)
+  box-shadow: 0 0 20px rgba(42, 255, 113, 0.16)
+
+.article-more-link a:hover, .btn-download:hover
+  background: linear-gradient(135deg, rgba(15, 80, 35, 0.98), rgba(34, 148, 67, 0.98))
+
+#footer
+  color: #9bd1ad
+
+@media (max-width: 768px)
+  #wrap
+    background: linear-gradient(180deg, rgba(2, 8, 5, 0.9), rgba(1, 4, 2, 0.98))

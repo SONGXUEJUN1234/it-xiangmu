@@ -135,4 +135,76 @@
 
     $container.removeClass('mobile-nav-on');
   });
+
+  var matrixCanvas = document.getElementById('matrix-rain');
+
+  if (matrixCanvas && matrixCanvas.getContext){
+    var matrixContext = matrixCanvas.getContext('2d'),
+      matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%"\'#&_(),.;:[]{}<>01',
+      fontSize = 16,
+      columns = 0,
+      drops = [],
+      animationFrameId = null,
+      lastRender = 0,
+      renderInterval = 66;
+
+    var setupMatrix = function(){
+      var scale = window.devicePixelRatio || 1,
+        width = window.innerWidth,
+        height = window.innerHeight;
+
+      matrixCanvas.width = width * scale;
+      matrixCanvas.height = height * scale;
+      matrixCanvas.style.width = width + 'px';
+      matrixCanvas.style.height = height + 'px';
+      matrixContext.setTransform(scale, 0, 0, scale, 0, 0);
+      columns = Math.ceil(width / fontSize);
+      drops = [];
+
+      for (var i = 0; i < columns; i++){
+        drops.push(Math.random() * -60);
+      }
+    };
+
+    var renderMatrix = function(timestamp){
+      if (!lastRender || timestamp - lastRender >= renderInterval){
+        var width = window.innerWidth,
+          height = window.innerHeight;
+
+        matrixContext.fillStyle = 'rgba(1, 8, 4, 0.16)';
+        matrixContext.fillRect(0, 0, width, height);
+        matrixContext.font = fontSize + 'px monospace';
+
+        for (var i = 0; i < drops.length; i++){
+          var text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length)),
+            x = i * fontSize,
+            y = drops[i] * fontSize,
+            intensity = Math.random();
+
+          matrixContext.fillStyle = intensity > 0.92 ? '#d6ffe6' : intensity > 0.7 ? '#79ffb0' : '#1ec75b';
+          matrixContext.fillText(text, x, y);
+
+          if (y > height && Math.random() > 0.975){
+            drops[i] = Math.random() * -25;
+          } else {
+            drops[i] += 1 + intensity * 0.35;
+          }
+        }
+
+        lastRender = timestamp;
+      }
+
+      animationFrameId = window.requestAnimationFrame(renderMatrix);
+    };
+
+    setupMatrix();
+    animationFrameId = window.requestAnimationFrame(renderMatrix);
+
+    window.addEventListener('resize', function(){
+      window.cancelAnimationFrame(animationFrameId);
+      lastRender = 0;
+      setupMatrix();
+      animationFrameId = window.requestAnimationFrame(renderMatrix);
+    });
+  }
 })(jQuery);

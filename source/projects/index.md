@@ -12,3 +12,4 @@ title: 项目
 - 音乐节拍器（下载版）：音乐节奏练习工具 | [下载源码](/downloads/音乐节拍器.zip)
 - 粒子显示：Canvas 粒子动画效果展示 | [在线体验](/apps/粒子显示/) | [下载源码](/downloads/粒子显示.zip)
 - 鸡尾酒配方查询：单页鸡尾酒检索与配方展示应用 | [在线体验](/apps/cocktail/) | [下载源码](/downloads/cocktail.zip)
+- "一带一路"项目可视化：基于 Leaflet + ECharts 的海外项目数据可视化平台 | [在线体验](/apps/bri-projects/) | [下载源码](/downloads/bri-projects.zip)

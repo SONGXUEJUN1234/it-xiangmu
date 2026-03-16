@@ -7,7 +7,7 @@ tags:
   - Military
   - Visualization
 categories:
-  - Projects
+  - 项目
 repo: ""
 download: "/downloads/war-simulator.tar.gz"
 demo: "/apps/war-simulator/"

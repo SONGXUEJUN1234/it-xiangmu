@@ -14,3 +14,4 @@ title: 项目
 - 鸡尾酒配方查询：单页鸡尾酒检索与配方展示应用 | [在线体验](/apps/cocktail/) | [下载源码](/downloads/cocktail.zip)
 - "一带一路"项目可视化：基于 Leaflet + ECharts 的海外项目数据可视化平台 | [在线体验](/apps/bri-projects/) | [下载源码](/downloads/bri-projects.zip)
 - war-simulator：伊朗战场模拟器，交互式军事部署与导弹射程可视化工具 | [在线体验](/apps/war-simulator/) | [下载源码](/downloads/war-simulator.tar.gz)
+- kanban-board：任务看板系统，类似 Trello 的多人协作任务管理工具 | [项目说明](/apps/kanban-board/) | [下载源码](/downloads/kanban-board.zip)

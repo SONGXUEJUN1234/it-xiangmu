@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board - 任务看板系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .features {
+            margin: 30px 0;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            color: #555;
+        }
+        .feature-item:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .tech-stack {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .tech-stack h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tech-tag {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px 10px 10px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e9ecef;
+        }
+        .notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #856404;
+        }
+        .notice strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Kanban Board</h1>
+        <p class="subtitle">任务看板系统 - 类似 Trello 的协作工具</p>
+        
+        <div class="notice">
+            <strong>⚠️ 需要后端服务</strong>
+            此项目需要 FastAPI 后端 + PostgreSQL 数据库支持，请下载源码后按说明部署。
+        </div>
+
+        <div class="features">
+            <div class="feature-item">用户认证与 JWT 令牌管理</div>
+            <div class="feature-item">看板创建与多人协作</div>
+            <div class="feature-item">任务列表与卡片拖拽</div>
+            <div class="feature-item">标签、优先级、截止日期</div>
+            <div class="feature-item">评论系统与活动日志</div>
+            <div class="feature-item">WebSocket 实时更新</div>
+        </div>
+
+        <div class="tech-stack">
+            <h3>🛠 技术栈</h3>
+            <div class="tech-tags">
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">React 18</span>
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">Zustand</span>
+                <span class="tech-tag">Socket.IO</span>
+                <span class="tech-tag">shadcn/ui</span>
+            </div>
+        </div>
+
+        <div>
+            <a href="/downloads/kanban-board.zip" class="btn btn-primary">📥 下载源码</a>
+            <a href="/categories/Projects/" class="btn btn-secondary">🔙 返回项目列表</a>
+        </div>
+    </div>
+</body>
+</html>

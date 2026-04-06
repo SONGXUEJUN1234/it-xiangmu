@@ -2,7 +2,7 @@
 title: 茅盾文学奖网站
 date: 2026-04-06 13:00:00
 tags: [Hugo, 静态网站, 中国文学]
-categories: [网站项目]
+categories: [Projects]
 slug: maodun-award
 ---
 

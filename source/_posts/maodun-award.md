@@ -1,11 +1,12 @@
 ---
-title: maodun-award
+title: 茅盾文学奖获奖作品展示
 date: 2026-04-06
 updated: 2026-04-06
 tags:
   - Hugo
-  - StaticSite
-  - ChineseLiterature
+  - 静态网站
+  - 文学
+  - 展示
 categories:
   - 项目
 repo: "https://github.com/SONGXUEJUN1234/maodun-award"
@@ -15,55 +16,29 @@ platform: Web
 version: 1.0.0
 ---
 
-## Overview
+## 项目简介
 
-茅盾文学奖获奖作品展示网站，采用现代卡片式设计风格，深红+金色配色方案。
+茅盾文学奖获奖作品展示网站，采用现代卡片式设计风格，使用 Hugo 生成静态页面。展示第十届（2019）和第十一届（2023）共10部茅盾文学奖获奖作品和作家信息。
 
-## Features
+## 技术栈
 
-- **响应式布局**：移动端/平板/桌面自适应
-- **作品展示**：第十届（2019）和第十一届（2023）共11部获奖作品
-- **详细信息**：书名、作者、作者简介、出版社、出版年份、作品简介
-- **优雅设计**：深红+金色配色，呼应文学庄重感
-- **快速加载**：纯静态网站，秒开体验
+- **静态网站生成器**: Hugo - 构建速度快，中文文档完善
+- **样式**: 原生 CSS - 轻量无依赖，完全控制
+- **数据格式**: YAML - 简洁易读，Hugo 原生支持
+- **配色**: 深红#8B1A1A、浅米#F5F1E8、金色#C9A961
 
-## Tech Stack
+## 功能特点
 
-- **静态网站生成器**: Hugo
-- **样式**: 原生 CSS3
-- **数据格式**: YAML + Markdown
-- **部署**: Vercel
+- 响应式卡片布局（移动端单列、平板双列、桌面三列）
+- 作品详情页展示完整信息（作家简介、出版社、作品描述）
+- 现代卡片交互效果（hover上移+阴影加深）
+- GitHub Actions 自动部署到 GitHub Pages
 
-## Demo
+## 在线体验
+[在线体验](/apps/maodun-award/)
 
-[在线预览](/apps/maodun-award/)
-
-## Download
-
+## 下载
 [下载源码](/downloads/maodun-award.zip)
 
-## Quick Start
-
-### 环境要求
-- Hugo 0.120+
-- 任意浏览器
-
-### 安装运行
-\`\`\`bash
-# 克隆仓库
-git clone https://github.com/SONGXUEJUN1234/maodun-award.git
-cd maodun-award
-
-# 启动 Hugo 开发服务器
-hugo server -D
-
-# 访问 http://localhost:1313
-\`\`\`
-
-### 构建部署
-\`\`\`bash
-# 构建静态文件
-hugo
-
-# 输出在 public/ 目录
-\`\`\`
+## 源码仓库
+[GitHub Repository](https://github.com/SONGXUEJUN1234/maodun-award)

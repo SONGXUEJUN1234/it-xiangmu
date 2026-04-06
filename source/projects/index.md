@@ -15,3 +15,4 @@ title: 项目
 - "一带一路"项目可视化：基于 Leaflet + ECharts 的海外项目数据可视化平台 | [在线体验](/apps/bri-projects/) | [下载源码](/downloads/bri-projects.zip)
 - war-simulator：伊朗战场模拟器，交互式军事部署与导弹射程可视化工具 | [在线体验](/apps/war-simulator/) | [下载源码](/downloads/war-simulator.tar.gz)
 - kanban-board：任务看板系统，类似 Trello 的多人协作任务管理工具 | [项目说明](/apps/kanban-board/) | [下载源码](/downloads/kanban-board.zip)
+- 茅盾文学奖网站：中国文学茅盾文学奖获奖作品展示，采用 Hugo 静态网站生成器 | [项目文章](/2026/04/06/maodun-award/) | [下载源码](/downloads/maodun-award.zip)

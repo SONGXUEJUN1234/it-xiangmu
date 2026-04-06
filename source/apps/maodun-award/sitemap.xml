@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://localhost:1313/maodun-award/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/tags/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/zhujiao/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/renshijian/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/beishang/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/qianlijiangshantu/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/huixiang/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/baoshui/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/yingwuxiong/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/benba/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/qianfengji/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/</loc>
+  </url><url>
+    <loc>http://localhost:1313/maodun-award/work/xueshandadi/</loc>
+  </url>
+</urlset>

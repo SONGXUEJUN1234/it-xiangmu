@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>茅盾文学奖</title>
+    <link>http://localhost:1313/maodun-award/</link>
+    <description>Recent content on 茅盾文学奖</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <atom:link href="http://localhost:1313/maodun-award/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>主角</title>
+      <link>http://localhost:1313/maodun-award/work/zhujiao/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/zhujiao/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>人世间</title>
+      <link>http://localhost:1313/maodun-award/work/renshijian/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/renshijian/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>北上</title>
+      <link>http://localhost:1313/maodun-award/work/beishang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/beishang/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>千里江山图</title>
+      <link>http://localhost:1313/maodun-award/work/qianlijiangshantu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/qianlijiangshantu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>回响</title>
+      <link>http://localhost:1313/maodun-award/work/huixiang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/huixiang/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>宝水</title>
+      <link>http://localhost:1313/maodun-award/work/baoshui/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/baoshui/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>应物兄</title>
+      <link>http://localhost:1313/maodun-award/work/yingwuxiong/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/yingwuxiong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>本巴</title>
+      <link>http://localhost:1313/maodun-award/work/benba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/benba/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>牵风记</title>
+      <link>http://localhost:1313/maodun-award/work/qianfengji/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/qianfengji/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>雪山大地</title>
+      <link>http://localhost:1313/maodun-award/work/xueshandadi/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/maodun-award/work/xueshandadi/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

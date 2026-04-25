@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>散装物料盘点工具 - 空置体积法</title>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js?v=2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js?v=2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .icon {
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .measurement-list {
+            margin-top: 20px;
+        }
+
+        .measurement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .measurement-item .point-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .measurement-item .values {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+        }
+
+        .measurement-item .value {
+            color: #666;
+        }
+
+        .measurement-item .value strong {
+            color: #333;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-card .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .result-card .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-card .result-label {
+            opacity: 0.9;
+        }
+
+        .result-card .result-value {
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .result-card.vacuum {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .visualization {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .visualization-canvas {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            cursor: move;
+        }
+
+        .visualization-hint {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+            padding: 8px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .density-reference {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fffbeb;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .density-reference h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+
+        .density-reference ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+        }
+
+        .density-reference li {
+            color: #78716c;
+            font-size: 0.9em;
+        }
+
+        .add-measurement-form {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .add-measurement-form .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .tips {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e0f2fe;
+            border-radius: 8px;
+            border-left: 4px solid #0284c7;
+        }
+
+        .tips h4 {
+            color: #0369a1;
+            margin-bottom: 10px;
+        }
+
+        .tips ul {
+            list-style: none;
+            color: #0c4a6e;
+        }
+
+        .tips li {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tips li:before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: #0284c7;
+        }
+
+        /* 测量动画样式 */
+        .measurement-demo {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .demo-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .demo-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(180deg, #87CEEB 0%, #E8F4F8 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+
+        /* 左侧墙壁（测量起点） */
+        .demo-left-wall {
+            position: absolute;
+            left: 80px;
+            top: 40px;
+            bottom: 40px;
+            width: 12px;
+            background: linear-gradient(90deg, #8B7355 0%, #A0522D 50%, #8B7355 100%);
+            border: 2px solid #5D4037;
+            border-radius: 2px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        /* 右侧区域（门口和物料堆） */
+        .demo-right-area {
+            position: absolute;
+            left: 92px;
+            top: 40px;
+            right: 40px;
+            bottom: 40px;
+        }
+
+        /* 门口开口区域 */
+        .demo-opening-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(200,200,200,0.1) 100%);
+            border: 1px dashed #aaa;
+            border-radius: 4px;
+        }
+
+        /* 物料堆 - 三角形从左到右逐渐增高 */
+        .demo-material {
+            position: absolute;
+            right: 20px;
+            bottom: 0;
+            width: 180px;
+            height: 200px;
+            background: #4A4A4A;
+            clip-path: polygon(
+                0% 100%,      /* 左下角，地面位置，无物料 */
+                30% 100%,     /* 物料开始堆积 */
+                100% 30%,     /* 右上角，最高点 */
+                100% 100%     /* 右下角 */
+            );
+            box-shadow: inset -5px 0 10px rgba(0,0,0,0.3);
+        }
+
+        /* 动态物料形状 - 梯形，左边界与测量点对齐 */
+        .demo-material-shape {
+            position: absolute;
+            bottom: 40px;
+            background: #6B6B6B;
+            opacity: 0;
+            transition: opacity 0.5s;
+            border: 2px solid #4A4A4A;
+            border-radius: 3px;
+        }
+
+        .demo-material-shape.show {
+            opacity: 0.85;
+        }
+
+        /* 每个测量层对应的物料形状 */
+        .demo-material-layer {
+            position: absolute;
+            background: linear-gradient(135deg, #5A5A5A 0%, #7A7A7A 100%);
+            border: 1px solid #4A4A4A;
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .demo-material-layer.show {
+            opacity: 0.9;
+        }
+
+        .demo-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(180deg, #8B7355 0%, #6B5345 100%);
+            border-top: 2px solid #5D4037;
+        }
+
+        /* 测量位置指示器（在左墙上） */
+        .demo-measure-indicator {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #FF0000;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .demo-measure-indicator.show {
+            opacity: 1;
+        }
+
+        /* 激光线 */
+        .demo-laser-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #FF0000 0%, #FF0000 80%, transparent 100%);
+            transform-origin: left center;
+            opacity: 0;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+            z-index: 10;
+        }
+
+        .demo-laser-line.active {
+            opacity: 1;
+            animation: laserPulse 0.1s infinite;
+        }
+
+        @keyframes laserPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* 测量点 */
+        .demo-measure-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #FF4444;
+            border: 2px solid #FF0000;
+            border-radius: 50%;
+            opacity: 0;
+            transform: translate(-50%, 50%);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            z-index: 11;
+        }
+
+        .demo-measure-point.show {
+            opacity: 1;
+            animation: pointPulse 0.5s ease-out;
+        }
+
+        @keyframes pointPulse {
+            0% { transform: translate(-50%, 50%) scale(0); }
+            50% { transform: translate(-50%, 50%) scale(1.5); }
+            100% { transform: translate(-50%, 50%) scale(1); }
+        }
+
+        /* 距离标注 */
+        .demo-distance-label {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #333;
+            font-weight: bold;
+            opacity: 0;
+            transform: translate(-50%, -100%);
+            white-space: nowrap;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 12;
+        }
+
+        .demo-distance-label.show {
+            opacity: 1;
+        }
+
+        /* 高度标注 */
+        .demo-height-label {
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #333;
+            font-weight: bold;
+            opacity: 0;
+            transform: translate(-50%, -100%);
+        }
+
+        .demo-height-label.show {
+            opacity: 1;
+        }
+
+        /* 高度标尺 */
+        .demo-height-ruler {
+            position: absolute;
+            left: 30px;
+            top: 40px;
+            bottom: 40px;
+            width: 40px;
+        }
+
+        .demo-ruler-mark {
+            position: absolute;
+            right: 0;
+            width: 12px;
+            height: 2px;
+            background: #333;
+        }
+
+        .demo-ruler-mark::after {
+            content: attr(data-height);
+            position: absolute;
+            right: 18px;
+            top: -7px;
+            font-size: 10px;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .demo-ruler-mark.active {
+            background: #FF0000;
+            width: 20px;
+        }
+
+        .demo-info {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            min-width: 150px;
+        }
+
+        .demo-info h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .demo-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .demo-status {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .demo-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3;
+        }
+
+        .demo-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .demo-btn.primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .demo-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .demo-steps {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .demo-step {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 11px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .demo-step.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .demo-step-num {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            line-height: 22px;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ 散装物料盘点工具</h1>
+            <p>通过空置体积法精确计算散装砂石等物料的体积与重量</p>
+        </div>
+
+        <!-- 测量动画演示 -->
+        <div class="measurement-demo">
+            <div class="demo-title">📏 空置体积法测量演示</div>
+            <div class="demo-container">
+                <!-- 左侧墙壁（测量起点） -->
+                <div class="demo-left-wall">
+                    <div class="demo-measure-indicator" id="measureIndicator"></div>
+                </div>
+
+                <!-- 右侧门口和物料堆 -->
+                <div class="demo-right-area">
+                    <div class="demo-opening-area"></div>
+                    <div class="demo-material"></div>
+                    <!-- 动态物料层 - 将由JavaScript创建 -->
+                    <div id="materialLayers"></div>
+                </div>
+
+                <!-- 地面 -->
+                <div class="demo-ground"></div>
+
+                <!-- 高度标尺 -->
+                <div class="demo-height-ruler">
+                    <div class="demo-ruler-mark" data-height="2.5m" style="bottom: 200px;"></div>
+                    <div class="demo-ruler-mark" data-height="2.0m" style="bottom: 160px;"></div>
+                    <div class="demo-ruler-mark" data-height="1.5m" style="bottom: 120px;"></div>
+                    <div class="demo-ruler-mark" data-height="1.0m" style="bottom: 80px;"></div>
+                    <div class="demo-ruler-mark" data-height="0.5m" style="bottom: 40px;"></div>
+                    <div class="demo-ruler-mark" data-height="0.0m" style="bottom: 0;"></div>
+                </div>
+
+                <!-- 激光测量线 -->
+                <div class="demo-laser-line" id="laserLine1"></div>
+                <div class="demo-laser-line" id="laserLine2"></div>
+                <div class="demo-laser-line" id="laserLine3"></div>
+                <div class="demo-laser-line" id="laserLine4"></div>
+                <div class="demo-laser-line" id="laserLine5"></div>
+
+                <!-- 测量点 -->
+                <div class="demo-measure-point" id="measurePoint1"></div>
+                <div class="demo-measure-point" id="measurePoint2"></div>
+                <div class="demo-measure-point" id="measurePoint3"></div>
+                <div class="demo-measure-point" id="measurePoint4"></div>
+                <div class="demo-measure-point" id="measurePoint5"></div>
+
+                <!-- 距离标注 -->
+                <div class="demo-distance-label" id="distanceLabel1">2.0m</div>
+                <div class="demo-distance-label" id="distanceLabel2">3.5m</div>
+                <div class="demo-distance-label" id="distanceLabel3">5.0m</div>
+                <div class="demo-distance-label" id="distanceLabel4">6.5m</div>
+                <div class="demo-distance-label" id="distanceLabel5">8.0m</div>
+
+                <!-- 数据面板 -->
+                <div class="demo-info" id="demoInfo">
+                    <h4>📊 测量数据</h4>
+                    <div class="demo-info-item">
+                        <span>高度0.5m:</span>
+                        <span id="demoData1">--</span>
+                    </div>
+                    <div class="demo-info-item">
+                        <span>高度1.0m:</span>
+                        <span id="demoData2">--</span>
+                    </div>
+                    <div class="demo-info-item">
+                        <span>高度1.5m:</span>
+                        <span id="demoData3">--</span>
+                    </div>
+                    <div class="demo-info-item">
+                        <span>高度2.0m:</span>
+                        <span id="demoData4">--</span>
+                    </div>
+                    <div class="demo-info-item">
+                        <span>高度2.5m:</span>
+                        <span id="demoData5">--</span>
+                    </div>
+                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #ddd;">
+                    <div class="demo-info-item">
+                        <span>空置体积:</span>
+                        <span id="demoVacuumVolume" style="color: #3b82f6; font-weight: bold;">--</span>
+                    </div>
+                    <div class="demo-info-item">
+                        <span>物料体积:</span>
+                        <span id="demoMaterialVolume" style="color: #10b981; font-weight: bold;">--</span>
+                    </div>
+                </div>
+
+                <!-- 状态提示 -->
+                <div class="demo-status" id="demoStatus">点击"开始演示"观看测量流程</div>
+            </div>
+            <!-- 控制按钮 -->
+            <div class="demo-controls">
+                <button class="demo-btn primary" id="demoStartBtn" onclick="startDemo()">▶️ 开始演示</button>
+                <button class="demo-btn secondary" onclick="resetDemo()">🔄 重置</button>
+            </div>
+            <!-- 流程步骤 -->
+            <div class="demo-steps">
+                <div class="demo-step" id="demoStep1">
+                    <div class="demo-step-num">1</div>
+                    <div>站在左侧墙边</div>
+                </div>
+                <div class="demo-step" id="demoStep2">
+                    <div class="demo-step-num">2</div>
+                    <div>不同高度水平测距</div>
+                </div>
+                <div class="demo-step" id="demoStep3">
+                    <div class="demo-step-num">3</div>
+                    <div>记录空置长度</div>
+                </div>
+                <div class="demo-step" id="demoStep4">
+                    <div class="demo-step-num">4</div>
+                    <div>计算物料体积</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- 左侧：输入区域 -->
+            <div class="left-column">
+                <!-- 仓库信息 -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="icon">📐</span>
+                        仓库信息
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>长度（米）</label>
+                            <input type="number" id="warehouseLength" value="20" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>宽度（米）</label>
+                            <input type="number" id="warehouseWidth" value="10" step="0.1" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>高度（米）</label>
+                        <input type="number" id="warehouseHeight" value="4" step="0.1" min="0">
+                    </div>
+                </div>
+
+                <!-- 物料信息 -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-title">
+                        <span class="icon">🪨</span>
+                        物料信息
+                    </div>
+                    <div class="form-group">
+                        <label>物料类型</label>
+                        <select id="materialType">
+                            <option value="1.3">瓶料碎玻璃 (1.3 吨/m³)</option>
+                            <option value="1.5">玻璃砂 (1.5 吨/m³)</option>
+                            <option value="2.5">干锂长石 (2.5 吨/m³)</option>
+                            <option value="2.6">湿锂长石 (2.6 吨/m³)</option>
+                            <option value="2.5">钾钠长石 (2.5 吨/m³)</option>
+                            <option value="1.3">片料碎玻璃 (1.3 吨/m³)</option>
+                            <option value="1.5">石英砂 (1.5 吨/m³)</option>
+                            <option value="1.4">黄砂 (1.4 吨/m³)</option>
+                            <option value="2.7">方解石 (2.7 吨/m³)</option>
+                            <option value="custom">自定义</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="customDensityGroup" style="display: none;">
+                        <label>自定义密度（吨/立方米）</label>
+                        <input type="number" id="customDensity" value="1.5" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <!-- 测量点 -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-title">
+                        <span class="icon">📏</span>
+                        测量点数据（空置体积法）
+                    </div>
+
+                    <div class="add-measurement-form">
+                        <div class="form-group">
+                            <label>测量高度（米）</label>
+                            <input type="number" id="measureHeight" placeholder="1.5" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>空置长度（米）</label>
+                            <input type="number" id="measureDistance" placeholder="15" step="0.1" min="0">
+                        </div>
+                        <button class="btn btn-primary" onclick="addMeasurement()">
+                            <span>➕</span> 添加
+                        </button>
+                    </div>
+
+                    <div class="tips">
+                        <h4>💡 测量说明</h4>
+                        <ul>
+                            <li>站在门口，保持位置固定</li>
+                            <li>在不同高度水平打激光（如0.5m、1.0m、1.5m...）</li>
+                            <li>记录每个高度下激光打到物料面的水平距离</li>
+                            <li>建议每隔0.5米测量一次</li>
+                            <li>从仓库顶部到底部依次测量</li>
+                        </ul>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                            <h4 style="color: #0369a1; margin-bottom: 10px;">📐 空置体积计算公式（棱台公式）</h4>
+                            <div style="background: white; padding: 12px; border-radius: 6px; border: 1px solid #ddd; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; color: #333;">
+                                V = h × (A₁ + A₂ + √(A₁×A₂)) / 3
+                            </div>
+                            <div style="margin-top: 8px; font-size: 11px; color: #0c4a6e; line-height: 1.6;">
+                                <strong>其中：</strong><br>
+                                • h = 相邻测量点的高度差<br>
+                                • A₁ = 高度1处的空置面积 = 空置长度₁ × 仓库宽度<br>
+                                • A₂ = 高度2处的空置面积 = 空置长度₂ × 仓库宽度
+                            </div>
+                            <div style="margin-top: 8px; font-size: 11px; color: #0c4a6e;">
+                                <strong>物料体积 = 仓库总体积 - 空置体积</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="measurement-list" id="measurementList">
+                        <div class="empty-state">
+                            <div class="icon">📋</div>
+                            <p>暂无测量点</p>
+                            <p style="font-size: 0.9em;">请添加至少2个测量点开始计算</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" onclick="loadSampleData()">
+                            <span>📝</span> 加载示例
+                        </button>
+                        <button class="btn btn-danger" onclick="clearAll()">
+                            <span>🗑️</span> 清空
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：结果区域 -->
+            <div class="right-column">
+                <!-- 计算结果 -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        盘点结果
+                    </div>
+
+                    <div id="resultArea">
+                        <div class="empty-state">
+                            <div class="icon">🔢</div>
+                            <p>添加测量点后自动计算</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 详细计算 -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-title">
+                        <span class="icon">📋</span>
+                        详细计算（空置体积）
+                    </div>
+                    <div id="detailArea">
+                        <div class="empty-state">
+                            <div class="icon">📈</div>
+                            <p>计算后显示详细数据</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 可视化 -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-title">
+                        <span class="icon">🎨</span>
+                        3D立体可视化
+                    </div>
+                    <div class="visualization">
+                        <canvas id="visualizationCanvas" class="visualization-canvas"></canvas>
+                        <div class="visualization-hint">
+                            🖱️ 拖动旋转 | 滚轮缩放 | 右键平移
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测量点数据 - 存储格式: {height: 测量高度, distance: 空置长度}
+        let measurements = [];
+
+        // 物料类型变化时
+        document.getElementById('materialType').addEventListener('change', function() {
+            const customGroup = document.getElementById('customDensityGroup');
+            if (this.value === 'custom') {
+                customGroup.style.display = 'block';
+            } else {
+                customGroup.style.display = 'none';
+            }
+            calculate();
+        });
+
+        // 监听输入变化
+        document.getElementById('warehouseLength').addEventListener('input', calculate);
+        document.getElementById('warehouseWidth').addEventListener('input', calculate);
+        document.getElementById('warehouseHeight').addEventListener('input', calculate);
+        document.getElementById('customDensity').addEventListener('input', calculate);
+
+        // 添加测量点
+        function addMeasurement() {
+            const height = parseFloat(document.getElementById('measureHeight').value);
+            const distance = parseFloat(document.getElementById('measureDistance').value);
+
+            if (isNaN(height) || isNaN(distance)) {
+                alert('请输入有效的数值');
+                return;
+            }
+
+            if (height < 0 || distance < 0) {
+                alert('测量高度和空置长度必须大于等于0');
+                return;
+            }
+
+            // 检查高度是否重复
+            if (measurements.some(m => m.height === height)) {
+                alert('该测量高度已存在');
+                return;
+            }
+
+            measurements.push({ height, distance });
+            measurements.sort((a, b) => b.height - a.height); // 从高到低排序
+
+            // 清空输入
+            document.getElementById('measureHeight').value = '';
+            document.getElementById('measureDistance').value = '';
+
+            updateMeasurementList();
+            calculate();
+        }
+
+        // 删除测量点
+        function removeMeasurement(index) {
+            measurements.splice(index, 1);
+            updateMeasurementList();
+            calculate();
+        }
+
+        // 更新测量点列表显示
+        function updateMeasurementList() {
+            const container = document.getElementById('measurementList');
+
+            if (measurements.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📋</div>
+                        <p>暂无测量点</p>
+                        <p style="font-size: 0.9em;">请添加至少2个测量点开始计算</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            measurements.forEach((m, index) => {
+                html += `
+                    <div class="measurement-item">
+                        <div class="point-number">${index + 1}</div>
+                        <div class="values">
+                            <span class="value">测量高度: <strong>${m.height.toFixed(1)}</strong> 米</span>
+                            <span class="value">空置长度: <strong>${m.distance.toFixed(1)}</strong> 米</span>
+                        </div>
+                        <button class="btn btn-danger" onclick="removeMeasurement(${index})">删除</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 计算分段空置体积（棱台公式）
+        function calculateSegmentVolume(point1, point2, width) {
+            // point1和point2是相邻的两个测量点，按高度排序
+            // 计算高度差
+            const heightDiff = Math.abs(point1.height - point2.height);
+
+            // 计算两个高度层的横截面积（空置部分）
+            const area1 = point1.distance * width;
+            const area2 = point2.distance * width;
+
+            // 使用棱台体积公式
+            const volume = heightDiff * (area1 + area2 + Math.sqrt(area1 * area2)) / 3;
+            return volume;
+        }
+
+        // 计算总空置体积
+        function calculateTotalVacuumVolume(width) {
+            if (measurements.length < 2) return 0;
+
+            let totalVolume = 0;
+            for (let i = 0; i < measurements.length - 1; i++) {
+                totalVolume += calculateSegmentVolume(measurements[i], measurements[i + 1], width);
+            }
+
+            // 计算最底层的空置体积（如果有最低测量点）
+            if (measurements.length > 0) {
+                const lowestPoint = measurements[measurements.length - 1];
+                if (lowestPoint.height > 0) {
+                    // 从最低测量点到地面，假设空置长度逐渐减少到0
+                    const heightDiff = lowestPoint.height;
+                    const area1 = lowestPoint.distance * width;
+                    const area2 = 0; // 地面处空置长度为0
+                    const bottomVolume = heightDiff * (area1 + area2 + Math.sqrt(area1 * area2)) / 3;
+                    totalVolume += bottomVolume;
+                }
+            }
+
+            return totalVolume;
+        }
+
+        // 主计算函数
+        function calculate() {
+            const length = parseFloat(document.getElementById('warehouseLength').value) || 0;
+            const width = parseFloat(document.getElementById('warehouseWidth').value) || 0;
+            const height = parseFloat(document.getElementById('warehouseHeight').value) || 0;
+            let density;
+
+            const materialType = document.getElementById('materialType').value;
+            if (materialType === 'custom') {
+                density = parseFloat(document.getElementById('customDensity').value) || 1.5;
+            } else {
+                density = parseFloat(materialType);
+            }
+
+            const resultArea = document.getElementById('resultArea');
+            const detailArea = document.getElementById('detailArea');
+
+            if (measurements.length < 2) {
+                resultArea.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🔢</div>
+                        <p>需要至少2个测量点才能计算</p>
+                        <p style="font-size: 0.9em;">当前测量点: ${measurements.length} 个</p>
+                    </div>
+                `;
+                detailArea.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📈</div>
+                        <p>计算后显示详细数据</p>
+                    </div>
+                `;
+                drawVisualization();
+                return;
+            }
+
+            // 计算仓库总体积
+            const warehouseVolume = length * width * height;
+
+            // 计算空置体积
+            const vacuumVolume = calculateTotalVacuumVolume(width);
+
+            // 计算物料体积
+            const materialVolume = warehouseVolume - vacuumVolume;
+
+            // 计算物料重量
+            const materialWeight = materialVolume * density;
+
+            // 显示结果
+            const materialName = document.getElementById('materialType').options[document.getElementById('materialType').selectedIndex].text;
+            resultArea.innerHTML = `
+                <div class="result-card vacuum">
+                    <div class="result-row">
+                        <span class="result-label">仓库总体积</span>
+                        <span class="result-value">${warehouseVolume.toFixed(2)} m³</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">空置体积</span>
+                        <span class="result-value">${vacuumVolume.toFixed(2)} m³</span>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-row">
+                        <span class="result-label">物料类型</span>
+                        <span class="result-value">${materialName.split('(')[0].trim()}</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">物料体积</span>
+                        <span class="result-value">${materialVolume.toFixed(2)} m³</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">物料重量</span>
+                        <span class="result-value">${materialWeight.toFixed(2)} 吨</span>
+                    </div>
+                </div>
+            `;
+
+            // 详细计算（空置体积分段）
+            let detailHtml = '<table class="detail-table"><thead><tr><th>分段</th><th>高度层(m)</th><th>长度1(m)</th><th>长度2(m)</th><th>空置体积(m³)</th></tr></thead><tbody>';
+
+            for (let i = 0; i < measurements.length - 1; i++) {
+                const p1 = measurements[i];
+                const p2 = measurements[i + 1];
+                const heightDiff = (p1.height - p2.height).toFixed(1);
+                const segmentVolume = calculateSegmentVolume(p1, p2, width);
+                detailHtml += `<tr><td>${i + 1}</td><td>${p1.height.toFixed(1)} - ${p2.height.toFixed(1)}</td><td>${p1.distance.toFixed(1)}</td><td>${p2.distance.toFixed(1)}</td><td>${segmentVolume.toFixed(2)}</td></tr>`;
+            }
+
+            // 添加底层分段
+            if (measurements.length > 0) {
+                const lowestPoint = measurements[measurements.length - 1];
+                if (lowestPoint.height > 0) {
+                    const heightDiff = lowestPoint.height;
+                    const area1 = lowestPoint.distance * width;
+                    const area2 = 0;
+                    const bottomVolume = heightDiff * (area1 + area2 + Math.sqrt(area1 * area2)) / 3;
+                    detailHtml += `<tr><td>${measurements.length}</td><td>${lowestPoint.height.toFixed(1)} - 0.0</td><td>${lowestPoint.distance.toFixed(1)}</td><td>0.0</td><td>${bottomVolume.toFixed(2)}</td></tr>`;
+                }
+            }
+
+            detailHtml += '</tbody></table>';
+            detailArea.innerHTML = detailHtml;
+
+            drawVisualization();
+        }
+
+        // Three.js 3D可视化变量
+        let scene, camera, renderer, controls;
+        let materialMesh = null;
+        let warehouseMesh = null;
+        let vacuumMesh = null;
+        let gridHelper = null;
+        let animationId = null;
+
+        // 初始化Three.js场景
+        function initThreeJS() {
+            const canvas = document.getElementById('visualizationCanvas');
+
+            // 创建场景
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xE8F4F8);
+            scene.fog = new THREE.Fog(0xE8F4F8, 50, 150);
+
+            // 创建相机
+            camera = new THREE.PerspectiveCamera(
+                50,
+                canvas.offsetWidth / canvas.offsetHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(25, 20, 30);
+
+            // 创建渲染器
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+            // 添加光源
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(20, 30, 20);
+            scene.add(directionalLight);
+
+            const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
+            scene.add(hemisphereLight);
+
+            // 添加地面
+            const groundGeometry = new THREE.PlaneGeometry(150, 150);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x8B7355,
+                roughness: 0.9
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // 添加网格辅助线
+            gridHelper = new THREE.GridHelper(100, 100, 0x666666, 0x999999);
+            scene.add(gridHelper);
+
+            // 添加坐标轴辅助
+            const axesHelper = new THREE.AxesHelper(15);
+            scene.add(axesHelper);
+
+            // 添加控制器
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 5;
+            controls.maxDistance = 100;
+            controls.target.set(10, 3, 5);
+
+            // 动画循环
+            function animate() {
+                animationId = requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // 绘制3D可视化
+        function drawVisualization() {
+            const canvas = document.getElementById('visualizationCanvas');
+
+            if (!scene) {
+                initThreeJS();
+            }
+
+            // 移除旧的网格
+            const objectsToRemove = [];
+            scene.traverse((child) => {
+                if (child.type === 'Mesh' ||
+                    child.type === 'Sprite' ||
+                    child.type === 'LineSegments') {
+                    if (child !== gridHelper &&
+                        child.parent === scene &&
+                        child.geometry &&
+                        child.geometry.type !== 'PlaneGeometry' &&
+                        child.geometry.type !== 'GridHelper' &&
+                        child.geometry.type !== 'AxesHelper') {
+                        objectsToRemove.push(child);
+                    }
+                }
+            });
+            objectsToRemove.forEach(obj => scene.remove(obj));
+
+            if (measurements.length < 2) {
+                return;
+            }
+
+            const warehouseLength = parseFloat(document.getElementById('warehouseLength').value) || 20;
+            const warehouseWidth = parseFloat(document.getElementById('warehouseWidth').value) || 10;
+            const warehouseHeight = parseFloat(document.getElementById('warehouseHeight').value) || 4;
+            const scale = 1.0;
+
+            // 创建空置部分材质（半透明蓝色）
+            const vacuumMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3b82f6,
+                roughness: 0.5,
+                metalness: 0.0,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+
+            // 创建物资部分材质（灰色实体）
+            const materialMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4A4A4A,
+                roughness: 0.9,
+                metalness: 0.0,
+                transparent: false,
+                side: THREE.DoubleSide,
+                flatShading: false
+            });
+
+            // 为每个高度层创建空置体积和物资体积
+            for (let i = 0; i < measurements.length - 1; i++) {
+                const p1 = measurements[i]; // 较高
+                const p2 = measurements[i + 1]; // 较低
+
+                const height1 = p1.height * scale;
+                const height2 = p2.height * scale;
+                const vacuumLength1 = p1.distance * scale; // 空置长度
+                const vacuumLength2 = p2.distance * scale;
+                const depth = warehouseWidth * scale;
+
+                // ===== 创建空置部分（半透明蓝色）=====
+                const vacuumGeometry = new THREE.BufferGeometry();
+                const vacuumVertices = new Float32Array([
+                    // 底部 (height2)
+                    0, height2, 0,
+                    vacuumLength2, height2, 0,
+                    vacuumLength2, height2, depth,
+                    0, height2, depth,
+                    // 顶部 (height1)
+                    0, height1, 0,
+                    vacuumLength1, height1, 0,
+                    vacuumLength1, height1, depth,
+                    0, height1, depth
+                ]);
+
+                const vacuumIndices = [
+                    0, 1, 2, 0, 2, 3,  // 底面
+                    4, 5, 6, 4, 6, 7,  // 顶面
+                    0, 1, 5, 0, 5, 4,  // 前面
+                    3, 2, 6, 3, 6, 7,  // 后面
+                    0, 3, 7, 0, 7, 4,  // 左面
+                    1, 2, 6, 1, 6, 5   // 右面
+                ];
+
+                vacuumGeometry.setIndex(vacuumIndices);
+                vacuumGeometry.setAttribute('position', new THREE.BufferAttribute(vacuumVertices, 3));
+                vacuumGeometry.computeVertexNormals();
+
+                const vacuumMesh = new THREE.Mesh(vacuumGeometry, vacuumMaterial);
+                scene.add(vacuumMesh);
+
+                // ===== 创建物资部分（灰色实体）=====
+                // 物资从空置长度的末端延伸到仓库尽头
+                const materialGeometry = new THREE.BufferGeometry();
+                const materialVertices = new Float32Array([
+                    // 底部 (height2) - 从vacuumLength2到warehouseLength
+                    vacuumLength2, height2, 0,
+                    warehouseLength * scale, height2, 0,
+                    warehouseLength * scale, height2, depth,
+                    vacuumLength2, height2, depth,
+                    // 顶部 (height1) - 从vacuumLength1到warehouseLength
+                    vacuumLength1, height1, 0,
+                    warehouseLength * scale, height1, 0,
+                    warehouseLength * scale, height1, depth,
+                    vacuumLength1, height1, depth
+                ]);
+
+                const materialIndices = [
+                    0, 1, 2, 0, 2, 3,  // 底面
+                    4, 5, 6, 4, 6, 7,  // 顶面
+                    0, 1, 5, 0, 5, 4,  // 前面
+                    3, 2, 6, 3, 6, 7,  // 后面
+                    0, 3, 7, 0, 7, 4,  // 左面（斜面，物料表面）
+                    1, 2, 6, 1, 6, 5   // 右面（仓库尽头墙面）
+                ];
+
+                materialGeometry.setIndex(materialIndices);
+                materialGeometry.setAttribute('position', new THREE.BufferAttribute(materialVertices, 3));
+                materialGeometry.computeVertexNormals();
+
+                const materialMesh = new THREE.Mesh(materialGeometry, materialMaterial);
+                scene.add(materialMesh);
+            }
+
+            // ===== 添加底层（从最低测量点到地面）=====
+            if (measurements.length > 0) {
+                const lowestPoint = measurements[measurements.length - 1];
+                if (lowestPoint.height > 0) {
+                    const height1 = lowestPoint.height * scale;
+                    const vacuumLength1 = lowestPoint.distance * scale;
+                    const depth = warehouseWidth * scale;
+
+                    // 底层空置部分
+                    const vacuumGeometry = new THREE.BufferGeometry();
+                    const vacuumVertices = new Float32Array([
+                        // 底部 (地面)
+                        0, 0, 0,
+                        0, 0, depth,
+                        // 顶部
+                        0, height1, 0,
+                        vacuumLength1, height1, 0,
+                        vacuumLength1, height1, depth,
+                        0, height1, depth
+                    ]);
+
+                    const vacuumIndices = [
+                        2, 3, 4, 2, 4, 5,  // 顶面
+                        0, 1, 4, 0, 4, 3,  // 前面
+                        0, 2, 3, 0, 3, 1,  // 左面
+                        1, 5, 4, 1, 4, 2,  // 后面
+                        0, 2, 5, 0, 5, 1   // 底面（地面）
+                    ];
+
+                    vacuumGeometry.setIndex(vacuumIndices);
+                    vacuumGeometry.setAttribute('position', new THREE.BufferAttribute(vacuumVertices, 3));
+                    vacuumGeometry.computeVertexNormals();
+
+                    const vacuumMesh = new THREE.Mesh(vacuumGeometry, vacuumMaterial);
+                    scene.add(vacuumMesh);
+
+                    // 底层物资部分
+                    const materialGeometry = new THREE.BufferGeometry();
+                    const materialVertices = new Float32Array([
+                        // 底部 (地面) - 从vacuumLength1到warehouseLength
+                        vacuumLength1, 0, 0,
+                        warehouseLength * scale, 0, 0,
+                        warehouseLength * scale, 0, depth,
+                        vacuumLength1, 0, depth,
+                        // 顶部
+                        vacuumLength1, height1, 0,
+                        warehouseLength * scale, height1, 0,
+                        warehouseLength * scale, height1, depth,
+                        vacuumLength1, height1, depth
+                    ]);
+
+                    const materialIndices = [
+                        0, 1, 2, 0, 2, 3,  // 底面（地面）
+                        4, 5, 6, 4, 6, 7,  // 顶面
+                        0, 1, 5, 0, 5, 4,  // 前面
+                        3, 2, 6, 3, 6, 7,  // 后面
+                        0, 3, 7, 0, 7, 4,  // 左面（斜面，物料表面）
+                        1, 2, 6, 1, 6, 5   // 右面（仓库尽头墙面）
+                    ];
+
+                    materialGeometry.setIndex(materialIndices);
+                    materialGeometry.setAttribute('position', new THREE.BufferAttribute(materialVertices, 3));
+                    materialGeometry.computeVertexNormals();
+
+                    const materialMesh = new THREE.Mesh(materialGeometry, materialMaterial);
+                    scene.add(materialMesh);
+                }
+            }
+
+            // ===== 添加顶层物资（从最高测量点到仓库顶部）=====
+            if (measurements.length > 0) {
+                const highestPoint = measurements[0]; // 已排序，第一个是最高
+                if (highestPoint.height < warehouseHeight) {
+                    const height2 = highestPoint.height * scale;
+                    const height1 = warehouseHeight * scale;
+                    const vacuumLength = highestPoint.distance * scale;
+                    const depth = warehouseWidth * scale;
+
+                    // 顶层空置部分
+                    const vacuumGeometry = new THREE.BufferGeometry();
+                    const vacuumVertices = new Float32Array([
+                        // 底部
+                        0, height2, 0,
+                        vacuumLength, height2, 0,
+                        vacuumLength, height2, depth,
+                        0, height2, depth,
+                        // 顶部 (仓库顶部)
+                        0, height1, 0,
+                        vacuumLength, height1, 0,
+                        vacuumLength, height1, depth,
+                        0, height1, depth
+                    ]);
+
+                    const vacuumIndices = [
+                        0, 1, 2, 0, 2, 3,  // 底面
+                        4, 5, 6, 4, 6, 7,  // 顶面
+                        0, 1, 5, 0, 5, 4,  // 前面
+                        3, 2, 6, 3, 6, 7,  // 后面
+                        0, 3, 7, 0, 7, 4,  // 左面
+                        1, 2, 6, 1, 6, 5   // 右面
+                    ];
+
+                    vacuumGeometry.setIndex(vacuumIndices);
+                    vacuumGeometry.setAttribute('position', new THREE.BufferAttribute(vacuumVertices, 3));
+                    vacuumGeometry.computeVertexNormals();
+
+                    const vacuumMesh = new THREE.Mesh(vacuumGeometry, vacuumMaterial);
+                    scene.add(vacuumMesh);
+
+                    // 顶层物资部分
+                    const materialGeometry = new THREE.BufferGeometry();
+                    const materialVertices = new Float32Array([
+                        // 底部
+                        vacuumLength, height2, 0,
+                        warehouseLength * scale, height2, 0,
+                        warehouseLength * scale, height2, depth,
+                        vacuumLength, height2, depth,
+                        // 顶部 (仓库顶部)
+                        vacuumLength, height1, 0,
+                        warehouseLength * scale, height1, 0,
+                        warehouseLength * scale, height1, depth,
+                        vacuumLength, height1, depth
+                    ]);
+
+                    const materialIndices = [
+                        0, 1, 2, 0, 2, 3,  // 底面
+                        4, 5, 6, 4, 6, 7,  // 顶面（仓库顶面）
+                        0, 1, 5, 0, 5, 4,  // 前面
+                        3, 2, 6, 3, 6, 7,  // 后面
+                        0, 3, 7, 0, 7, 4,  // 左面（斜面，物料表面）
+                        1, 2, 6, 1, 6, 5   // 右面（仓库尽头墙面）
+                    ];
+
+                    materialGeometry.setIndex(materialIndices);
+                    materialGeometry.setAttribute('position', new THREE.BufferAttribute(materialVertices, 3));
+                    materialGeometry.computeVertexNormals();
+
+                    const materialMesh = new THREE.Mesh(materialGeometry, materialMaterial);
+                    scene.add(materialMesh);
+                }
+            }
+
+            // 创建仓库围墙（线框）
+            const warehouseGeometry = new THREE.BoxGeometry(
+                warehouseLength * scale,
+                warehouseHeight * scale,
+                warehouseWidth * scale
+            );
+            const warehouseEdges = new THREE.EdgesGeometry(warehouseGeometry);
+            const warehouseMaterial = new THREE.LineBasicMaterial({
+                color: 0xFF0000,
+                linewidth: 3
+            });
+            warehouseMesh = new THREE.LineSegments(warehouseEdges, warehouseMaterial);
+            warehouseMesh.position.set(
+                warehouseLength * scale / 2,
+                warehouseHeight * scale / 2,
+                warehouseWidth * scale / 2
+            );
+            scene.add(warehouseMesh);
+
+            // 添加测量点标记 - 显示在物料顶层的前面边缘
+            measurements.forEach((m, index) => {
+                const pointGeometry = new THREE.SphereGeometry(0.4, 16, 16);
+                const pointMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xFF4444,
+                    emissive: 0xFF0000,
+                    emissiveIntensity: 0.5
+                });
+                const pointMesh = new THREE.Mesh(pointGeometry, pointMaterial);
+                // 将测量点放在物料表面与空置体积的交界处，并在前面(z=0)避免被遮挡
+                pointMesh.position.set(
+                    m.distance * scale,
+                    m.height * scale,
+                    0  // 放在最前面，避免被遮挡
+                );
+                pointMesh.castShadow = true;
+                scene.add(pointMesh);
+
+                // 添加标签 - 放在测量点上方
+                const labelCanvas = document.createElement('canvas');
+                const labelContext = labelCanvas.getContext('2d');
+                labelCanvas.width = 64;
+                labelCanvas.height = 64;
+                labelContext.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                labelContext.beginPath();
+                labelContext.arc(32, 32, 30, 0, 2 * Math.PI);
+                labelContext.fill();
+                labelContext.fillStyle = '#FF0000';
+                labelContext.font = 'bold 36px Arial';
+                labelContext.textAlign = 'center';
+                labelContext.textBaseline = 'middle';
+                labelContext.fillText((index + 1).toString(), 32, 32);
+
+                const texture = new THREE.CanvasTexture(labelCanvas);
+                const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                sprite.position.set(
+                    m.distance * scale,
+                    m.height * scale + 1,
+                    0  // 放在最前面
+                );
+                sprite.scale.set(1.5, 1.5, 1);
+                scene.add(sprite);
+            });
+
+            // 调整相机和控制器
+            controls.target.set(
+                warehouseLength * scale / 2,
+                warehouseHeight * scale / 2,
+                warehouseWidth * scale / 2
+            );
+
+            const maxDimension = Math.max(warehouseLength, warehouseHeight, warehouseWidth);
+            camera.position.set(
+                warehouseLength * scale / 2 + maxDimension * 1.2,
+                warehouseHeight * scale / 2 + maxDimension * 0.8,
+                warehouseWidth * scale / 2 + maxDimension * 1.5
+            );
+        }
+
+        // 加载示例数据
+        function loadSampleData() {
+            // 示例：仓库高4m，在不同高度测量空置长度
+            measurements = [
+                { height: 4.0, distance: 20.0 },  // 顶部：激光打到最深处20m
+                { height: 3.0, distance: 16.0 },  // 3米高：激光打到16m处
+                { height: 2.0, distance: 12.0 },  // 2米高：激光打到12m处
+                { height: 1.0, distance: 7.0 },   // 1米高：激光打到7m处
+                { height: 0.5, distance: 4.0 },   // 0.5米高：激光打到4m处
+                { height: 0.2, distance: 1.5 }    // 0.2米高：激光打到1.5m处
+            ];
+
+            document.getElementById('warehouseLength').value = 20;
+            document.getElementById('warehouseWidth').value = 10;
+            document.getElementById('warehouseHeight').value = 4;
+
+            updateMeasurementList();
+            calculate();
+        }
+
+        // 清空所有数据
+        function clearAll() {
+            if (measurements.length > 0 && !confirm('确定要清空所有测量数据吗？')) {
+                return;
+            }
+            measurements = [];
+            updateMeasurementList();
+            calculate();
+        }
+
+        // 初始化
+        updateMeasurementList();
+        calculate();
+
+        // 窗口大小改变时重绘
+        window.addEventListener('resize', function() {
+            if (renderer && camera) {
+                const canvas = document.getElementById('visualizationCanvas');
+                camera.aspect = canvas.offsetWidth / canvas.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+            }
+        });
+
+        // ========== 测量动画演示 ==========
+        let demoRunning = false;
+        let demoStep = 0;
+
+        // 示例测量数据：从低到高在不同高度测量空置长度
+        // 高度越高，激光打到物料的距离越长（空置长度越长）
+        // 高度越低，距离越短（空置长度越短）
+        const demoMeasurements = [
+            { height: 0.5, distance: 2.0 },   // 0.5米高：空置长度2.0m（最短）
+            { height: 1.0, distance: 3.5 },   // 1.0米高：空置长度3.5m
+            { height: 1.5, distance: 5.0 },   // 1.5米高：空置长度5.0m
+            { height: 2.0, distance: 6.5 },   // 2.0米高：空置长度6.5m
+            { height: 2.5, distance: 8.0 }    // 2.5米高：空置长度8.0m（最长）
+        ];
+
+        function startDemo() {
+            if (demoRunning) return;
+            demoRunning = true;
+            demoStep = 0;
+
+            document.getElementById('demoStartBtn').disabled = true;
+
+            animateDemoStep();
+        }
+
+        function animateDemoStep() {
+            if (demoStep >= demoMeasurements.length) {
+                showDemoResult();
+                return;
+            }
+
+            const data = demoMeasurements[demoStep];
+            const stepNum = demoStep + 1;
+
+            // 更新状态
+            document.getElementById('demoStatus').textContent = `在高度 ${data.height}m 处测量空置长度...`;
+
+            // 激活流程步骤
+            updateDemoSteps(Math.min(stepNum, 4));
+
+            // 激活当前高度标尺
+            document.querySelectorAll('.demo-ruler-mark').forEach((mark, index) => {
+                const height = parseFloat(mark.getAttribute('data-height'));
+                if (Math.abs(height - data.height) < 0.1) {
+                    mark.classList.add('active');
+                } else {
+                    mark.classList.remove('active');
+                }
+            });
+
+            // 显示测量位置指示器
+            const indicator = document.getElementById('measureIndicator');
+            const maxHeight = 200; // 最大高度像素
+            const indicatorBottom = (data.height / 2.5) * maxHeight;
+            indicator.style.bottom = `${indicatorBottom}px`;
+            indicator.classList.add('show');
+
+            // 显示激光线 - 从左侧墙壁发射到物料
+            const laserLine = document.getElementById(`laserLine${stepNum}`);
+            const wallLeft = 80; // 左墙位置
+            const wallWidth = 12; // 左墙宽度
+            const laserStartX = wallLeft + wallWidth; // 激光起点（墙的右边缘）
+            const pixelsPerMeter = 20; // 每1米对应的像素（缩小比例以适应新布局）
+            const groundY = 40; // 地面Y坐标
+
+            // 计算激光线的位置
+            // 高度从地面算起：0m=地面, 2.5m=顶部
+            const laserBottom = groundY + (data.height / 2.5) * maxHeight;
+            const laserLength = data.distance * pixelsPerMeter;
+
+            laserLine.style.left = `${laserStartX}px`;
+            laserLine.style.bottom = `${laserBottom}px`;
+            laserLine.style.width = `${laserLength}px`;
+            laserLine.classList.add('active');
+
+            setTimeout(() => {
+                // 显示测量点 - 在物料表面与空置体积的交界处
+                const point = document.getElementById(`measurePoint${stepNum}`);
+                point.classList.add('show');
+
+                // 显示距离标注
+                const label = document.getElementById(`distanceLabel${stepNum}`);
+                label.classList.add('show');
+
+                // 计算测量点位置
+                const pointLeft = laserStartX + laserLength;
+                const pointBottom = laserBottom;
+
+                point.style.left = `${pointLeft}px`;
+                point.style.bottom = `${pointBottom}px`;
+
+                label.style.left = `${pointLeft}px`;
+                label.style.bottom = `${pointBottom + 25}px`;
+
+                setTimeout(() => {
+                    // 记录数据 - 根据高度映射到对应的data元素
+                    const heightIndex = Math.round(data.height * 2); // 0.5->1, 1.0->2, 1.5->3, 2.0->4, 2.5->5
+                    const dataElement = document.getElementById(`demoData${heightIndex}`);
+                    if (dataElement) {
+                        dataElement.textContent = `${data.distance.toFixed(1)}m`;
+                        dataElement.style.color = '#3b82f6';
+                        dataElement.style.fontWeight = 'bold';
+                    }
+
+                    // 创建物料层形状 - 梯形，左边界与测量点对齐
+                    createMaterialLayer(stepNum, pointLeft, laserBottom, data);
+
+                    setTimeout(() => {
+                        laserLine.classList.remove('active');
+
+                        demoStep++;
+                        setTimeout(animateDemoStep, 500);
+                    }, 600);
+                }, 800);
+            }, 800);
+        }
+
+        // 创建物料层形状
+        function createMaterialLayer(layerNum, leftX, bottomY, data) {
+            const materialLayers = document.getElementById('materialLayers');
+            const existingLayer = document.getElementById(`materialLayer${layerNum}`);
+
+            if (existingLayer) {
+                existingLayer.classList.add('show');
+                return;
+            }
+
+            const layer = document.createElement('div');
+            layer.id = `materialLayer${layerNum}`;
+            layer.className = 'demo-material-layer';
+
+            // 计算物料层的尺寸
+            const wallLeft = 80;
+            const wallWidth = 12;
+            const containerWidth = materialLayers.offsetWidth;
+            const materialWidth = containerWidth - (leftX - wallLeft - wallWidth);
+
+            // 计算该层的高度和位置
+            let layerHeight;
+            let layerBottom;
+
+            if (layerNum === 1) {
+                // 第一层从地面到当前高度
+                layerHeight = bottomY - 40;
+                layerBottom = 0;
+            } else {
+                // 获取上一层的位置
+                const prevLayer = document.getElementById(`materialLayer${layerNum - 1}`);
+                if (prevLayer) {
+                    const prevBottom = parseFloat(prevLayer.style.bottom);
+                    const prevHeight = parseFloat(prevLayer.style.height);
+                    layerBottom = prevBottom + prevHeight;
+                    layerHeight = bottomY - 40 - layerBottom;
+                } else {
+                    layerHeight = bottomY - 40;
+                    layerBottom = 0;
+                }
+            }
+
+            layer.style.left = `${leftX - wallLeft - wallWidth}px`;
+            layer.style.bottom = `${layerBottom}px`;
+            layer.style.width = `${materialWidth}px`;
+            layer.style.height = `${layerHeight}px`;
+
+            materialLayers.appendChild(layer);
+
+            // 延迟显示以创建动画效果
+            setTimeout(() => {
+                layer.classList.add('show');
+            }, 100);
+        }
+
+        function showDemoResult() {
+            document.getElementById('demoStatus').textContent = '✅ 测量完成！计算结果...';
+
+            // 计算空置体积
+            const width = 10;
+            let vacuumVolume = 0;
+
+            for (let i = 0; i < demoMeasurements.length - 1; i++) {
+                const p1 = demoMeasurements[i];
+                const p2 = demoMeasurements[i + 1];
+                const heightDiff = p1.height - p2.height;
+                const area1 = p1.distance * width;
+                const area2 = p2.distance * width;
+                const volume = heightDiff * (area1 + area2 + Math.sqrt(area1 * area2)) / 3;
+                vacuumVolume += volume;
+            }
+
+            // 添加底层
+            const lowestPoint = demoMeasurements[demoMeasurements.length - 1];
+            if (lowestPoint.height > 0) {
+                const heightDiff = lowestPoint.height;
+                const area1 = lowestPoint.distance * width;
+                const area2 = 0;
+                const bottomVolume = heightDiff * (area1 + area2 + Math.sqrt(area1 * area2)) / 3;
+                vacuumVolume += bottomVolume;
+            }
+
+            const warehouseVolume = 4 * 10 * 4; // 长4m × 宽10m × 高4m
+            const materialVolume = warehouseVolume - vacuumVolume;
+
+            setTimeout(() => {
+                document.getElementById('demoVacuumVolume').textContent = `${vacuumVolume.toFixed(1)}m³`;
+                document.getElementById('demoMaterialVolume').textContent = `${materialVolume.toFixed(1)}m³`;
+                document.getElementById('demoStatus').textContent = `🎉 完成！空置体积: ${vacuumVolume.toFixed(1)}m³, 物料体积: ${materialVolume.toFixed(1)}m³`;
+
+                updateDemoSteps(4);
+                document.getElementById('demoStartBtn').disabled = false;
+                demoRunning = false;
+            }, 1000);
+        }
+
+        function updateDemoSteps(activeStep) {
+            for (let i = 1; i <= 4; i++) {
+                const stepElement = document.getElementById(`demoStep${i}`);
+                if (i <= activeStep) {
+                    stepElement.classList.add('active');
+                } else {
+                    stepElement.classList.remove('active');
+                }
+            }
+        }
+
+        function resetDemo() {
+            demoRunning = false;
+            demoStep = 0;
+
+            document.getElementById('demoStatus').textContent = '点击"开始演示"观看测量流程';
+            document.getElementById('demoStartBtn').disabled = false;
+
+            // 重置标尺
+            document.querySelectorAll('.demo-ruler-mark').forEach(mark => {
+                mark.classList.remove('active');
+            });
+
+            // 重置测量指示器
+            const indicator = document.getElementById('measureIndicator');
+            indicator.classList.remove('show');
+
+            // 重置激光线
+            for (let i = 1; i <= 5; i++) {
+                const laserLine = document.getElementById(`laserLine${i}`);
+                laserLine.classList.remove('active');
+
+                const point = document.getElementById(`measurePoint${i}`);
+                point.classList.remove('show');
+
+                const label = document.getElementById(`distanceLabel${i}`);
+                label.classList.remove('show');
+            }
+
+            // 清除物料层
+            const materialLayers = document.getElementById('materialLayers');
+            materialLayers.innerHTML = '';
+
+            // 重置数据
+            for (let i = 1; i <= 5; i++) {
+                const dataElement = document.getElementById(`demoData${i}`);
+                if (dataElement) {
+                    dataElement.textContent = '--';
+                    dataElement.style.color = '';
+                    dataElement.style.fontWeight = '';
+                }
+            }
+            document.getElementById('demoVacuumVolume').textContent = '--';
+            document.getElementById('demoMaterialVolume').textContent = '--';
+
+            // 重置流程步骤
+            updateDemoSteps(0);
+        }
+    </script>
+</body>
+</html>

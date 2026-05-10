@@ -17,3 +17,4 @@ title: 项目
 - kanban-board：任务看板系统，类似 Trello 的多人协作任务管理工具 | [项目说明](/apps/kanban-board/) | [下载源码](/downloads/kanban-board.zip)
 - 茅盾文学奖网站：中国文学茅盾文学奖获奖作品展示，采用 Hugo 静态网站生成器 | [在线体验](/apps/maodun-award/) | [项目文章](/2026/04/06/maodun-award/) | [下载源码](/downloads/maodun-award.zip)
 - 散装物料盘点工具：基于空置体积法的专业盘点计算工具，精确计算散装砂石等物料的体积与重量 | [在线体验](/apps/inventory-tool/)
+- 玻璃原料价格监控系统：实时监控玻璃生产主要原料（纯碱、天然气、电力、锂长石、方解石等）价格变动的专业工具 | [在线体验](/apps/glass-price-monitor/) | [下载源码](/downloads/glass-price-monitor.zip)

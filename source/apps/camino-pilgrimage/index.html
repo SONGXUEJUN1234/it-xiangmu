@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walking to the Edge of Land - Camino de Santiago</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.header { background: rgba(255,255,255,0.98); padding: 25px 40px; text-align: center; }
+.header h1 { color: #2d3748; font-size: 28px; }
+.header p { color: #718096; }
+.container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: rgba(255,255,255,0.98); padding: 18px; border-radius: 10px; text-align: center; }
+.stat-card h3 { color: #a5c155; font-size: 13px; }
+.stat-card p { color: #2d3748; font-size: 22px; font-weight: bold; }
+#map { height: 600px; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); margin-bottom: 25px; }
+.timeline { position: relative; padding-left: 55px; }
+.timeline::before { content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #667eea, #764ba2); }
+.day-item { background: rgba(255,255,255,0.98); margin-bottom: 22px; padding: 22px; border-radius: 10px; position: relative; }
+.day-number { position: absolute; left: -42px; top: 18px; width: 34px; height: 34px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; }
+.day-item h3 { color: #667eea; font-size: 20px; margin-bottom: 8px; }
+.location { color: #718096; font-size: 13px; margin-bottom: 12px; }
+.distance { background: #f7fafc; padding: 4px 10px; border-radius: 12px; font-size: 11px; color: #a0aec0; margin-left: 8px; }
+.screenshot { width: 100%; max-width: 650px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 12px; cursor: pointer; }
+.back-to-map { background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-bottom: 10px; }
+.back-to-map:hover { background: #5568d3; }
+.custom-marker { background: white; border: 3px solid #667eea; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; color: #667eea; }
+.popup-content { text-align: center; }
+.popup-content h4 { color: #667eea; margin-bottom: 5px; }
+.popup-content p { color: #4a5568; font-size: 12px; }
+.full-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+.full-screen.active { display: flex; }
+.full-screen img { max-width: 90%; max-height: 75vh; object-fit: contain; border-radius: 8px; }
+.full-screen button { background: #667eea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; margin-top: 15px; }
+</style>
+</head>
+<body>
+<div class="header">
+<h1>Walking to the Edge of Land</h1>
+<p>Camino de Santiago · 33 Days · 780km · France to Spain</p>
+</div>
+<div class="container">
+<div class="stats">
+<div class="stat-card"><h3>Total Days</h3><p>33</p></div>
+<div class="stat-card"><h3>Distance</h3><p>780 km</p></div>
+<div class="stat-card"><h3>Average</h3><p>24 km/day</p></div>
+<div class="stat-card"><h3>Start</h3><p>St-Jean</p></div>
+<div class="stat-card"><h3>End</h3><p>Santiago</p></div>
+</div>
+<div id="map"></div>
+<div class="timeline" id="timeline"></div>
+</div>
+<div class="full-screen" id="fullScreen">
+<img id="fullImage" src="" alt="">
+<button onclick="closeFullScreen()">Return to Map</button>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const pilgrimageData = [
+{ day: 1, title: "Birthday Happy", location: "Saint-Jean-Pied-de-Port", lat: 43.1633, lng: -1.2335, distance: 0, image: "camino-images/DAY1.png" },
+{ day: 2, title: "Different Paths", location: "Roncesvalles", lat: 43.1633, lng: -1.3183, distance: 27, image: "camino-images/day2.png" },
+{ day: 3, title: "Asian", location: "Zubiri", lat: 43.0045, lng: -1.5013, distance: 54, image: "camino-images/day3.png" },
+{ day: 4, title: "Backpack", location: "Pamplona", lat: 42.8125, lng: -1.6458, distance: 82, image: "camino-images/DAY4.png" },
+{ day: 5, title: "Missing Person", location: "Puente la Reina", lat: 42.6706, lng: -1.8144, distance: 111, image: "camino-images/DAY5.png" },
+{ day: 6, title: "Oh My Sun", location: "Estella", lat: 42.6726, lng: -2.0422, distance: 138, image: "camino-images/day6.png" },
+{ day: 7, title: "Three People", location: "Los Arcos", lat: 42.6568, lng: -2.1509, distance: 162, image: "camino-images/DAY7.png" },
+{ day: 8, title: "Jasmine", location: "Logrono", lat: 42.4667, lng: -2.4435, distance: 188, image: "camino-images/DAY8.png" },
+{ day: 9, title: "Self-made Salad", location: "Najera", lat: 42.4181, lng: -2.7391, distance: 216, image: "camino-images/DAY9.png" },
+{ day: 10, title: "Resurrected Chicken", location: "Santo Domingo", lat: 42.4475, lng: -2.8823, distance: 243, image: "camino-images/day10.png" },
+{ day: 11, title: "Iced Tea", location: "Belorado", lat: 42.4149, lng: -3.0698, distance: 270, image: "camino-images/DAY11.png" },
+{ day: 12, title: "Moment of Fate", location: "San Juan de Ortega", lat: 42.3842, lng: -3.1987, distance: 296, image: "camino-images/day12.png" },
+{ day: 13, title: "Cannot Shake Off", location: "Burgos", lat: 42.3439, lng: -3.6969, distance: 324, image: "camino-images/day13.png" },
+{ day: 14, title: "Last Bed", location: "Hontanas", lat: 42.2922, lng: -4.0336, distance: 353, image: "camino-images/DAY14.png" },
+{ day: 15, title: "Drunk", location: "Castrojeriz", lat: 42.2798, lng: -4.1312, distance: 380, image: "camino-images/day15.png" },
+{ day: 16, title: "Tears in the Backyard", location: "Fromista", lat: 42.2494, lng: -4.4198, distance: 408, image: "camino-images/DAY16.png" },
+{ day: 17, title: "Sound of Heartbreak", location: "Carrion de los Condes", lat: 42.2389, lng: -4.6206, distance: 435, image: "camino-images/day17.png" },
+{ day: 18, title: "Eagle", location: "Terradillos", lat: 42.2639, lng: -4.8327, distance: 462, image: "camino-images/DAY18.png" },
+{ day: 19, title: "Watermelon and Cantaloupe", location: "Sahagun", lat: 42.3894, lng: -5.0479, distance: 490, image: "camino-images/DAY19.png" },
+{ day: 20, title: "Reasons for the Journey", location: "El Burgo Ranero", lat: 42.4086, lng: -5.2453, distance: 516, image: "camino-images/day20.png" },
+{ day: 21, title: "Sandwich and Seafood Rice", location: "Mansilla de las Mulas", lat: 42.4083, lng: -5.5156, distance: 543, image: "camino-images/day21.png" },
+{ day: 22, title: "Competition", location: "Leon", lat: 42.5987, lng: -5.5671, distance: 571, image: "camino-images/day22.png" },
+{ day: 23, title: "Fleas", location: "Villadangos", lat: 42.4386, lng: -5.7453, distance: 597, image: "camino-images/day23.png" },
+{ day: 24, title: "Gate of Forgiveness", location: "Astorga", lat: 42.4594, lng: -6.0566, distance: 625, image: "camino-images/day24.png" },
+{ day: 25, title: "Mountain Top", location: "Foncebadon", lat: 42.4531, lng: -6.2745, distance: 652, image: "camino-images/DAY25.png" },
+{ day: 26, title: "Give Me a Hug", location: "Ponferrada", lat: 42.5479, lng: -5.9671, distance: 679, image: "camino-images/DAY26.png" },
+{ day: 27, title: "Bear", location: "Villafranca del Bierzo", lat: 42.5069, lng: -6.7486, distance: 706, image: "camino-images/DAY27.png" },
+{ day: 28, title: "Hand Gestures", location: "O Cebreiro", lat: 42.7241, lng: -7.4144, distance: 734, image: "camino-images/day28.png" },
+{ day: 29, title: "Crazy Plan", location: "Sarria", lat: 42.7779, lng: -7.4169, distance: 756, image: "camino-images/day29.png" },
+{ day: 30, title: "Santiago", location: "Santiago de Compostela", lat: 42.8785, lng: -8.5447, distance: 780, image: "camino-images/DAY30.png" },
+{ day: 31, title: "Don't Rush", location: "Santiago de Compostela", lat: 42.8785, lng: -8.5447, distance: 780, image: "camino-images/DAY31.png" },
+{ day: 32, title: "Mist", location: "Fisterra", lat: 42.9280, lng: -9.2630, distance: 890, image: "camino-images/DAY32.png" },
+{ day: 33, title: "End and Beginning", location: "Cape Finisterre", lat: 42.9080, lng: -9.2650, distance: 893, image: "camino-images/day33.png" }
+];
+
+const map = L.map("map").setView([42.5, -3.5], 6);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "OpenStreetMap" }).addTo(map);
+
+const routeCoords = pilgrimageData.map(d => [d.lat, d.lng]);
+L.polyline(routeCoords, { color: "#667eea", weight: 4, opacity: 0.8 }).addTo(map);
+
+pilgrimageData.forEach(d => {
+    const marker = L.marker([d.lat, d.lng], {
+        icon: L.divIcon({
+            className: "custom-marker-container",
+            html: "<div class='custom-marker'>"+d.day+"</div>",
+            iconSize: [32, 32], iconAnchor: [16, 16]
+        })
+    }).addTo(map);
+
+    marker.bindPopup("<div class='popup-content'><h4>Day "+d.day+": "+d.title+"</h4><p>"+d.location+"</p><p style='color:#a0aec0'>"+d.distance+" km</p><img src='"+d.image+"' style='width:250px;border-radius:6px;margin-top:5px;'></div>", { maxWidth: 300 });
+});
+
+const timeline = document.getElementById("timeline");
+pilgrimageData.forEach(d => {
+    const item = document.createElement("div");
+    item.className = "day-item";
+    item.id = "day-card-" + d.day;
+    item.innerHTML = "<div class='day-number'>"+d.day+"</div><button class='back-to-map' onclick='window.scrollTo({top:0,behavior:\"smooth\"})'>↑ Back to Map</button><h3>Day "+d.day+": "+d.title+"</h3><div class='location'>📍 "+d.location+"<span class='distance'>"+d.distance+" km</span></div><img src='"+d.image+"' class='screenshot' onclick='showFullScreen(\""+d.image+"\")' alt='Day "+d.day+"'>";
+    timeline.appendChild(item);
+});
+
+function showFullScreen(src) {
+    document.getElementById("fullImage").src = src;
+    document.getElementById("fullScreen").classList.add("active");
+}
+
+function closeFullScreen() {
+    document.getElementById("fullScreen").classList.remove("active");
+}
+
+map.fitBounds(L.latLngBounds(routeCoords), { padding: [50, 50] });
+</script>
+</body>
+</html>

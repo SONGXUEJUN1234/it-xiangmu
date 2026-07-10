@@ -7,30 +7,18 @@
 <link rel="stylesheet" href="leaflet/leaflet.css">
 <script src="leaflet/leaflet.js"></script>
 <style>
-  html, body { height: 100%; margin: 0; }
-  body { font-family: "PingFang SC", "Microsoft YaHei", "Source Han Serif SC", serif; background: #f3ece1; }
-  #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
-
-  #panel {
-    position: absolute; z-index: 1000; top: 14px; left: 14px;
-    background: rgba(252, 247, 237, 0.95);
-    border: 1px solid #c9a87a; border-left: 5px solid #9c3a1e;
-    border-radius: 6px; padding: 12px 16px; max-width: 320px;
-    box-shadow: 0 4px 16px rgba(60, 30, 0, 0.18); line-height: 1.5;
-  }
-  #panel h1 { font-size: 17px; margin: 0 0 2px; color: #5a2a0c; letter-spacing: 1px; }
-  #panel .sub { font-size: 12px; color: #8a6a45; margin-bottom: 8px; }
-  #panel .meta { font-size: 12px; color: #4a3520; }
-  #panel .meta b { color: #9c3a1e; }
-  #panel .hint { font-size: 11px; color: #9a8466; margin-top: 8px; border-top: 1px dashed #d8c4a4; padding-top: 6px; }
-
-  #legend {
-    position: absolute; z-index: 1000; bottom: 22px; left: 14px;
-    background: rgba(252, 247, 237, 0.95);
-    border: 1px solid #c9a87a; border-radius: 6px; padding: 10px 14px;
-    font-size: 12px; color: #4a3520; box-shadow: 0 4px 14px rgba(60,30,0,0.15);
-  }
-  #legend .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  html, body { margin: 0; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", "Source Han Serif SC", serif; background: #f3ece1; color: #3a2a18; padding-bottom: 30px; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 16px 18px 0; }
+  .head { background: rgba(252,247,237,0.95); border: 1px solid #c9a87a; border-left: 5px solid #9c3a1e; border-radius: 6px; padding: 14px 18px; margin-bottom: 12px; line-height: 1.55; }
+  .head h1 { font-size: 20px; margin: 0 0 2px; color: #5a2a0c; letter-spacing: 1px; }
+  .head .sub { font-size: 12.5px; color: #8a6a45; margin-bottom: 8px; }
+  .head .meta { font-size: 12.5px; color: #4a3520; }
+  .head .meta b { color: #9c3a1e; }
+  .head .hint { font-size: 11.5px; color: #9a8466; margin-top: 8px; border-top: 1px dashed #d8c4a4; padding-top: 6px; }
+  #map { height: 80vh; min-height: 520px; width: 100%; border-radius: 8px; border: 1px solid #c9a87a; box-shadow: 0 4px 16px rgba(60,30,0,0.18); }
+  .legend { margin-top: 12px; background: rgba(252,247,237,0.95); border: 1px solid #c9a87a; border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #4a3520; display: flex; flex-wrap: wrap; gap: 6px 22px; }
+  .legend .row { display: flex; align-items: center; gap: 8px; }
   .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
   .line { width: 18px; height: 3px; display: inline-block; border-radius: 2px; }
 
@@ -60,26 +48,23 @@
 </style>
 </head>
 <body>
-<div id="map"></div>
-
-<div id="panel">
-  <h1>从塞北到西域：重走沙漠古道</h1>
-  <div class="sub">［美］欧文·拉铁摩尔 Owen Lattimore · 王敬 译</div>
-  <div class="meta">
-    <b>时间：</b>1926年8月 – 1927年1月<br>
-    <b>驼队：</b>九头骆驼，自张家口出发<br>
-    <b>主干：</b>归化 → 古城子，约 1797 英里<br>
-    <b>路线：</b>明清驼道（归新商路 / 大西路）
+<div class="wrap">
+  <div class="head">
+    <h1>从塞北到西域：重走沙漠古道</h1>
+    <div class="sub">［美］欧文·拉铁摩尔 Owen Lattimore · 王敬 译</div>
+    <div class="meta">
+      <b>时间：</b>1926年8月 – 1927年1月　<b>驼队：</b>九头骆驼，自张家口出发　<b>主干：</b>归化 → 古城子，约 1797 英里　<b>路线：</b>明清驼道（归新商路 / 大西路）
+    </div>
+    <div class="hint">点击站点编号查看详情；数字为行程顺序；灰点为书中提及的关联地点。右下角可切换图层（卫星/浅色/标准/地形）。</div>
   </div>
-  <div class="hint">点击站点编号查看详情；数字为行程顺序；灰点为书中提及的关联地点。右下角可切换图层（卫星/浅色/标准/地形）。</div>
-</div>
-
-<div id="legend">
-  <div class="row"><span class="dot" style="background:#2e6da4"></span> 起点（火车 / 商队组建）</div>
-  <div class="row"><span class="dot" style="background:#c0532b"></span> 驼道主站点（11 站）</div>
-  <div class="row"><span class="dot" style="background:#2e8b57"></span> 终点（古城子 / 奇台）</div>
-  <div class="row"><span class="line" style="background:#b8472d"></span> 驼队实际行进路线</div>
-  <div class="row"><span class="dot" style="background:#9a8466;width:10px;height:10px"></span> 书中提及的关联地点</div>
+  <div id="map"></div>
+  <div class="legend">
+    <div class="row"><span class="dot" style="background:#2e6da4"></span> 起点</div>
+    <div class="row"><span class="dot" style="background:#c0532b"></span> 驼道主站点（11 站）</div>
+    <div class="row"><span class="dot" style="background:#2e8b57"></span> 终点（古城子 / 奇台）</div>
+    <div class="row"><span class="line" style="background:#b8472d"></span> 驼队实际行进路线</div>
+    <div class="row"><span class="dot" style="background:#9a8466;width:10px;height:10px"></span> 书中提及的关联地点</div>
+  </div>
 </div>
 
 <script>

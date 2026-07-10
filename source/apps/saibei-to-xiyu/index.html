@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从塞北到西域 · 拉铁摩尔驼道路线图（1926–1927）</title>
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<script src="leaflet/leaflet.js"></script>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", "Source Han Serif SC", serif; background: #f3ece1; }
+  #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+
+  #panel {
+    position: absolute; z-index: 1000; top: 14px; left: 14px;
+    background: rgba(252, 247, 237, 0.95);
+    border: 1px solid #c9a87a; border-left: 5px solid #9c3a1e;
+    border-radius: 6px; padding: 12px 16px; max-width: 320px;
+    box-shadow: 0 4px 16px rgba(60, 30, 0, 0.18); line-height: 1.5;
+  }
+  #panel h1 { font-size: 17px; margin: 0 0 2px; color: #5a2a0c; letter-spacing: 1px; }
+  #panel .sub { font-size: 12px; color: #8a6a45; margin-bottom: 8px; }
+  #panel .meta { font-size: 12px; color: #4a3520; }
+  #panel .meta b { color: #9c3a1e; }
+  #panel .hint { font-size: 11px; color: #9a8466; margin-top: 8px; border-top: 1px dashed #d8c4a4; padding-top: 6px; }
+
+  #legend {
+    position: absolute; z-index: 1000; bottom: 22px; left: 14px;
+    background: rgba(252, 247, 237, 0.95);
+    border: 1px solid #c9a87a; border-radius: 6px; padding: 10px 14px;
+    font-size: 12px; color: #4a3520; box-shadow: 0 4px 14px rgba(60,30,0,0.15);
+  }
+  #legend .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+  .line { width: 18px; height: 3px; display: inline-block; border-radius: 2px; }
+
+  .num { display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    font-size: 14px; font-weight: 700; color: #fff;
+    border: 2px solid #fff8ec; box-shadow: 0 1px 5px rgba(0,0,0,0.55); }
+  .num.main { background: #c0532b; }
+  .num.start { background: #2e6da4; }
+  .num.end { background: #2e8b57; }
+  .dot-mention { display:flex; align-items:center; justify-content:center;
+    width: 13px; height: 13px; border-radius: 50%; background: #9a8466;
+    border: 2px solid #fff8ec; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+  .lbl { background: rgba(252,247,237,0.92); color:#5a2a0c; font-size:11px;
+    padding:1px 5px; border-radius:3px; border:1px solid #d8c4a4; white-space:nowrap;
+    box-shadow:0 1px 3px rgba(0,0,0,0.3); font-weight:600; }
+  .lbl.mention { background: rgba(252,247,237,0.8); color:#7a6a50; font-weight:400; font-size:10px; }
+  .leaflet-popup-content-wrapper { background:#fdf8ee; border:1px solid #c9a87a; border-radius:6px; }
+  .leaflet-popup-content { margin: 12px 14px; font-size: 13px; line-height: 1.55; }
+  .popup h2 { font-size:15px; margin:0 0 2px; color:#9c3a1e; }
+  .popup .now { font-size:11px; color:#8a6a45; margin-bottom:6px; }
+  .popup .ch { display:inline-block; font-size:11px; background:#efe2c8; color:#7a4a1a;
+    padding:1px 7px; border-radius:10px; margin-bottom:6px; }
+  .popup .desc { color:#3a2a18; }
+  .popup .quote { margin-top:6px; padding:5px 8px; background:#f6ecd6; border-left:3px solid #c9a87a;
+    font-size:12px; color:#5a4530; font-style: italic; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="panel">
+  <h1>从塞北到西域：重走沙漠古道</h1>
+  <div class="sub">［美］欧文·拉铁摩尔 Owen Lattimore · 王敬 译</div>
+  <div class="meta">
+    <b>时间：</b>1926年8月 – 1927年1月<br>
+    <b>驼队：</b>九头骆驼，自张家口出发<br>
+    <b>主干：</b>归化 → 古城子，约 1797 英里<br>
+    <b>路线：</b>明清驼道（归新商路 / 大西路）
+  </div>
+  <div class="hint">点击站点编号查看详情；数字为行程顺序；灰点为书中提及的关联地点。右下角可切换图层（卫星/浅色/标准/地形）。</div>
+</div>
+
+<div id="legend">
+  <div class="row"><span class="dot" style="background:#2e6da4"></span> 起点（火车 / 商队组建）</div>
+  <div class="row"><span class="dot" style="background:#c0532b"></span> 驼道主站点（11 站）</div>
+  <div class="row"><span class="dot" style="background:#2e8b57"></span> 终点（古城子 / 奇台）</div>
+  <div class="row"><span class="line" style="background:#b8472d"></span> 驼队实际行进路线</div>
+  <div class="row"><span class="dot" style="background:#9a8466;width:10px;height:10px"></span> 书中提及的关联地点</div>
+</div>
+
+<script>
+const stops = [
+  { lat:39.9042, lng:116.4074, type:'start', name:'北京', now:'北京', ch:'第一章 通向亚洲腹地之路',
+    desc:'旅程的真正起点。1925年初拉铁摩尔在天津向洋行老板辞职，决心深入亚洲腹地。1926年乘夜班火车离开北京，恰逢“三一八”前后北洋政府的动荡局势。',
+    quote:'我乘夜班火车离开北京，就在当天下午，一群示威者遭到北洋政府警察的枪击……' },
+  { lat:40.7686, lng:114.8865, type:'start', name:'张家口', now:'河北张家口', ch:'商队组建之地',
+    desc:'塞外商贸重镇、张库大道（张家口—库伦）枢纽。拉铁摩尔在此组建驼队、学习像中国商人那样旅行，正式踏上西行驼道。' },
+  { lat:40.8426, lng:111.7490, type:'main', name:'归化', now:'内蒙古呼和浩特', ch:'第二章 塞北边缘',
+    desc:'驼队西行的主要起点。位于大青山南麓宽阔谷地，水源充足，自古是高原游牧与农耕交汇的天然粮仓，也是西北商帮的总部所在。',
+    quote:'归化位于一处宽阔的谷地中，北面是构成蒙古高原南部山地的大青山山脉，南面是山西的外缘山脉。' },
+  { lat:41.6981, lng:110.4377, type:'main', name:'百灵庙', now:'内蒙古达尔罕茂明安联合旗', ch:'第三章 百灵庙',
+    desc:'北上越过阴山（大青山）后的草原寺庙集镇，内蒙古中部的政治宗教中心，驼队北出蒙古高原的必经之路。' },
+  { lat:38.8441, lng:105.7288, type:'main', name:'阿拉善', now:'内蒙古阿拉善左旗巴彦浩特（定远营）', ch:'第七–十二章',
+    desc:'越过阿拉善边界，进入腾格里与巴丹吉林沙漠之间的绿洲腹地。沿途是驼夫、商贩、牧民交汇之地，也是全书最长的一段荒漠旅程。',
+    quote:'中国不缺诚实能干的佣人，但是愿意承担责任、能够主动工作的则很少见。' },
+  { lat:41.9543, lng:101.0569, type:'main', name:'额济纳河', now:'内蒙古额济纳旗（黑河 / 弱水下游）', ch:'第十三章 额济纳河',
+    desc:'黑河（弱水）注入居延海的下游绿洲，黑城（哈拉浩特）遗址所在。这是穿越戈壁前最后、也是最关键的水源生命线。' },
+  { lat:41.90, lng:97.80, type:'main', name:'黑戈壁', now:'甘新交界黑戈壁带', ch:'第十四章 黑戈壁',
+    desc:'中蒙交界、甘新内三省区交汇处的黑色砾石荒漠，中国西北最大的无人区之一，古道最险恶的一段。' },
+  { lat:41.850, lng:96.970, type:'main', name:'黑喇嘛城堡', now:'甘肃酒泉肃北马鬃山镇', ch:'第十五–十六章',
+    desc:'黑喇嘛丹宾喇嘛建于马鬃山的武装要塞遗址，1919年南下所建，曾是丝路驼道上令人闻风丧胆的传奇险地，方圆5平方公里密布碉堡战壕。' },
+  { lat:43.60, lng:94.20, type:'main', name:'达子沟', now:'新疆巴里坤—伊吾交界（前山梁）', ch:'第十七章 达子沟',
+    desc:'巴里坤盆地与伊吾谷地之间的前山梁分界地貌，驼队出黑戈壁、翻越天山东段北麓进入新疆东部的咽喉。',
+    quote:'新疆的汉人称之为皮牙，这一称谓可能是根据突厥语称谓演化而来的。' },
+  { lat:44.27, lng:93.07, type:'main', name:'三趟湖', now:'新疆哈密巴里坤三塘湖乡', ch:'第十九章 三趟湖绿洲',
+    desc:'上、中、下三个湖泊构成的绿洲，新疆东大门的丝路咽喉。商队在此补给，再西折走向天山北麓。',
+    quote:'当一个被统治族群生活富足时，即使政权危如累卵，他们也不太可能想到反叛。' },
+  { lat:44.0204, lng:89.5286, type:'end', name:'古城子', now:'新疆昌吉奇台县', ch:'终点 · 附录“每日行程：从归化到古城子”',
+    desc:'旅程终点，清代新疆商贸重镇、归新驼道的西端总汇。1927年1月抵达，由此可继续西往乌鲁木齐或南下哈密。正是这次旅行，成为拉铁摩尔走上学术之路的契机。' }
+];
+
+const mentions = [
+  { lat:40.97, lng:111.80, name:'大青山', note:'归化城北山脉，蒙古高原南缘。' },
+  { lat:40.6574, lng:109.8403, name:'包头', note:'商道节点。“包头的意思是行李（运输）的尽头”。' },
+  { lat:38.86, lng:103.09, name:'镇番', note:'今民勤。“镇番娃娃”——风雪考验中的人物所自来。' }
+];
+
+const map = L.map('map', { zoomControl: true }).setView([42.0, 100.0], 4);
+
+const bases = {
+  '卫星影像': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom: 17, attribution: '© Esri' }),
+  '浅色地图': L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    { maxZoom: 18, attribution: '© CARTO, © OpenStreetMap' }),
+  '标准地图': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    { maxZoom: 16, attribution: '© OpenStreetMap' }),
+  '地形图': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    { maxZoom: 14, attribution: '© OpenTopoMap, © OpenStreetMap' })
+};
+bases['卫星影像'].addTo(map);
+L.control.layers(bases, null, { position: 'bottomright', collapsed: false }).addTo(map);
+
+const routeLatLngs = stops.map(s => [s.lat, s.lng]);
+L.polyline(routeLatLngs, { color: '#b8472d', weight: 3.5, opacity: 0.9, lineCap: 'round' }).addTo(map);
+
+stops.forEach((s, i) => {
+  const cls = s.type === 'start' ? 'start' : (s.type === 'end' ? 'end' : 'main');
+  const icon = L.divIcon({ className: '', html: `<div class="num ${cls}">${i+1}</div>`,
+    iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -14] });
+  const html = `<div class="popup">
+    <h2>${s.name}</h2><div class="now">今：${s.now}</div><div class="ch">${s.ch}</div>
+    <div class="desc">${s.desc}</div>${s.quote ? `<div class="quote">“${s.quote}”</div>` : ''}</div>`;
+  L.marker([s.lat, s.lng], { icon }).addTo(map).bindPopup(html);
+  L.marker([s.lat, s.lng], { icon: L.divIcon({ className:'', html:`<div class="lbl">${i+1}. ${s.name}</div>`,
+    iconSize:[80,16], iconAnchor:[40,18] }), interactive:false }).addTo(map);
+});
+
+mentions.forEach(m => {
+  const icon = L.divIcon({ className: '', html: '<div class="dot-mention"></div>',
+    iconSize: [13, 13], iconAnchor: [6, 6] });
+  L.marker([m.lat, m.lng], { icon }).addTo(map)
+    .bindPopup(`<div class="popup"><h2>${m.name}</h2><div class="desc">${m.note}</div></div>`);
+  L.marker([m.lat, m.lng], { icon: L.divIcon({ className:'', html:`<div class="lbl mention">${m.name}</div>`,
+    iconSize:[60,16], iconAnchor:[30,16] }), interactive:false }).addTo(map);
+});
+
+map.fitBounds(routeLatLngs, { padding: [40, 40] });
+</script>
+</body>
+</html>

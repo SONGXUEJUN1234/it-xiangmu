@@ -19,3 +19,4 @@ title: 项目
 - 散装物料盘点工具：基于空置体积法的专业盘点计算工具，精确计算散装砂石等物料的体积与重量 | [在线体验](/apps/inventory-tool/)
 - 玻璃原料价格监控系统：实时监控玻璃生产主要原料（纯碱、天然气、电力、锂长石、方解石等）价格变动的专业工具 | [在线体验](/apps/glass-price-monitor/) | [下载源码](/downloads/glass-price-monitor.zip)
 - 朝圣之路：圣地亚哥朝圣之旅33天完整记录，从法国到西班牙的893公里朝圣路线可视化 | [在线体验](/apps/camino-pilgrimage/) | [项目文章](/2026/05/17/camino-pilgrimage/) | [下载源码](/downloads/camino-pilgrimage.zip)
+- 从塞北到西域：拉铁摩尔驼道路线图，1926年塞北至新疆古城子的沙漠古道11站交互式地图 | [在线体验](/apps/saibei-to-xiyu/) | [项目文章](/2026/07/10/saibei-to-xiyu/) | [下载源码](/downloads/saibei-to-xiyu.zip)

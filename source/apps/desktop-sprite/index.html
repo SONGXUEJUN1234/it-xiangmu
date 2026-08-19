@@ -1,0 +1,76 @@
+---
+title: 暖心桌面精灵
+---
+
+<style>
+.sprite-page{font-family:"Microsoft YaHei",system-ui,sans-serif;color:#493c55;line-height:1.7}
+.sprite-page .lead{font-size:16px;color:#604b6e}
+.sprite-page .preview-card{margin:24px auto;padding:36px 20px 28px;border-radius:28px;text-align:center;background:linear-gradient(145deg,#fffafd,#f4efff);border:1px solid rgba(255,255,255,.9);box-shadow:0 14px 40px rgba(92,65,115,.18)}
+.sprite-page .bubble{display:inline-block;padding:14px 20px;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(113,81,128,.12);font-size:15px;font-weight:600;color:#604b6e;margin-bottom:6px}
+.sprite-page .pet{position:relative;width:148px;height:190px;margin:18px auto 6px;animation:sprite-float 3.4s ease-in-out infinite;filter:drop-shadow(0 15px 12px rgba(96,71,115,.15))}
+.sprite-page .face{position:absolute;left:17px;top:29px;width:114px;height:99px;background:#ffd9e4;border:5px solid #f0b4c8;border-radius:46% 46% 42% 42%;z-index:2}
+.sprite-page .ear{position:absolute;top:7px;width:51px;height:64px;background:#ffd9e4;border:5px solid #f0b4c8;border-radius:70% 35% 65% 35%;z-index:1}
+.sprite-page .ear.l{left:9px;transform:rotate(-25deg)}
+.sprite-page .ear.r{right:9px;transform:scaleX(-1) rotate(-25deg)}
+.sprite-page .eye{position:absolute;top:42px;width:9px;height:13px;border-radius:50%;background:#533c5e;z-index:3}
+.sprite-page .eye.l{left:31px}.sprite-page .eye.r{right:31px}
+.sprite-page .blush{position:absolute;top:59px;width:20px;height:9px;border-radius:50%;background:#f49ab0;opacity:.72;z-index:3}
+.sprite-page .blush.l{left:12px}.sprite-page .blush.r{right:12px}
+.sprite-page .mouth{position:absolute;left:50px;top:53px;font-size:20px;z-index:3}
+.sprite-page .body{position:absolute;left:22px;top:112px;width:105px;height:77px;border-radius:50px 50px 35px 35px;background:#c9b8f6;border:5px solid #a08bdc}
+.sprite-page .heart{color:#fff;font-size:28px;text-align:center;margin-top:18px}
+.sprite-page .sparkle{position:absolute;color:#f3bd53;font-size:22px;animation:sprite-twinkle 1.8s infinite}
+.sprite-page .s1{left:10px;top:24px}.sprite-page .s2{right:6px;top:120px;animation-delay:.7s}
+.sprite-page .caption{font-size:12px;color:#a698ae;margin-top:10px}
+.sprite-page table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+.sprite-page th{background:#f4efff;color:#755c84;text-align:left}
+.sprite-page th,.sprite-page td{padding:9px 12px;border:1px solid #e8dff0}
+.sprite-page .btn{display:inline-block;padding:11px 26px;border-radius:18px;background:#9b83df;color:#fff!important;font-weight:600;text-decoration:none;box-shadow:0 6px 16px rgba(155,131,223,.35)}
+.sprite-page .btn:hover{filter:brightness(1.05)}
+.sprite-page pre{background:#2d2438;color:#e8dff0;padding:14px 16px;border-radius:12px;overflow-x:auto;font-size:13px}
+@keyframes sprite-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
+@keyframes sprite-twinkle{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.2) rotate(15deg)}}
+</style>
+
+<div class="sprite-page">
+  <h2>暖心桌面精灵（下载版）</h2>
+  <p class="lead">一个基于 Electron 的 Windows 桌面暖心精灵：以无边框透明窗口悬浮在桌面右下角，定时送出关心金句，用系统中文语音轻声播报，并以轻微浮动、闪烁和弹出动画营造桌宠陪伴感。</p>
+
+  <div class="preview-card">
+    <span class="bubble">愿你今天也被温柔以待。</span>
+    <div class="pet">
+      <span class="sparkle s1">✦</span><span class="sparkle s2">✦</span>
+      <i class="ear l"></i><i class="ear r"></i>
+      <div class="face">
+        <i class="eye l"></i><i class="eye r"></i>
+        <i class="blush l"></i><i class="blush r"></i>
+        <span class="mouth">◡</span>
+      </div>
+      <div class="body"><div class="heart">♥</div></div>
+    </div>
+    <div class="caption">桌面精灵实际效果示意（网页内静态预览，应用本体为 Windows 桌面程序）</div>
+  </div>
+
+  <h3>功能特点</h3>
+  <table>
+    <tr><th>功能</th><th>说明</th></tr>
+    <tr><td>桌面悬浮</td><td>无边框、透明、置顶显示，不占用任务栏位置</td></tr>
+    <tr><td>关心金句</td><td>内置多条中文暖心金句，支持「再说一句」立即触发</td></tr>
+    <tr><td>随机提醒</td><td>可设置 15 分钟 / 30 分钟 / 1 小时 / 2 小时提醒间隔</td></tr>
+    <tr><td>语音播报</td><td>调用 Windows 系统中文语音合成播报金句</td></tr>
+    <tr><td>动画效果</td><td>桌宠浮动、金句弹出、星光闪烁与按钮交互</td></tr>
+    <tr><td>安静时段</td><td>默认 22:00—07:00 免打扰，可在设置面板调整</td></tr>
+    <tr><td>开机启动</td><td>可在设置中启用 Windows 开机自动启动</td></tr>
+    <tr><td>系统托盘</td><td>支持显示精灵、立即发送一句和退出应用</td></tr>
+  </table>
+
+  <h3>本地运行</h3>
+  <p>在 Windows 上进入源码目录，执行：</p>
+  <pre><code>npm install
+npm start</code></pre>
+  <p>首次安装 Electron 需要网络连接；如下载较慢，可配置可用的 npm 镜像源后重试。</p>
+
+  <h3>下载</h3>
+  <p><a class="btn" href="/downloads/desktop-sprite.zip">下载源码（desktop-sprite.zip）</a></p>
+  <p>说明：该项目为 Windows 桌面工程，不提供网页在线演示，本页为项目介绍页。
+</div>

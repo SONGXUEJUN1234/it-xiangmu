@@ -1,0 +1,118 @@
+---
+title: 唐朝诗人年谱甘特图
+---
+
+<style>
+.gantt-page{font-family:"Microsoft YaHei",system-ui,sans-serif;color:#3d3a34;line-height:1.75}
+.gantt-page .lead{font-size:16px;color:#5c564b}
+.gantt-page h2,.gantt-page h3{font-family:"Noto Serif SC","SimSun",serif;color:#2f2c26}
+.gantt-page .preview-card{margin:24px auto;padding:28px 22px 20px;border-radius:18px;background:linear-gradient(160deg,#fffdf8,#f6f1e6);border:1px solid #e8e0cf;box-shadow:0 12px 34px rgba(90,80,60,.14)}
+.gantt-page .mini{position:relative;font-size:12px}
+.gantt-page .mini .axis{position:relative;height:18px;border-bottom:1px solid #cfc5ae;margin-left:76px}
+.gantt-page .mini .tick{position:absolute;top:0;transform:translateX(-50%);color:#a09478;font-size:11px}
+.gantt-page .mini .periods{position:relative;height:20px;margin:6px 0 4px 76px;border-radius:4px;overflow:hidden}
+.gantt-page .mini .pband{position:absolute;top:0;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;letter-spacing:2px}
+.gantt-page .mini .rows{position:relative;margin-left:76px;border-left:1px solid #e4dcc9}
+.gantt-page .mini .row{position:relative;height:24px;border-bottom:1px dotted #e8e0cf}
+.gantt-page .mini .bar{position:absolute;top:6px;height:12px;border-radius:6px;opacity:.92}
+.gantt-page .mini .pname{position:absolute;left:-76px;width:70px;text-align:right;top:2px;color:#4c463c;font-size:12px;white-space:nowrap}
+.gantt-page .mini .evline{position:absolute;top:-26px;bottom:0;width:0;border-left:1px dashed #b0864f;opacity:.65}
+.gantt-page .mini .evtag{position:absolute;top:-22px;transform:translateX(-50%);font-size:10px;color:#8a6a35;white-space:nowrap}
+.gantt-page .caption{font-size:12px;color:#a89c82;margin-top:12px;text-align:center}
+.gantt-page .legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px;font-size:12px;color:#5c564b}
+.gantt-page .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.gantt-page table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+.gantt-page th{background:#f6f1e6;color:#6b5d3f;text-align:left}
+.gantt-page th,.gantt-page td{padding:9px 12px;border:1px solid #e8e0cf}
+.gantt-page .btn{display:inline-block;padding:11px 26px;border-radius:14px;background:#8a6a35;color:#fff!important;font-weight:600;text-decoration:none;box-shadow:0 6px 16px rgba(138,106,53,.35)}
+.gantt-page .btn:hover{filter:brightness(1.08)}
+.gantt-page pre{background:#332f27;color:#efe8d8;padding:14px 16px;border-radius:12px;overflow-x:auto;font-size:13px}
+.gantt-page ul{padding-left:22px}
+.gantt-page li{margin:6px 0}
+</style>
+
+<div class="gantt-page">
+  <h2>唐朝诗人年谱甘特图（Excel 工作簿）</h2>
+  <p class="lead">把 50 位唐朝诗人（王勃、李白、杜甫、白居易、李商隐……）的生平装进一张 Excel 甘特图：580—929 年、每 5 年一列，甘特条按年谱片段（任职、贬谪、漫游、隐居……）分段着色，纵向一眼看出诗人之间的时空交集。</p>
+
+  <div class="preview-card">
+    <div class="mini">
+      <div class="axis">
+        <span class="tick" style="left:5.71%">600</span><span class="tick" style="left:20%">650</span><span class="tick" style="left:34.29%">700</span><span class="tick" style="left:48.57%">750</span><span class="tick" style="left:62.86%">800</span><span class="tick" style="left:77.14%">850</span><span class="tick" style="left:91.43%">900</span>
+      </div>
+      <div class="periods">
+        <span class="pband" style="left:10.86%;width:26.86%;background:#4a3aa7">初唐</span>
+        <span class="pband" style="left:37.71%;width:15.43%;background:#2a78d6">盛唐</span>
+        <span class="pband" style="left:53.14%;width:19.71%;background:#1baf7a">中唐</span>
+        <span class="pband" style="left:72.86%;width:20.57%;background:#e34948">晚唐</span>
+      </div>
+      <div class="rows">
+        <span class="evline" style="left:31.43%"></span><span class="evtag" style="left:31.43%">690 武周</span>
+        <span class="evline" style="left:50%"></span><span class="evtag" style="left:50%">755 安史</span>
+        <span class="evline" style="left:64.29%"></span><span class="evtag" style="left:64.29%">805 永贞</span>
+        <span class="evline" style="left:72.86%"></span><span class="evtag" style="left:72.86%">835 甘露</span>
+        <span class="evline" style="left:84.29%"></span><span class="evtag" style="left:84.29%">875 黄巢</span>
+        <span class="evline" style="left:93.43%"></span><span class="evtag" style="left:93.43%">907 唐亡</span>
+        <div class="row"><span class="pname">王勃 650-676</span><span class="bar" style="left:20%;width:7.43%;background:#4a3aa7"></span></div>
+        <div class="row"><span class="pname">陈子昂 661-702</span><span class="bar" style="left:23.14%;width:11.71%;background:#4a3aa7"></span></div>
+        <div class="row"><span class="pname">贺知章 659-744</span><span class="bar" style="left:22.57%;width:24.29%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">张九龄 678-740</span><span class="bar" style="left:28%;width:17.71%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">孟浩然 689-740</span><span class="bar" style="left:31.14%;width:14.57%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">王维 701-761</span><span class="bar" style="left:34.57%;width:17.14%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">李白 701-762</span><span class="bar" style="left:34.57%;width:17.43%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">杜甫 712-770</span><span class="bar" style="left:37.71%;width:16.57%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">岑参 715-770</span><span class="bar" style="left:38.57%;width:15.71%;background:#2a78d6"></span></div>
+        <div class="row"><span class="pname">韦应物 737-792</span><span class="bar" style="left:44.86%;width:15.71%;background:#1baf7a"></span></div>
+        <div class="row"><span class="pname">韩愈 768-824</span><span class="bar" style="left:53.71%;width:16%;background:#1baf7a"></span></div>
+        <div class="row"><span class="pname">白居易 772-846</span><span class="bar" style="left:54.86%;width:21.14%;background:#1baf7a"></span></div>
+        <div class="row"><span class="pname">刘禹锡 772-842</span><span class="bar" style="left:54.86%;width:20%;background:#1baf7a"></span></div>
+        <div class="row"><span class="pname">柳宗元 773-819</span><span class="bar" style="left:55.14%;width:13.14%;background:#1baf7a"></span></div>
+        <div class="row"><span class="pname">李贺 790-816</span><span class="bar" style="left:60%;width:7.43%;background:#1baf7a"></span></div>
+        <div class="row"><span class="pname">杜牧 803-852</span><span class="bar" style="left:63.71%;width:14%;background:#e34948"></span></div>
+        <div class="row"><span class="pname">温庭筠 812-866</span><span class="bar" style="left:66.29%;width:15.43%;background:#e34948"></span></div>
+        <div class="row"><span class="pname">李商隐 813-858</span><span class="bar" style="left:66.57%;width:12.86%;background:#e34948"></span></div>
+        <div class="row"><span class="pname">韦庄 836-910</span><span class="bar" style="left:73.14%;width:21.14%;background:#e34948"></span></div>
+        <div class="row" style="border-bottom:none"><span class="pname">杜荀鹤 846-904</span><span class="bar" style="left:75.71%;width:16.57%;background:#e34948"></span></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#4a3aa7"></i>初唐</span>
+      <span><i style="background:#2a78d6"></i>盛唐</span>
+      <span><i style="background:#1baf7a"></i>中唐</span>
+      <span><i style="background:#e34948"></i>晚唐</span>
+    </div>
+    <div class="caption">网页内静态示意：20 位代表诗人生卒年条（按四唐分期着色）。工作簿内为 50 位诗人、逐段年谱甘特图，按地理大区与人生类型双维度着色。</div>
+  </div>
+
+  <h3>工作簿结构（7 个工作表）</h3>
+  <table>
+    <tr><th>工作表</th><th>内容</th></tr>
+    <tr><td>读我</td><td>用法说明、两张图例、数据口径与存疑标注说明</td></tr>
+    <tr><td>名录</td><td>50 位诗人基础表：生卒年、享年（活公式）、四唐分期、字号称谓、存疑备注</td></tr>
+    <tr><td>年谱数据</td><td>数据源表视图：每行一段——诗人、起止年、人生类型、地理大区、事件/地点（共 324 段）</td></tr>
+    <tr><td>甘特·地点</td><td>按地理大区（两京/江南/蜀中/荆湘……）着色的甘特图</td></tr>
+    <tr><td>甘特·类型</td><td>按人生类型（京官/贬谪/漫游/隐居……）着色的甘特图</td></tr>
+    <tr><td>交集</td><td>50×50 同在世年数矩阵（活公式 + 蓝色色阶）+ 26 条交游事件表</td></tr>
+    <tr><td>历史大事</td><td>18 条大事年表；并渲染为甘特图顶部事件带与竖线（武周、安史、永贞、甘露、黄巢、唐亡）</td></tr>
+  </table>
+
+  <h3>数据与口径</h3>
+  <ul>
+    <li>生卒年取通行值，存疑标「约」，名录备注记异说（如张若虚生年 647/670 两说取 670）</li>
+    <li>年谱片段按「主要居留地 / 主要身份」分段，每人片段首尾相接铺满一生，无重叠无缝隙</li>
+    <li>横轴每 5 年一列（580—929，共 70 桶）；重大事件在对应列画深色竖线</li>
+    <li>两套 7 色板均通过色盲安全与亮度带校验；低对比色另配段级文字标签、白色隔断与图例兜底</li>
+    <li>交集矩阵为活公式（COUNTIFS 思路的重算校验零公式错误），改数据后可整表联动</li>
+  </ul>
+
+  <h3>本地使用</h3>
+  <p>直接用 Excel / WPS 打开压缩包内的 <code>唐朝诗人年谱甘特图.xlsx</code> 即可浏览。如需改数据重新生成：</p>
+  <pre><code>pip install openpyxl formulas
+python build_xlsx.py    # 重新生成工作簿
+python verify_xlsx.py   # 自验：公式重算、逐桶比对色块、图例映射、史实抽查</code></pre>
+  <p>数据源为 <code>data/</code> 下四个 CSV（poets / segments / events / encounters，UTF-8-SIG 编码），可直接用文本编辑器或 Excel 修改。</p>
+
+  <h3>下载</h3>
+  <p><a class="btn" href="/downloads/唐朝诗人年谱甘特图.zip">下载工作簿与源码（唐朝诗人年谱甘特图.zip）</a></p>
+  <p>说明：该项目为 Excel 数据工程，不提供网页在线演示，本页为项目介绍页。
+</div>

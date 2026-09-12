@@ -1,0 +1,86 @@
+---
+title: 猴面包的树 · 作品地点地图
+---
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>猴面包的树 · 作品地点地图</title>
+<style>
+  body{margin:0;background:#f5f1e8;color:#2b2925;font-family:"Noto Serif SC","Songti SC",serif;line-height:1.9}
+  .wrap{max-width:860px;margin:0 auto;padding:48px 28px 72px}
+  .eyebrow{letter-spacing:.35em;font-size:12px;color:#c0654a;font-family:inherit}
+  h1{font-size:34px;margin:10px 0 6px;font-weight:600}
+  h1 span{color:#c0654a}
+  .sub{color:#7a7466;font-size:15px;margin-bottom:28px}
+  .note{background:#efe8d9;border:1px solid #ddd2bb;border-radius:10px;padding:14px 18px;font-size:14px;color:#6b6355;margin:22px 0}
+  h2{font-size:20px;margin:38px 0 12px;border-left:4px solid #c0654a;padding-left:12px;font-weight:600}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  td,th{border:1px solid #ddd2bb;padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#eae2cf;font-weight:600}
+  pre{background:#2f2b24;color:#e8e2d2;padding:16px 18px;border-radius:10px;font-size:13px;overflow:auto}
+  a.btn{display:inline-block;background:#c0654a;color:#fff;text-decoration:none;padding:11px 26px;border-radius:999px;font-size:15px;margin:6px 14px 0 0}
+  a.btn.ghost{background:none;border:1.5px solid #c0654a;color:#c0654a}
+  .map-illus{margin:26px 0 6px}
+  footer{margin-top:46px;color:#8b8474;font-size:13px;border-top:1px solid #ddd2bb;padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">FIELD INDEX / 2026</p>
+  <h1>猴面包的树<span> · </span>作品地点地图</h1>
+  <p class="sub">文字从哪里出发，地图就从哪里展开 —— 微信读书作者「猴面包的树」101 部作品、88 个已核验地点的世界地图。</p>
+
+  <div class="note">在线演示由原生成环境（Manus 托管）提供，点击下方「在线演示」即可体验完整地图；本站另提供源码下载，地图地点数据托管在原环境云端，源码运行需自备数据（见下方说明）。</div>
+
+  <div class="map-illus">
+    <svg viewBox="0 0 800 300" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="田野索引风格地图示意">
+      <rect width="800" height="300" rx="14" fill="#ece4d2"/>
+      <g stroke="#d8cdb2" stroke-width="1">
+        <path d="M40 220 Q180 150 340 210 T660 190 T780 150" fill="none"/>
+        <path d="M60 90 Q220 60 400 110 T760 70" fill="none"/>
+      </g>
+      <g fill="#c0654a">
+        <circle cx="150" cy="120" r="6"/><circle cx="150" cy="120" r="13" fill="none" stroke="#c0654a" stroke-opacity=".4" stroke-width="2"/>
+        <circle cx="330" cy="200" r="6"/><circle cx="330" cy="200" r="13" fill="none" stroke="#c0654a" stroke-opacity=".4" stroke-width="2"/>
+        <circle cx="520" cy="100" r="6"/><circle cx="520" cy="100" r="13" fill="none" stroke="#c0654a" stroke-opacity=".4" stroke-width="2"/>
+        <circle cx="680" cy="180" r="6"/><circle cx="680" cy="180" r="13" fill="none" stroke="#c0654a" stroke-opacity=".4" stroke-width="2"/>
+      </g>
+      <g font-family="sans-serif" font-size="13" fill="#7a7466">
+        <text x="130" y="152">阿拉斯加</text><text x="310" y="232">萨列哈尔德</text><text x="500" y="132">乞力马扎罗</text><text x="662" y="212">东澳海岸</text>
+      </g>
+    </svg>
+  </div>
+
+  <h2>项目介绍</h2>
+  <p>以旅行者的纸质档案册为灵感（「田野索引」设计方向），把作者在 101 部游记中写到的地点放到一张世界地图上：初始收录 136 个地点、153 条作品—地点关联，经书籍简介证据与地理编码双重核验后保留 <strong>88 个地点、99 条关联、0 条坐标错配</strong>；对阿拉斯加、北极圈等易错点做过逐点人工校验。</p>
+
+  <h2>功能特点</h2>
+  <table>
+    <tr><th>能力</th><th>说明</th></tr>
+    <tr><td>证据优先</td><td>仅收录「作品简介中存在地点证据 + 具备地理编码」的地点，每条关联带证据文字与置信度（high/medium/low）</td></tr>
+    <tr><td>投影对齐</td><td>红点叠加层与 Google Maps 嵌入底图使用同一 Web Mercator 投影、中心与缩放，修复「红点漂到海里」类错位</td></tr>
+    <tr><td>作品档案卡</td><td>点击地点展开关联书籍封面轨道，一键跳转微信读书对应书目</td></tr>
+    <tr><td>近似定位标注</td><td>地理编码置信不足的地点明确标注「近似定位」，不冒充精确坐标</td></tr>
+  </table>
+
+  <h2>本地运行（源码工程）</h2>
+  <pre>pnpm install
+pnpm dev        # 开发预览（默认 3000 端口）
+pnpm build      # 构建产物输出到 dist/public</pre>
+  <p style="font-size:14px;color:#7a7466">提示：地点数据与三张图片素材原本经由生成环境的托管存储下发（<code>/manus-storage/…</code>），源码运行时需自备或替换为自己的数据文件（数据结构见 <code>client/src/pages/Home.tsx</code> 的 Place/Work 类型）。</p>
+
+  <h2>数据边界</h2>
+  <p>作品与封面元数据来自用户授权的微信读书接口；坐标一次性来自 OpenStreetMap Nominatim（单线程、1 请求/秒并本地缓存）；底图为 Google Maps 官方嵌入。地点收录以书籍简介证据为准，不代表作者到访的全部行程。</p>
+
+  <p>
+    <a class="btn" href="https://baobabmap-j2afg9ta.manus.space/" target="_blank" rel="noopener noreferrer">在线演示</a>
+    <a class="btn ghost" href="/downloads/baobab-journey.zip">下载源码</a>
+    <a class="btn ghost" href="/2026/09/12/baobab-journey/">项目文章</a>
+  </p>
+
+  <footer>独立整理 · 猴面包的树作品地点索引 · © 2026</footer>
+</div>
+</body>
+</html>

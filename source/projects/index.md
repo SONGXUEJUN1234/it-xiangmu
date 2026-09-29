@@ -28,3 +28,4 @@ title: 项目
 - 绿皮火车·民谣歌单：周云蓬《绿皮火车：一直在路上》书中的可核验民谣歌单，出处分级标注，试听外链官方音乐平台 | [在线体验](/apps/green-train/) | [项目文章](/2026/09/12/green-train/) | [下载源码](/downloads/green-train.zip)
 - 2025 诗篇·一年之内的回声：《2025》诗集 20 首网页欣赏器，竖版海报一键导出与雨声/音乐声景（静态版 AI 赏析不可用） | [在线体验](/apps/poetry-2025/) | [项目文章](/2026/09/12/poetry-2025/) | [下载源码](/downloads/poetry-2025.zip)
 - 猴面包的树·作品地点地图：101 部游记作品的 88 个已核验地点世界地图，证据优先与投影对齐，在线演示由原生成环境托管 | [在线演示](https://baobabmap-j2afg9ta.manus.space/) | [项目文章](/2026/09/12/baobab-journey/) | [下载源码](/downloads/baobab-journey.zip)
+- 星空·星座认星镜：眼镜式星座识别装置，Python 按亮星 J2000 真实坐标生成打孔图纸 PDF，两星锁定法零基础认星 | [项目介绍](/apps/xingkong/) | [项目文章](/2026/09/29/xingkong/) | [下载源码](/downloads/xingkong.zip)

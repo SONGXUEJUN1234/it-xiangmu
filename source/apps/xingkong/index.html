@@ -1,0 +1,100 @@
+---
+title: 星空·星座认星镜
+---
+
+<style>
+.xk-page{font-family:"Microsoft YaHei",system-ui,sans-serif;color:#cdd6f4;line-height:1.7}
+.xk-page .lead{font-size:16px;color:#aeb8dd}
+.xk-page h3{border-left:4px solid #e8c368;padding-left:10px}
+.xk-page .preview-card{margin:24px auto;padding:26px 18px 20px;border-radius:20px;text-align:center;background:linear-gradient(160deg,#d9d0bf,#cfc5ae);border:1px solid #b8ac92;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.xk-page .board{display:block;max-width:100%;height:auto;margin:0 auto}
+.xk-page .caption{font-size:12px;color:#6b6253;margin-top:8px}
+.xk-page table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+.xk-page th{background:#1a2145;color:#e8c368;text-align:left}
+.xk-page th,.xk-page td{padding:9px 12px;border:1px solid #2a3160}
+.xk-page tr:nth-child(odd) td{background:rgba(255,255,255,.02)}
+.xk-page .btn{display:inline-block;padding:11px 26px;border-radius:16px;background:#2f3a78;color:#fff!important;font-weight:600;text-decoration:none;box-shadow:0 6px 16px rgba(47,58,120,.5)}
+.xk-page .btn:hover{filter:brightness(1.12)}
+.xk-page pre{background:#0b0f24;color:#dfe4ff;padding:14px 16px;border-radius:12px;overflow-x:auto;font-size:13px}
+.xk-page .note{font-size:13px;color:#8f9ac4}
+.xk-page ol li,.xk-page ul li{margin:4px 0}
+</style>
+
+<div class="xk-page">
+  <h2>星空·星座认星镜（下载版）</h2>
+  <p class="lead">眼镜式星座识别装置：Python 命令行工具按星座亮星 J2000 真实坐标生成打孔图纸 PDF，
+  硬纸板打孔后套在眼镜上——锚点大孔对准易认亮星、歪头旋转锁定第二颗星，其余孔即指向整个星座。</p>
+
+  <div class="preview-card">
+    <svg class="board" viewBox="0 0 380 200" width="380" role="img" aria-label="北斗七星打孔面板示意图">
+      <rect x="0" y="0" width="380" height="200" fill="#d9d0bf"/>
+      <rect x="10" y="10" width="360" height="180" fill="none" stroke="#8a7d63" stroke-width="2"/>
+      <line x1="26" y1="12" x2="26" y2="188" stroke="#a89b7e" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <line x1="354" y1="12" x2="354" y2="188" stroke="#a89b7e" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <text x="26" y="196" font-size="9" fill="#8a7d63" text-anchor="middle">折翼虚线</text>
+      <text x="354" y="196" font-size="9" fill="#8a7d63" text-anchor="middle">折翼虚线</text>
+      <g stroke="#a89b7e" stroke-width="1" opacity=".55">
+        <line x1="42" y1="128" x2="96" y2="104"/><line x1="96" y1="104" x2="148" y2="82"/>
+        <line x1="148" y1="82" x2="205" y2="52"/><line x1="205" y1="52" x2="222" y2="102"/>
+        <line x1="222" y1="102" x2="280" y2="92"/><line x1="280" y1="92" x2="264" y2="40"/>
+        <line x1="264" y1="40" x2="205" y2="52"/>
+      </g>
+      <g>
+        <circle cx="42" cy="128" r="6.5" fill="#241f1a"/><text x="30" y="146" font-size="11" fill="#5a5347">摇光</text>
+        <circle cx="96" cy="104" r="6.5" fill="#241f1a"/><text x="84" y="122" font-size="11" fill="#5a5347">开阳</text>
+        <circle cx="148" cy="82" r="6.5" fill="#241f1a"/><text x="136" y="100" font-size="11" fill="#5a5347">玉衡</text>
+        <circle cx="205" cy="52" r="6.5" fill="#241f1a"/><text x="196" y="38" font-size="11" fill="#5a5347">天权</text>
+        <circle cx="222" cy="102" r="6.5" fill="#241f1a"/><text x="214" y="122" font-size="11" fill="#5a5347">天玑</text>
+        <circle cx="280" cy="92" r="6.5" fill="#241f1a"/><text x="292" y="98" font-size="11" fill="#5a5347">天璇</text>
+        <circle cx="264" cy="40" r="11" fill="#241f1a" stroke="#b9892e" stroke-width="3"/>
+        <text x="280" y="36" font-size="11" font-weight="bold" fill="#5a5347">天枢（锚点 Ø5mm）</text>
+      </g>
+      <line x1="60" y1="170" x2="160" y2="170" stroke="#5a5347" stroke-width="2"/>
+      <line x1="60" y1="164" x2="60" y2="176" stroke="#5a5347" stroke-width="2"/>
+      <line x1="160" y1="164" x2="160" y2="176" stroke="#5a5347" stroke-width="2"/>
+      <text x="110" y="162" font-size="10" fill="#5a5347" text-anchor="middle">50 mm 校准标尺</text>
+    </svg>
+    <div class="caption">北斗七星打孔面板示意（孔位按真实星位换算；金色描边大孔为锚点，印刷面朝眼安装）</div>
+  </div>
+
+  <h3>功能特点</h3>
+  <table>
+    <tr><th>功能</th><th>说明</th></tr>
+    <tr><td>真实星位打孔</td><td>按 J2000 赤经赤纬计算各亮星相对位置，孔位即星位（精度 0.01–0.05 度）</td></tr>
+    <tr><td>两星锁定法</td><td>锚点大孔（Ø5mm）套住亮星，歪头旋转让"第二亮"孔也套住对应星，图案即锁定</td></tr>
+    <tr><td>可调离眼距离</td><td><code>--distance</code> 80–300mm（默认 100mm），孔距随距离自动换算</td></tr>
+    <tr><td>打印校准标尺</td><td>图纸含 50mm 标尺，打印后先量标尺确认为 100% 实际大小</td></tr>
+    <tr><td>每孔印星名</td><td>孔旁印有星名，锁定后按名认星</td></tr>
+    <tr><td>单元测试</td><td>pytest 覆盖坐标换算与星表数据不变量</td></tr>
+    <tr><td>星表可扩展</td><td>star_data.py 按现有格式补星座即可</td></tr>
+  </table>
+
+  <h3>首批支持星座</h3>
+  <table>
+    <tr><th>星座</th><th>最佳季节</th><th>星数</th><th>锚点亮星</th></tr>
+    <tr><td>北斗七星</td><td>全年（北半球中高纬）</td><td>7</td><td>天枢</td></tr>
+    <tr><td>猎户座</td><td>冬季</td><td>7</td><td>参宿四</td></tr>
+    <tr><td>仙后座</td><td>秋季</td><td>5</td><td>王良四</td></tr>
+    <tr><td>天鹅座</td><td>夏季</td><td>5</td><td>天津四</td></tr>
+    <tr><td>天琴座</td><td>夏季</td><td>5</td><td>织女一</td></tr>
+  </table>
+
+  <h3>生成图纸</h3>
+  <pre><code>python -m pip install -r requirements.txt   # 首次
+python make_card.py 列表                     # 查看支持的星座
+python make_card.py 猎户座 --distance 100    # 生成图纸 PDF</code></pre>
+  <p class="note">Windows 下建议加 <code>PYTHONUTF8=1</code> 前缀运行，避免中文输出乱码。</p>
+
+  <h3>制作与使用</h3>
+  <ul>
+    <li><b>制作</b>：图纸按 100% 实际大小打印 → 贴 300g 灰板纸裁切 → 锚点 Ø5mm、其余 Ø3mm 打孔 → 左右贴折翼固定在眼镜框</li>
+    <li><b>安装</b>：印刷面（印有星名的面）必须朝向眼睛，装反图案会左右镜像</li>
+    <li><b>使用</b>：闭一只眼，锚点大孔套住亮星 → 歪头旋转锁定第二颗 → 其余孔即指向星座各星</li>
+    <li><b>验证</b>：晴夜先测北斗（全年可见最宽容），锁定后各孔错位 &lt; 3° 算通过</li>
+  </ul>
+
+  <h3>下载</h3>
+  <p><a class="btn" href="/downloads/xingkong.zip">下载源码（xingkong.zip）</a></p>
+  <p class="note">该项目为 Python 命令行工具，不提供网页在线演示，本页为项目介绍页。源码同步托管于
+  <a href="https://github.com/SONGXUEJUN1234/xingkong">GitHub</a>。</p>
+</div>
